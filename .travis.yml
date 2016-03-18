@@ -1,12 +1,28 @@
 language: android
 
+jdk: oraclejdk7
+
+env:
+  global:
+    - ANDROID_API_LEVEL=23
+    - EMULATOR_API_LEVEL=22
+    - ANDROID_BUILD_TOOLS_VERSION=23.0.2
+    - ANDROID_ABI=armeabi-v7a
+    - ADB_INSTALL_TIMEOUT=5    # minutes (2 minutes by default)
+
 android:
   components:
     - tools
     - platform-tools
-    - build-tools-23.0.2
-    - android-23
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    - android-$ANDROID_API_LEVEL
+    - android-$EMULATOR_API_LEVEL
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-23
+    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
-script: ./gradlew build connectedCheck
+before_script:
+  - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+
+script: ./gradlew connectedCheck -x library:signArchives -PdisablePreDex
