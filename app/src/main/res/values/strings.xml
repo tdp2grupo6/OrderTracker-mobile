@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="error_accediendo_bd">Error accediendo a la BD: %1$s</string>
+    <string name="error_respuesta_servidor">Error al interpretar la respuesta del servidor: %1$s</string>
+    <string name="error_procesando">Error inesperado al procesar: %1$s</string>
+
 </resources>
