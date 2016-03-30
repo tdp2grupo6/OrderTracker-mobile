@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.service.BootReceiver;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter;
 
@@ -127,6 +125,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if (id == R.id.nav_clientes) {
+            Intent intent = new Intent (this, MainActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_catalogo) {
+            Intent intent = new Intent (this, Catalogo.class);
+            startActivity(intent);
+        }
+
+        /*
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

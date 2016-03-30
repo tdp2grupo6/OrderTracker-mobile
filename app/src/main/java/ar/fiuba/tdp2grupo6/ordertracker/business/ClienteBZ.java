@@ -55,7 +55,7 @@ public class ClienteBZ {
                         JSONObject itemjson = data.getJSONObject(i);
 
                         //TODO: SACAR CUANDO VENGA EL ID
-                        itemjson.put("ID", i+1);
+                        //itemjson.put("ID", i+1);
 
                         Cliente cliente = new Cliente(itemjson);
                         mDataBase.clienteGuardar(cliente);

@@ -2,6 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_clientes"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Clientes" />
+    <item
+        android:id="@+id/nav_catalogo"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="Catálogo" />
+    </group>
+
+    <!--
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
@@ -32,5 +44,5 @@
                 android:title="Send" />
         </menu>
     </item>
-
+    -->
 </menu>

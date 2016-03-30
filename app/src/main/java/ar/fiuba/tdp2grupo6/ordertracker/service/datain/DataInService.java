@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
 //Servicio que asegura terminar su proceso en caso que algun pedido de interrupcion de OS
 public class DataInService extends IntentService {
@@ -33,6 +35,14 @@ public class DataInService extends IntentService {
 			try {
 				ClienteBZ clienteBZ =  new ClienteBZ(context);
 				clienteBZ.Sincronizar();
+			} catch (Exception e) {
+				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
+			}
+
+			// Sincroniza los productos
+			try {
+				ProductoBZ productoBZ =  new ProductoBZ(context);
+				productoBZ.Sincronizar();
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}

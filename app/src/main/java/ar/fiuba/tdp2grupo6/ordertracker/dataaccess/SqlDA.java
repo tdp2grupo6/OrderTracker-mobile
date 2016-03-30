@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.db.DbHelper;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
@@ -137,6 +138,122 @@ public class SqlDA {
 
 		try {
 			db.delete(DbHelper.tblCliente, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+
+	/******************************************************************************************************/
+	// Catalogo
+
+	public Producto productoGuardar(Producto producto) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblProducto_colId, producto.id);
+			cv.put(DbHelper.tblProducto_colNombre, producto.nombre);
+			cv.put(DbHelper.tblProducto_colMarca, producto.marca);
+			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
+			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
+			cv.put(DbHelper.tblProducto_colStock, producto.stock);
+			db.insert(DbHelper.tblProducto, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return producto;
+	}
+
+	public long productoActualizar(Producto producto) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblProducto_colNombre, producto.nombre);
+			cv.put(DbHelper.tblProducto_colMarca, producto.marca);
+			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
+			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
+			cv.put(DbHelper.tblProducto_colStock, producto.stock);
+
+			String where = "";
+			if (producto != null) {
+				String condition = DbHelper.tblProducto_colId + "=" + String.valueOf(producto.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblProducto, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public ArrayList<Producto> productoBuscar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<Producto> listProducto = new ArrayList<Producto>();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblProducto;
+
+			String where = "";
+			if (id > 0) {
+				String condition = DbHelper.tblProducto_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					Producto producto = new Producto();
+					producto.id = c.getLong(c.getColumnIndex(DbHelper.tblProducto_colId));
+					producto.nombre = c.getString(c.getColumnIndex(DbHelper.tblProducto_colNombre));
+					producto.marca = c.getString(c.getColumnIndex(DbHelper.tblProducto_colMarca));
+					producto.caracteristicas = c.getString(c.getColumnIndex(DbHelper.tblProducto_colCaracteristicas));
+					producto.precio = c.getDouble(c.getColumnIndex(DbHelper.tblProducto_colPrecio));
+					producto.stock = c.getInt(c.getColumnIndex(DbHelper.tblProducto_colStock));
+					listProducto.add(producto);
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listProducto;
+	}
+
+	public long productoEliminar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblProducto_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblProducto, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public void productoVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblProducto, null, null);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}

@@ -21,11 +21,14 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colNombre = "nombre";
 	public static final String tblCliente_colDireccion = "direccion";
 
-	// Tabla Producto
+	// Tabla Catalogo
 	public static final String tblProducto = "Producto";
 	public static final String tblProducto_colId = "id"; // Autoincremental
 	public static final String tblProducto_colNombre = "nombre";
-	public static final String tblProducto_colDescripcion = "descripcion";
+	public static final String tblProducto_colMarca = "marca";
+	public static final String tblProducto_colCaracteristicas = "caracteristicas";
+	public static final String tblProducto_colPrecio = "precio";
+	public static final String tblProducto_colStock = "stock";
 
 	public static synchronized DbHelper getInstance(Context context) {
 		if (helper == null) {
@@ -56,11 +59,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
-		// Producto
+		// Catalogo
 		createTable = "CREATE TABLE " + tblProducto + " (";
 		createTable += tblProducto_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblProducto_colNombre + " TEXT";
-		createTable += ", " + tblProducto_colDescripcion + " TEXT";
+		createTable += ", " + tblProducto_colMarca + " TEXT";
+		createTable += ", " + tblProducto_colCaracteristicas + " TEXT";
+		createTable += ", " + tblProducto_colPrecio + " REAL";
+		createTable += ", " + tblProducto_colStock + " INTEGER";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);

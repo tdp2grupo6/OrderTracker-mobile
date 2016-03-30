@@ -9,5 +9,7 @@
     <string name="error_accediendo_bd">Error accediendo a la BD: %1$s</string>
     <string name="error_respuesta_servidor">Error al interpretar la respuesta del servidor: %1$s</string>
     <string name="error_procesando">Error inesperado al procesar: %1$s</string>
+    <string name="title_activity_catalogo">Catálogo</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>
