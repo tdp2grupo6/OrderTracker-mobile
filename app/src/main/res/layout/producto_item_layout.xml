@@ -27,8 +27,9 @@
             android:id="@+id/list_producto_precio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp" >
+            android:textSize="12dp" >
         </TextView>
+
     </LinearLayout>
 
     <TextView

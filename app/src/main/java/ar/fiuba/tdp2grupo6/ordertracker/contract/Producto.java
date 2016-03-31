@@ -3,6 +3,9 @@ package ar.fiuba.tdp2grupo6.ordertracker.contract;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 /**
  * Created by dgacitua on 30-03-16.
  */
@@ -47,5 +50,16 @@ public class Producto {
     @Override
     public String toString() {
         return this.json.toString();
+    }
+
+    public String mostrarPrecio() {
+        DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+        return "$" + formatter.format(precio);
+    }
+
+    public String mostrarStock() {
+        return String.valueOf(stock);
     }
 }

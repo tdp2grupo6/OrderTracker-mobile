@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -24,6 +22,7 @@ public class CatalogoActivity extends AppCompatActivity {
 
     private Context mContext;
     private ListView mListView;
+    private TextView mEmptyView;
     private SwipeRefreshLayout mSwipeLayout;
     private ProductosBuscarTask mProductosBuscarTask;
 
@@ -44,9 +43,12 @@ public class CatalogoActivity extends AppCompatActivity {
             }
         });
         */
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container_producto);
+
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -55,6 +57,9 @@ public class CatalogoActivity extends AppCompatActivity {
         });
 
         mListView = (ListView) findViewById(R.id.productos_list);
+        mEmptyView = (TextView) findViewById(R.id.productos_list_empty);
+        mListView.setEmptyView(mEmptyView);
+
         mContext = (Context)this;
     }
 

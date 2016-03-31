@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
@@ -48,14 +49,13 @@ public class ProductoAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.producto_item_layout, null, false);
             holder = new ProductoViewHolder(convertView);
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ProductoViewHolder) convertView.getTag();
         }
         holder.getUpperText().setText(mProductos.get(position).nombre);
         holder.getLowerText1().setText(mProductos.get(position).caracteristicas);
-        holder.getLowerText2().setText("$" + mProductos.get(position).precio.toString());
-        holder.getSideText().setText(mProductos.get(position).stock + "");
+        holder.getLowerText2().setText(mProductos.get(position).mostrarPrecio());
+        holder.getSideText().setText(mProductos.get(position).mostrarStock());
 
         return convertView;
     }

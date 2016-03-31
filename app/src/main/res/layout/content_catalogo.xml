@@ -28,6 +28,16 @@
             android:paddingRight="5dp"
             android:paddingTop="5dp" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/productos_list_empty"
+        android:text="@string/no_hay_productos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textSize="26dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>
