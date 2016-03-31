@@ -28,14 +28,14 @@
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.datain.DataInAlarmReceiver"></receiver>
-        <receiver android:name=".service.dataout.DataOutAlarmReceiver"></receiver>
+        <receiver android:name=".service.datain.DataInAlarmReceiver" />
+        <receiver android:name=".service.dataout.DataOutAlarmReceiver" />
 
-        <service android:name=".service.datain.DataInService"></service>
-        <service android:name=".service.dataout.DataOutService"></service>
+        <service android:name=".service.datain.DataInService" />
+        <service android:name=".service.dataout.DataOutService" />
 
         <activity
-            android:name=".view.Catalogo"
+            android:name=".view.CatalogoActivity"
             android:label="@string/title_activity_catalogo"
             android:parentActivityName=".view.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

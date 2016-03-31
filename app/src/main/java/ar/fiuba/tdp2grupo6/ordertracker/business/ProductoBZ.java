@@ -56,9 +56,6 @@ public class ProductoBZ {
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject itemjson = data.getJSONObject(i);
 
-                        //TODO: SACAR CUANDO VENGA EL ID
-                        //itemjson.put("ID", i+1);
-
                         Producto producto = new Producto(itemjson);
                         mDataBase.productoGuardar(producto);
                     }

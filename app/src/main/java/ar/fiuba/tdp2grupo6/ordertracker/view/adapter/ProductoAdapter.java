@@ -19,6 +19,12 @@ public class ProductoAdapter extends BaseAdapter {
     private ArrayList<Producto> mProductos;
     private LayoutInflater mInflater;
 
+    public ProductoAdapter(Context context, ArrayList<Producto> productos) {
+        this.mContext = context;
+        this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mProductos = productos;
+    }
+
     @Override
     public int getCount() {
         return mProductos.size();
@@ -48,8 +54,8 @@ public class ProductoAdapter extends BaseAdapter {
         }
         holder.getUpperText().setText(mProductos.get(position).nombre);
         holder.getLowerText1().setText(mProductos.get(position).caracteristicas);
-        holder.getLowerText2().setText(mProductos.get(position).precio.toString());
-        holder.getSideText().setText(mProductos.get(position).stock);
+        holder.getLowerText2().setText("$" + mProductos.get(position).precio.toString());
+        holder.getSideText().setText(mProductos.get(position).stock + "");
 
         return convertView;
     }

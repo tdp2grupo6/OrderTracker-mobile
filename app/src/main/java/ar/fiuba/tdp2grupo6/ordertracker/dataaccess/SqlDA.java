@@ -144,7 +144,7 @@ public class SqlDA {
 	}
 
 	/******************************************************************************************************/
-	// Catalogo
+	// CatalogoActivity
 
 	public Producto productoGuardar(Producto producto) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();

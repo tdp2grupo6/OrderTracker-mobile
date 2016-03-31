@@ -25,7 +25,7 @@ public class ProductoViewHolder {
 
     public TextView getLowerText1() {
         if (this.lowerText1 == null) {
-            this.lowerText1 = (TextView) row.findViewById(R.id.list_producto_descripcion);
+            this.lowerText1 = (TextView) row.findViewById(R.id.list_producto_caracteristicas);
         }
         return this.lowerText1;
     }

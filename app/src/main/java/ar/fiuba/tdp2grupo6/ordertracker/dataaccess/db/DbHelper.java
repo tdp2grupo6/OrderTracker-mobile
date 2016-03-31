@@ -21,7 +21,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colNombre = "nombre";
 	public static final String tblCliente_colDireccion = "direccion";
 
-	// Tabla Catalogo
+	// Tabla CatalogoActivity
 	public static final String tblProducto = "Producto";
 	public static final String tblProducto_colId = "id"; // Autoincremental
 	public static final String tblProducto_colNombre = "nombre";
@@ -59,7 +59,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
-		// Catalogo
+		// CatalogoActivity
 		createTable = "CREATE TABLE " + tblProducto + " (";
 		createTable += tblProducto_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblProducto_colNombre + " TEXT";

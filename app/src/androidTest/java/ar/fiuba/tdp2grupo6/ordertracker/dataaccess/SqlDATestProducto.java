@@ -121,5 +121,4 @@ public class SqlDATestProducto {
         assertThat(productos , is(not(nullValue())));
         assertThat(productos.size(), is(0));
     }
-
 }
