@@ -48,7 +48,7 @@ public class ClienteBZ {
 					JSONArray data = new JSONArray(responseDA.getData());
 					for (int i = 0; i < data.length(); i++) {
                         JSONObject itemjson = data.getJSONObject(i);
-
+						
                         Cliente cliente = new Cliente(itemjson);
                         mSql.clienteGuardar(cliente);
 

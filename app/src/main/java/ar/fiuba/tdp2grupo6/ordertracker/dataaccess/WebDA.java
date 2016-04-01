@@ -166,4 +166,20 @@ public class WebDA {
 		}
 	}
 
+	// Obtiene los filtros disponibles para el usuario
+	public ResponseObject getProductos() throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "producto";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, null, null);
+
+			return response; //validar_response(response);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+	}
 }

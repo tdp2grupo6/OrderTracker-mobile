@@ -104,5 +104,4 @@ public class SqlDATest {
         assertThat(clientes , is(not(nullValue())));
         assertThat(clientes.size(), is(0));
     }
-
 }
