@@ -18,7 +18,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.service.BootReceiver;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
-public class CatalogoActivity extends AppCompatActivity {
+public class CatalogoActivity extends AppBaseActivity {
 
     private Context mContext;
     private ListView mListView;
@@ -46,9 +46,8 @@ public class CatalogoActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        //Set the swipe for refresh
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container_producto);
-
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -56,9 +55,9 @@ public class CatalogoActivity extends AppCompatActivity {
             }
         });
 
+        //Set the list of productos
         mListView = (ListView) findViewById(R.id.productos_list);
         mEmptyView = (TextView) findViewById(R.id.productos_list_empty);
-        mListView.setEmptyView(mEmptyView);
 
         mContext = (Context)this;
     }
@@ -69,7 +68,6 @@ public class CatalogoActivity extends AppCompatActivity {
 
         // por las dudas corre el servicio, si ya esta corriendo es ignorada
         // este inicio
-        this.sendBroadcast(new Intent(this, BootReceiver.class));
         this.refrescarLista();
     }
 
@@ -82,9 +80,9 @@ public class CatalogoActivity extends AppCompatActivity {
         if (mListView != null) {
             ProductoAdapter adapter = new ProductoAdapter(this, productos);
             mListView.setAdapter(adapter);
+            mListView.setEmptyView(mEmptyView);
         }
     }
-
 
     public class ProductosBuscarTask extends AsyncTask<Void, String, ArrayList<Producto>> {
         private Context mContext;

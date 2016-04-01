@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
@@ -46,7 +45,7 @@ public class ProductoAdapter extends BaseAdapter {
         // TODO
         ProductoViewHolder holder = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.producto_item_layout, null, false);
+            convertView = mInflater.inflate(R.layout.layout_item_catalogo, null, false);
             holder = new ProductoViewHolder(convertView);
             convertView.setTag(holder);
         } else {

@@ -12,19 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
             android:name=".view.ClienteActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.CatalogoActivity"
+            android:label="@string/title_activity_catalogo"
+            android:parentActivityName=".view.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <receiver android:name=".service.BootReceiver">
@@ -39,15 +39,7 @@
         <service android:name=".service.datain.DataInService" />
         <service android:name=".service.dataout.DataOutService" />
 
-        <activity
-            android:name=".view.CatalogoActivity"
-            android:label="@string/title_activity_catalogo"
-            android:parentActivityName=".view.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.fiuba.tdp2grupo6.ordertracker.view.MainActivity" />
-        </activity>
+
     </application>
 
 </manifest>

@@ -45,7 +45,7 @@ public class ClienteAdapter extends BaseAdapter {
             public View getView(int position, View convertView, ViewGroup parent) {
                 ClienteViewHolder holder = null;
                 if (convertView == null) {
-                    convertView = mInflater.inflate(R.layout.cliente_item_layout, null, false);
+                    convertView = mInflater.inflate(R.layout.layout_item_cliente, null, false);
                     holder = new ClienteViewHolder(convertView);
                     convertView.setTag(holder);
                 }

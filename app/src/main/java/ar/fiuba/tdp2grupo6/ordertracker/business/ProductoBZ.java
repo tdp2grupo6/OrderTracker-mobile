@@ -21,34 +21,34 @@ import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.WebDA;
  */
 public class ProductoBZ {
     private Context mContext;
-    private WebDA mService;
-    private SqlDA mDataBase;
+    private WebDA mWeb;
+    private SqlDA mSql;
 
     public ProductoBZ(Context context) {
         this.mContext = context;
-        this.mService = new WebDA(context);
-        this.mDataBase = new SqlDA(context);
+        this.mWeb = new WebDA(context);
+        this.mSql = new SqlDA(context);
     }
 
     public ProductoBZ(Context context, WebDA service) {
         this.mContext = context;
-        this.mService = service;
+        this.mWeb = service;
     }
 
     public ProductoBZ(Context context, SqlDA dataBase) {
         this.mContext = context;
-        this.mDataBase = dataBase;
+        this.mSql = dataBase;
     }
 
     public ArrayList<Producto> Sincronizar() throws ServiceException, BusinessException {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {
 
-            ResponseObject responseDA = mService.getProductos();
+            ResponseObject responseDA = mWeb.getProductos();
 
             if (responseDA.getData() != null) {
                 //Elimina todos los Productos
-                mDataBase.productoVaciar();
+                mSql.productoVaciar();
 
                 //Graba cada producto en la BD
                 try {
@@ -57,7 +57,9 @@ public class ProductoBZ {
                         JSONObject itemjson = data.getJSONObject(i);
 
                         Producto producto = new Producto(itemjson);
-                        mDataBase.productoGuardar(producto);
+                        mSql.productoGuardar(producto);
+
+                        response.add(producto);
                     }
                 } catch (JSONException jex) {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
@@ -74,7 +76,7 @@ public class ProductoBZ {
     public ArrayList<Producto> listar() throws BusinessException {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {
-            response = mDataBase.productoBuscar(0);
+            response = mSql.productoBuscar(0);
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }

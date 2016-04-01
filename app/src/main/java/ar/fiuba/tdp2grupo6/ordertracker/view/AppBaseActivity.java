@@ -113,12 +113,12 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_cliente:
+            case R.id.nav_clientes:
                 Intent a = new Intent(this, ClienteActivity.class);
                 startActivity(a);
                 break;
-            case R.id.nav_producto:
-                Intent b = new Intent(this, MainActivity.class);
+            case R.id.nav_catalogo:
+                Intent b = new Intent(this, CatalogoActivity.class);
                 startActivity(b);
                 break;
             // and so on...

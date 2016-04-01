@@ -60,6 +60,7 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +69,7 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
                         .setAction("Action", null).show();
             }
         });
+        */
 
         //Set the item selected
         mDrawerMenu.getItem(MENU_INDEX).setChecked(true);

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class ClienteFueraRutaFragment extends Fragment {
     private String mParam2;
 
     private ListView mListView;
+    private TextView mEmptyView;
     private SwipeRefreshLayout mSwipeLayout;
     private ClientesBuscarTask mClientesBuscarTask;
 
@@ -89,7 +91,7 @@ public class ClienteFueraRutaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cliente_fuera_ruta, container, false);
 
         //Set the swipe for refresh
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_cliente);
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -100,6 +102,7 @@ public class ClienteFueraRutaFragment extends Fragment {
 
         //Set the list of productos
         mListView = (ListView) view.findViewById(R.id.clientes_list);
+        mEmptyView = (TextView) view.findViewById(R.id.clientes_list_empty);
 
         return view;
     }
@@ -152,6 +155,7 @@ public class ClienteFueraRutaFragment extends Fragment {
         if (mListView != null) {
             ClienteAdapter adapter = new ClienteAdapter(getContext(), clientes);
             mListView.setAdapter(adapter);
+            mListView.setEmptyView(mEmptyView);
         }
     }
 
