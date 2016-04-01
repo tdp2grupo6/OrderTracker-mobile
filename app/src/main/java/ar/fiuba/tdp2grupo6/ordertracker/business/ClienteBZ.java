@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
@@ -19,34 +18,30 @@ import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
 
 public class ClienteBZ {
 	private Context mContext;
-	private WebDA mService;
-    private SqlDA mDataBase;
+	private WebDA mWeb;
+    private SqlDA mSql;
 
 	public ClienteBZ(Context context) {
 		this.mContext = context;
-        this.mService = new WebDA(context);
-        this.mDataBase = new SqlDA(context);
+        this.mWeb = new WebDA(context);
+        this.mSql = new SqlDA(context);
 	}
 
-	public ClienteBZ(Context context, WebDA service) {
+	public ClienteBZ(Context context, WebDA service, SqlDA dataBase) {
 		this.mContext = context;
-		this.mService = service;
+		this.mWeb = service;
+		this.mSql = dataBase;
 	}
 
-    public ClienteBZ(Context context, SqlDA dataBase) {
-        this.mContext = context;
-        this.mDataBase = dataBase;
-    }
-
-	public ArrayList<Cliente> Sincronizar() throws ServiceException, BusinessException {
+	public ArrayList<Cliente> sincronizar() throws ServiceException, BusinessException {
 		ArrayList<Cliente> response = new ArrayList<Cliente>();
 		try {
 
-			ResponseObject responseDA = mService.getClientes();
+			ResponseObject responseDA = mWeb.getClientes();
 
 			if (responseDA.getData() != null) {
                 //Elimina todos los clientes
-                mDataBase.clienteVaciar();
+                mSql.clienteVaciar();
 
 				//Graba cada cliente en la BD
 				try {
@@ -54,11 +49,10 @@ public class ClienteBZ {
 					for (int i = 0; i < data.length(); i++) {
                         JSONObject itemjson = data.getJSONObject(i);
 
-                        //TODO: SACAR CUANDO VENGA EL ID
-                        itemjson.put("ID", i+1);
-
                         Cliente cliente = new Cliente(itemjson);
-                        mDataBase.clienteGuardar(cliente);
+                        mSql.clienteGuardar(cliente);
+
+                        response.add(cliente);
 					}
 				} catch (JSONException jex) {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
@@ -75,7 +69,7 @@ public class ClienteBZ {
     public ArrayList<Cliente> listar() throws BusinessException {
         ArrayList<Cliente> response = new ArrayList<Cliente>();
         try {
-            response = mDataBase.clienteBuscar(0);
+            response = mSql.clienteBuscar(0);
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }

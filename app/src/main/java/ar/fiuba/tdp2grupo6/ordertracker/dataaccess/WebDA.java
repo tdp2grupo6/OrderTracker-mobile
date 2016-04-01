@@ -29,8 +29,6 @@ public class WebDA {
 	private static final String TAG = "HttpUrlConnectionUtlity";
 
 	private static final String GET_METHOD = "GET";
-
-
 	private static final String POST_METHOD = "POST";
 	private static final String PUT_METHOD = "PUT";
 	private static final String HEAD_METHOD = "HEAD";
@@ -91,17 +89,19 @@ public class WebDA {
 		BufferedReader reader = null;
 		StringBuffer response = new StringBuffer();
 
-		reader = new BufferedReader(new InputStreamReader(in));
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			response.append(line);
-		}
+		if (in != null) {
+			reader = new BufferedReader(new InputStreamReader(in));
+			String line = "";
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
 
-		if (reader != null) {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -161,7 +161,8 @@ public class WebDA {
 
 			return response; //validar_response(response);
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 	}
 

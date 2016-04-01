@@ -32,7 +32,7 @@ public class DataInService extends IntentService {
 			// Sincroniza los clientes
 			try {
 				ClienteBZ clienteBZ =  new ClienteBZ(context);
-				clienteBZ.Sincronizar();
+				clienteBZ.sincronizar();
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}

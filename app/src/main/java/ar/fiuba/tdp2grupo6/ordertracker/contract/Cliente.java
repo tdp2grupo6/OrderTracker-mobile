@@ -24,7 +24,7 @@ public class Cliente {
 		super();
 
 		this.json = new JSONObject(str);
-		this.id = json.optLong("ID");
+		this.id = json.optLong("id");
 		this.nombre = json.getString("nombreCompleto");
 		this.direccion = json.getString("direccion");
 		this.telefono = json.getString("telefono");
@@ -37,7 +37,7 @@ public class Cliente {
 		super();
 
 		this.json = json;
-		this.id = json.optLong("ID");
+		this.id = json.optLong("id");
 		this.nombre = json.getString("nombreCompleto");
 		this.direccion = json.getString("direccion");
 		this.telefono = json.getString("telefono");

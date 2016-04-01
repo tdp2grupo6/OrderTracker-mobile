@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 1;
+	static final int dbVersion = 2;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -20,6 +20,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colId = "id";
 	public static final String tblCliente_colNombre = "nombre";
 	public static final String tblCliente_colDireccion = "direccion";
+	public static final String tblCliente_colTelefono = "telefono";
+	public static final String tblCliente_colEmail = "email";
+	public static final String tblCliente_colLat = "lat";
+	public static final String tblCliente_colLng = "lng";
 
 	// Tabla Producto
 	public static final String tblProducto = "Producto";
@@ -49,6 +53,10 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += tblCliente_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblCliente_colNombre + " TEXT";
 		createTable += ", " + tblCliente_colDireccion + " TEXT";
+		createTable += ", " + tblCliente_colTelefono + " TEXT";
+		createTable += ", " + tblCliente_colEmail + " TEXT";
+		createTable += ", " + tblCliente_colLat + " REAL";
+		createTable += ", " + tblCliente_colLng + " REAL";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);

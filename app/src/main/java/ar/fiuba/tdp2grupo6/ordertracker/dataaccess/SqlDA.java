@@ -45,6 +45,10 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colId, cliente.id);
 			cv.put(DbHelper.tblCliente_colNombre, cliente.nombre);
 			cv.put(DbHelper.tblCliente_colDireccion, cliente.direccion);
+			cv.put(DbHelper.tblCliente_colTelefono, cliente.telefono);
+			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
+			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
+			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
 
 			db.insert(DbHelper.tblCliente, null, cv);
 		} catch (Exception e) {
@@ -62,6 +66,10 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblCliente_colNombre, cliente.nombre);
 			cv.put(DbHelper.tblCliente_colDireccion, cliente.direccion);
+			cv.put(DbHelper.tblCliente_colTelefono, cliente.telefono);
+			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
+			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
+			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
 
 			String where = "";
 			if (cliente != null) {
@@ -98,6 +106,10 @@ public class SqlDA {
 					cliente.id = c.getLong(c.getColumnIndex(DbHelper.tblCliente_colId));
 					cliente.nombre = c.getString(c.getColumnIndex(DbHelper.tblCliente_colNombre));
 					cliente.direccion = c.getString(c.getColumnIndex(DbHelper.tblCliente_colDireccion));
+					cliente.telefono = c.getString(c.getColumnIndex(DbHelper.tblCliente_colTelefono));
+					cliente.email = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEmail));
+					cliente.lat = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLat));
+					cliente.lng = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLng));
 					listCliente.add(cliente);
 				} while (c.moveToNext());
 			}
