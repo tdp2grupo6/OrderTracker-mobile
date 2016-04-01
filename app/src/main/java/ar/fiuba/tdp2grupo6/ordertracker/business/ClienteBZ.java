@@ -53,6 +53,7 @@ public class ClienteBZ {
                         mSql.clienteGuardar(cliente);
 
                         response.add(cliente);
+
 					}
 				} catch (JSONException jex) {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
