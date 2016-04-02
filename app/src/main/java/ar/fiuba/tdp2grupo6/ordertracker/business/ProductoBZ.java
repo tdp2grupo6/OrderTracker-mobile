@@ -40,7 +40,13 @@ public class ProductoBZ {
         this.mSql = dataBase;
     }
 
-    public ArrayList<Producto> Sincronizar() throws ServiceException, BusinessException {
+    public ProductoBZ(Context context, WebDA service, SqlDA dataBase) {
+        this.mContext = context;
+        this.mWeb = service;
+        this.mSql = dataBase;
+    }
+
+    public ArrayList<Producto> sincronizar() throws ServiceException, BusinessException {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {
 

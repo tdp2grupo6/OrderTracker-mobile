@@ -42,7 +42,7 @@ public class DataInService extends IntentService {
 			// Sincroniza los productos
 			try {
 				ProductoBZ productoBZ =  new ProductoBZ(context);
-				productoBZ.Sincronizar();
+				productoBZ.sincronizar();
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}
