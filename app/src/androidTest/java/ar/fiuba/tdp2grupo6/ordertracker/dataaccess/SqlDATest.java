@@ -46,7 +46,7 @@ public class SqlDATest {
         //graba
         Cliente cliente =  new Cliente();
         cliente.id = 1;
-        cliente.nombre = "algo";
+        cliente.nombreCompleto = "algo";
         cliente.direccion = "algomas";
         mDataBase.clienteGuardar(cliente);
 
@@ -56,7 +56,7 @@ public class SqlDATest {
         assertThat(clientes , is(not(nullValue())));
         assertThat(clientes.size(), is(1));
         assertThat(clientes.get(0).id, is(cliente.id));
-        assertThat(clientes.get(0).nombre, is(cliente.nombre));
+        assertThat(clientes.get(0).nombreCompleto, is(cliente.nombreCompleto));
         assertThat(clientes.get(0).direccion, is(cliente.direccion));
     }
 
@@ -67,12 +67,12 @@ public class SqlDATest {
         //graba
         Cliente cliente =  new Cliente();
         cliente.id = 1;
-        cliente.nombre = "algo";
+        cliente.nombreCompleto = "algo";
         cliente.direccion = "algomas";
         mDataBase.clienteGuardar(cliente);
 
         //actualiza
-        cliente.nombre = "algo1";
+        cliente.nombreCompleto = "algo1";
         cliente.direccion = "algomas1";
         long cant = mDataBase.clienteActualizar(cliente);
 
@@ -83,7 +83,7 @@ public class SqlDATest {
         assertThat(clientes, is(not(nullValue())));
         assertThat(clientes.size(), is(1));
         assertThat(clientes.get(0).id, is(cliente.id));
-        assertThat(clientes.get(0).nombre, is(cliente.nombre));
+        assertThat(clientes.get(0).nombreCompleto, is(cliente.nombreCompleto));
         assertThat(clientes.get(0).direccion, is(cliente.direccion));
     }
 
@@ -93,7 +93,7 @@ public class SqlDATest {
 
         Cliente cliente =  new Cliente();
         cliente.id = 1;
-        cliente.nombre = "algo";
+        cliente.nombreCompleto = "algo";
         cliente.direccion = "algomas";
 
         mDataBase.clienteGuardar(cliente);

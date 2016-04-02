@@ -8,7 +8,10 @@ public class Cliente {
 	public JSONObject json;
 
 	public long id;
+	public String nombreCompleto;
 	public String nombre;
+	public String apellido;
+	public String razonSocial;
 	public String direccion;
 	public String email;
 	public String telefono;
@@ -25,7 +28,10 @@ public class Cliente {
 
 		this.json = new JSONObject(str);
 		this.id = json.optLong("id");
-		this.nombre = json.getString("nombreCompleto");
+		this.nombreCompleto = json.getString("nombreCompleto");
+		this.nombre = json.getString("nombre");
+		this.apellido = json.getString("apellido");
+		this.razonSocial = json.getString("razonSocial");
 		this.direccion = json.getString("direccion");
 		this.telefono = json.getString("telefono");
 		this.email = json.getString("email");
@@ -38,7 +44,10 @@ public class Cliente {
 
 		this.json = json;
 		this.id = json.optLong("id");
-		this.nombre = json.getString("nombreCompleto");
+		this.nombreCompleto = json.getString("nombreCompleto");
+		this.nombre = json.getString("nombre");
+		this.apellido = json.getString("apellido");
+		this.razonSocial = json.getString("razonSocial");
 		this.direccion = json.getString("direccion");
 		this.telefono = json.getString("telefono");
 		this.email = json.getString("email");

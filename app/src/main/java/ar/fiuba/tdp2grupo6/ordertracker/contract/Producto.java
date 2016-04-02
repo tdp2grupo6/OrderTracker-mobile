@@ -25,7 +25,7 @@ public class Producto {
 
     public Producto(String str) throws JSONException {
         super();
-
+        //{"id":1,"nombre":"Mochila Deportiva Negra","marca":"Adidas","caracteristicas":"Mochila de alta capacidad y costura reforzada","categoria":[],"rutaImagen":"","stock":3,"precio":849.0,"estado":"No disponible"}
         this.json = new JSONObject(str);
         this.id = json.optLong("id");
         this.nombre = json.getString("nombre");

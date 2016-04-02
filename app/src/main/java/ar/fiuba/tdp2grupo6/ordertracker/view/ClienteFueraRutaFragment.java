@@ -5,10 +5,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,6 +47,7 @@ public class ClienteFueraRutaFragment extends Fragment {
 
     private ListView mListView;
     private TextView mEmptyView;
+    private ClienteAdapter mListAdapter;
     private SwipeRefreshLayout mSwipeLayout;
     private ClientesBuscarTask mClientesBuscarTask;
 
@@ -87,6 +96,9 @@ public class ClienteFueraRutaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Tiene options menu
+        setHasOptionsMenu(true);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cliente_fuera_ruta, container, false);
 
@@ -131,6 +143,51 @@ public class ClienteFueraRutaFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_menu_cliente_fuera_ruta, menu);
+
+        MenuItem search = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        EditText searchField = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        /*
+        final EditText searchField = (EditText) menu.findItem(R.id.action_search).getActionView();
+        */
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                if (mListAdapter != null) {
+                    mListAdapter.getFilter().filter(charSequence);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_search:
+                // do stuff
+                return true;
+        }
+        return false;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -153,8 +210,8 @@ public class ClienteFueraRutaFragment extends Fragment {
 
     private void actualizarLista(ArrayList<Cliente> clientes) {
         if (mListView != null) {
-            ClienteAdapter adapter = new ClienteAdapter(getContext(), clientes);
-            mListView.setAdapter(adapter);
+            mListAdapter = new ClienteAdapter(getContext(), clientes);
+            mListView.setAdapter(mListAdapter);
             mListView.setEmptyView(mEmptyView);
         }
     }

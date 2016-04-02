@@ -18,7 +18,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	// Tabla Cliente
 	public static final String tblCliente = "Cliente";
 	public static final String tblCliente_colId = "id";
+	public static final String tblCliente_colNombreCompleto = "nombreCompleto";
 	public static final String tblCliente_colNombre = "nombre";
+	public static final String tblCliente_colApellido = "apellido";
+	public static final String tblCliente_colRazonSocial = "razonSocial";
 	public static final String tblCliente_colDireccion = "direccion";
 	public static final String tblCliente_colTelefono = "telefono";
 	public static final String tblCliente_colEmail = "email";
@@ -28,7 +31,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	// Tabla CatalogoActivity
 	public static final String tblProducto = "Producto";
 	public static final String tblProducto_colId = "id"; // Autoincremental
-	public static final String tblProducto_colNombre = "nombre";
+	public static final String tblProducto_colNombre = "nombreCompleto";
 	public static final String tblProducto_colMarca = "marca";
 	public static final String tblProducto_colCaracteristicas = "caracteristicas";
 	public static final String tblProducto_colPrecio = "precio";
@@ -54,7 +57,10 @@ public class DbHelper extends SQLiteOpenHelper {
 		// Cliente
 		createTable = "CREATE TABLE " + tblCliente + " (";
 		createTable += tblCliente_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblCliente_colNombreCompleto + " TEXT";
 		createTable += ", " + tblCliente_colNombre + " TEXT";
+		createTable += ", " + tblCliente_colApellido + " TEXT";
+		createTable += ", " + tblCliente_colRazonSocial + " TEXT";
 		createTable += ", " + tblCliente_colDireccion + " TEXT";
 		createTable += ", " + tblCliente_colTelefono + " TEXT";
 		createTable += ", " + tblCliente_colEmail + " TEXT";

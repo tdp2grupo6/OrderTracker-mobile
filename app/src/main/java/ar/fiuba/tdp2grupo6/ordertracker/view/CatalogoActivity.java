@@ -20,6 +20,8 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class CatalogoActivity extends AppBaseActivity {
 
+    private final int MENU_INDEX = 1;
+
     private Context mContext;
     private ListView mListView;
     private TextView mEmptyView;
@@ -59,6 +61,8 @@ public class CatalogoActivity extends AppBaseActivity {
         mListView = (ListView) findViewById(R.id.productos_list);
         mEmptyView = (TextView) findViewById(R.id.productos_list_empty);
 
+        //Set the item selected
+        mDrawerMenu.getItem(MENU_INDEX).setChecked(true);
         mContext = (Context)this;
     }
 

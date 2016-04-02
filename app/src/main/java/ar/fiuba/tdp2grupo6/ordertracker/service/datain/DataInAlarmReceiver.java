@@ -17,7 +17,7 @@ public class DataInAlarmReceiver extends BroadcastReceiver {
 	}
 
 	public static void startAlarm(Context context) {
-		final int periodo = 120000;
+		final int periodo = 120000;//600000;
 
 		// Genera un servicio que se corre cada PERIOD de tiempo
 		AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

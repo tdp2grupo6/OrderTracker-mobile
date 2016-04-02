@@ -1,18 +1,11 @@
 package ar.fiuba.tdp2grupo6.ordertracker.dataaccess;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
@@ -44,7 +37,10 @@ public class SqlDA {
 		try {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblCliente_colId, cliente.id);
+			cv.put(DbHelper.tblCliente_colNombreCompleto, cliente.nombreCompleto);
 			cv.put(DbHelper.tblCliente_colNombre, cliente.nombre);
+			cv.put(DbHelper.tblCliente_colApellido, cliente.apellido);
+			cv.put(DbHelper.tblCliente_colRazonSocial, cliente.razonSocial);
 			cv.put(DbHelper.tblCliente_colDireccion, cliente.direccion);
 			cv.put(DbHelper.tblCliente_colTelefono, cliente.telefono);
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
@@ -65,7 +61,10 @@ public class SqlDA {
 		long cant = 0;
 		try {
 			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblCliente_colNombreCompleto, cliente.nombreCompleto);
 			cv.put(DbHelper.tblCliente_colNombre, cliente.nombre);
+			cv.put(DbHelper.tblCliente_colApellido, cliente.apellido);
+			cv.put(DbHelper.tblCliente_colRazonSocial, cliente.razonSocial);
 			cv.put(DbHelper.tblCliente_colDireccion, cliente.direccion);
 			cv.put(DbHelper.tblCliente_colTelefono, cliente.telefono);
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
@@ -105,7 +104,10 @@ public class SqlDA {
 				do {
 					Cliente cliente = new Cliente();
 					cliente.id = c.getLong(c.getColumnIndex(DbHelper.tblCliente_colId));
+					cliente.nombreCompleto = c.getString(c.getColumnIndex(DbHelper.tblCliente_colNombreCompleto));
 					cliente.nombre = c.getString(c.getColumnIndex(DbHelper.tblCliente_colNombre));
+					cliente.apellido = c.getString(c.getColumnIndex(DbHelper.tblCliente_colApellido));
+					cliente.razonSocial = c.getString(c.getColumnIndex(DbHelper.tblCliente_colRazonSocial));
 					cliente.direccion = c.getString(c.getColumnIndex(DbHelper.tblCliente_colDireccion));
 					cliente.telefono = c.getString(c.getColumnIndex(DbHelper.tblCliente_colTelefono));
 					cliente.email = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEmail));

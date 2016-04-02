@@ -36,7 +36,7 @@ public class ClienteTest {
         Cliente cliente = new Cliente(clienteString);
 
         assertThat(cliente.id, is(FAKE_CLIENTE_ID));
-        assertThat(cliente.nombre, is(FAKE_CLIENTE_NOMBRE));
+        assertThat(cliente.nombreCompleto, is(FAKE_CLIENTE_NOMBRE));
         assertThat(cliente.direccion, is(FAKE_CLIENTE_DIRECCION));
         //assertThat(cliente.json, is(clienteJson));
         //assertThat(cliente.toString(), is(clienteString));
@@ -47,7 +47,7 @@ public class ClienteTest {
         Cliente cliente = new Cliente(clienteJson);
 
         assertThat(cliente.id, is(FAKE_CLIENTE_ID));
-        assertThat(cliente.nombre, is(FAKE_CLIENTE_NOMBRE));
+        assertThat(cliente.nombreCompleto, is(FAKE_CLIENTE_NOMBRE));
         assertThat(cliente.direccion, is(FAKE_CLIENTE_DIRECCION));
         //assertThat(cliente.toString(), is(clienteString));
     }
