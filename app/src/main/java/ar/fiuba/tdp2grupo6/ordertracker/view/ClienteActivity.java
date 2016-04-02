@@ -85,7 +85,8 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_menu_cliente, menu);
+        // dgacitua: Desactivado temporalmente para estar acorde a los UAT
+        //getMenuInflater().inflate(R.menu.activity_menu_cliente, menu);
 
         return true;
     }

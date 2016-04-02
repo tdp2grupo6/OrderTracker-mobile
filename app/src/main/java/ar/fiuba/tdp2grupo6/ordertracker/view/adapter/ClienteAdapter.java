@@ -85,16 +85,19 @@ public class ClienteAdapter extends BaseAdapter implements Filterable {
 
 
             private ArrayList<Cliente> getFilteredResults(CharSequence constraint){
-                if (constraint.length() == 0){
+                // dgacitua: Modificado bajo criterio del cliente
+                if (constraint.length() < 2){
                     return mOriginalData;
                 }
 
                 String find = constraint.toString().toLowerCase();
                 ArrayList<Cliente> listResult = new ArrayList<Cliente>();
                 for (Cliente obj : mOriginalData){
-                    if (obj.nombre.toLowerCase().contains(find) ||
-                        obj.apellido.toLowerCase().contains(find) ||
-                        obj.direccion.toLowerCase().contains(find)){
+                    String nombreTemp = obj.nombre + " " + obj.apellido;
+                    if (obj.nombre.toLowerCase().startsWith(find) ||
+                        obj.apellido.toLowerCase().startsWith(find) ||
+                        obj.razonSocial.toLowerCase().startsWith(find) ||
+                        nombreTemp.toLowerCase().startsWith(find)) {
                         listResult.add(obj);
                     }
                 }
