@@ -2,42 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content"
+              android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/list_producto_imagen"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/ic_camera_alt_24dp"/>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical|start"
+        >
 
         <TextView
             android:id="@+id/list_producto_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp" >
+            style="@style/ItemTitulo"
+            android:text="Lente XXX"
+            >
         </TextView>
 
         <TextView
             android:id="@+id/list_producto_caracteristicas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12dp" >
+            android:gravity="center_vertical|start"
+            android:drawableStart="@drawable/ic_info_outline_12dp"
+            android:drawableLeft="@drawable/ic_info_outline_12dp"
+            android:drawablePadding="3dp"
+            style="@style/ItemDescripcion"
+            android:text="Lente profesional">
         </TextView>
 
         <TextView
             android:id="@+id/list_producto_precio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12dp" >
+            style="@style/ItemPrecio"
+            android:text="$ 123,45">
         </TextView>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/list_producto_stock"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|right"
-        android:textSize="25dp" >
-    </TextView>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:background="@drawable/item_producto_stock"
+        android:gravity="center"
+        style="@style/ItemStock"
+        android:text="12"/>
 
 </LinearLayout>
