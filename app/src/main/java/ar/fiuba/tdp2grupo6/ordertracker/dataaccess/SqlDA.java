@@ -47,6 +47,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
 			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
 			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
+			cv.put(DbHelper.tblCliente_colEstado, cliente.lng);
 
 			db.insert(DbHelper.tblCliente, null, cv);
 		} catch (Exception e) {
@@ -71,6 +72,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
 			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
 			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
+			cv.put(DbHelper.tblCliente_colEstado, cliente.lng);
 
 			String where = "";
 			if (cliente != null) {
@@ -114,6 +116,7 @@ public class SqlDA {
 					cliente.email = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEmail));
 					cliente.lat = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLat));
 					cliente.lng = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLng));
+					cliente.estado = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEstado));
 					listCliente.add(cliente);
 				} while (c.moveToNext());
 			}
@@ -172,6 +175,9 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
 			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
 			cv.put(DbHelper.tblProducto_colStock, producto.stock);
+			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
+			cv.put(DbHelper.tblProducto_colRutaImg, producto.rutaImagen);
+			cv.put(DbHelper.tblProducto_colRutaMini, producto.rutaMiniatura);
 			db.insert(DbHelper.tblProducto, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
@@ -191,6 +197,9 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
 			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
 			cv.put(DbHelper.tblProducto_colStock, producto.stock);
+			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
+			cv.put(DbHelper.tblProducto_colRutaImg, producto.rutaImagen);
+			cv.put(DbHelper.tblProducto_colRutaMini, producto.rutaMiniatura);
 
 			String where = "";
 			if (producto != null) {
@@ -230,6 +239,9 @@ public class SqlDA {
 					producto.caracteristicas = c.getString(c.getColumnIndex(DbHelper.tblProducto_colCaracteristicas));
 					producto.precio = c.getDouble(c.getColumnIndex(DbHelper.tblProducto_colPrecio));
 					producto.stock = c.getInt(c.getColumnIndex(DbHelper.tblProducto_colStock));
+					producto.estado = c.getString(c.getColumnIndex(DbHelper.tblProducto_colEstado));
+					producto.rutaImagen = c.getString(c.getColumnIndex(DbHelper.tblProducto_colRutaImg));
+					producto.rutaMiniatura = c.getString(c.getColumnIndex(DbHelper.tblProducto_colRutaMini));
 					listProducto.add(producto);
 				} while (c.moveToNext());
 			}

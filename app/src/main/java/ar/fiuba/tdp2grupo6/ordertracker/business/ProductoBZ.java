@@ -83,7 +83,7 @@ public class ProductoBZ {
 
         try {
 
-            ResponseObject responseDA = mWeb.getProductosImagenMiniatura(producto.id);
+            ResponseObject responseDA = mWeb.getProductosImagenMiniatura(producto.rutaMiniatura);
 
             if (responseDA.getBitmap() != null) {
                 //Graba en la SD
@@ -101,7 +101,7 @@ public class ProductoBZ {
 
         try {
 
-            ResponseObject responseDA = mWeb.getProductosImagen(producto.id);
+            ResponseObject responseDA = mWeb.getProductosImagen(producto.rutaImagen);
 
             if (responseDA.getBitmap() != null) {
                 //Graba en la SD

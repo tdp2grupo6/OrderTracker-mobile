@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException.ServiceExceptionType;
@@ -205,11 +206,11 @@ public class WebDA {
 	}
 
 	// Obtiene las imagenes para un producto
-	public ResponseObject getProductosImagen(long productoId) throws ServiceException {
+	public ResponseObject getProductosImagen(String rutaImagen) throws ServiceException {
 
 		ResponseObject response = null;
 		try {
-			String webMethod = "imagen/ver/" + productoId;
+			String webMethod = rutaImagen; //"imagen/ver/" + productoId;
 			String targetURL = mUrlEndpoint + webMethod;
 
 			// realiza la llamada al servicio
@@ -222,11 +223,11 @@ public class WebDA {
 	}
 
 	// Obtiene las imagenes miniatura para un producto
-	public ResponseObject getProductosImagenMiniatura(long productoId) throws ServiceException {
+	public ResponseObject getProductosImagenMiniatura(String rutaMiniatura) throws ServiceException {
 
 		ResponseObject response = null;
 		try {
-			String webMethod = "imagen/miniatura/" + productoId;
+			String webMethod = rutaMiniatura; //"imagen/miniatura/" + productoId;
 			String targetURL = mUrlEndpoint + webMethod;
 
 			// realiza la llamada al servicio

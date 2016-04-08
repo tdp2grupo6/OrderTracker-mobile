@@ -17,6 +17,7 @@ public class Cliente {
 	public String telefono;
 	public Double lat;
 	public Double lng;
+	public String estado;
 
 
 	public Cliente() {
@@ -25,6 +26,9 @@ public class Cliente {
 
 	public Cliente(String str) throws JSONException {
 		super();
+
+		// dgacitua: JSON de ejemplo (actualizado 08/04/2016)
+		// {"id":1,"nombreCompleto":"Luna, Silvina","nombre":"Silvina","apellido":"Luna","razonSocial":"Silvina Luna","direccion":"Las Heras 2850","telefono":"","email":"silvi@gmail.com","latitud":-34.5887297,"longitud":-58.3966085,"estado":{"tipo":"ROJO","nombre":"Visita pendiente"}}
 
 		this.json = new JSONObject(str);
 		this.id = json.optLong("id");
@@ -37,6 +41,7 @@ public class Cliente {
 		this.email = json.getString("email");
 		this.lat = json.getDouble("latitud");
 		this.lng = json.getDouble("longitud");
+		this.estado = json.getJSONObject("estado").getString("tipo");
 	}
 
 	public Cliente(JSONObject json) throws JSONException {
@@ -53,10 +58,23 @@ public class Cliente {
 		this.email = json.getString("email");
 		this.lat = json.getDouble("latitud");
 		this.lng = json.getDouble("longitud");
+		this.estado = json.getJSONObject("estado").getString("tipo");
 	}
 
 	@Override
 	public String toString() {
 		return this.json.toString();
+	}
+
+	public String mostrarEstado() {
+		if (this.estado.equals("VERDE")) {
+			return "Cliente visitado";
+		}
+		else if (this.estado.equals("AMARILLO")) {
+			return "No visitado hoy";
+		}
+		else {
+			return "Visita pendiente";
+		}
 	}
 }
