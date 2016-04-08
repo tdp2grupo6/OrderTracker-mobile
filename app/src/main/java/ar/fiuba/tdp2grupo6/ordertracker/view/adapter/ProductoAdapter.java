@@ -1,6 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
 /**
@@ -51,10 +53,16 @@ public class ProductoAdapter extends BaseAdapter {
         } else {
             holder = (ProductoViewHolder) convertView.getTag();
         }
-        holder.getUpperText().setText(mProductos.get(position).nombre);
-        holder.getLowerText1().setText(mProductos.get(position).caracteristicas);
-        holder.getLowerText2().setText(mProductos.get(position).mostrarPrecio());
-        holder.getSideText().setText(mProductos.get(position).mostrarStock());
+        Producto producto = mProductos.get(position);
+        holder.getUpperText().setText(producto.nombre);
+        holder.getLowerText1().setText(producto.caracteristicas);
+        holder.getLowerText2().setText(producto.mostrarPrecio());
+        holder.getSideText().setText(producto.mostrarStock());
+
+        ImagenBZ imagenBZ = new ImagenBZ();
+        Bitmap imagenMiniatura = imagenBZ.leer(producto.getNombreImagenMiniatura());
+        if (imagenMiniatura != null)
+            holder.getImage().setImageBitmap(imagenMiniatura);
 
         return convertView;
     }

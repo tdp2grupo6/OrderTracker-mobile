@@ -5,7 +5,10 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
@@ -42,7 +45,26 @@ public class DataInService extends IntentService {
 			// Sincroniza los productos
 			try {
 				ProductoBZ productoBZ =  new ProductoBZ(context);
-				productoBZ.sincronizar();
+				ArrayList<Producto> productos = productoBZ.sincronizar();
+
+				if (productos != null && productos.size() > 0) {
+					//Sincroniza la imagen de los productos que ho hayan sido ya descargados
+					ImagenBZ imagenBZ =  new ImagenBZ();
+					for(Producto producto: productos) {
+						boolean existeimagen = imagenBZ.existe(producto.getNombreImagenMiniatura());
+						if (!existeimagen) {
+							productoBZ.sincronizarImagenMini(producto);
+						}
+
+						existeimagen = imagenBZ.existe(producto.getNombreImagen());
+						if (!existeimagen) {
+							productoBZ.sincronizarImagen(producto);
+						}
+					}
+					//Descarga las imagenes para los productos si no lo tiene
+
+				}
+
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}

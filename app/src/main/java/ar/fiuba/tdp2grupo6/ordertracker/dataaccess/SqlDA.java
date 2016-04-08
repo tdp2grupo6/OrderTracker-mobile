@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.ProductoImagen;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.db.DbHelper;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
@@ -158,7 +159,7 @@ public class SqlDA {
 	}
 
 	/******************************************************************************************************/
-	// CatalogoActivity
+	// Producto
 
 	public Producto productoGuardar(Producto producto) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
@@ -273,4 +274,123 @@ public class SqlDA {
 		}
 	}
 
+	/******************************************************************************************************/
+	// ProductoImagen
+
+    /*
+	public ProductoImagen productoImagenGuardar(ProductoImagen productoImagen) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblProductoImagen_colId, productoImagen.id);
+			cv.put(DbHelper.tblProductoImagen_colProductoId, productoImagen.productoId);
+			cv.put(DbHelper.tblProductoImagen_colTipo, productoImagen.tipo);
+			cv.put(DbHelper.tblProductoImagen_colPath, productoImagen.path);
+			db.insert(DbHelper.tblProductoImagen, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return productoImagen;
+	}
+
+	public long productoImagenActualizar(ProductoImagen productoImagen) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblProductoImagen_colProductoId, productoImagen.productoId);
+			cv.put(DbHelper.tblProductoImagen_colTipo, productoImagen.tipo);
+			cv.put(DbHelper.tblProductoImagen_colPath, productoImagen.path);
+
+			String where = "";
+			if (productoImagen != null) {
+				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(productoImagen.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblProductoImagen, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public ArrayList<ProductoImagen> productoImagenBuscar(long id, long productoId) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<ProductoImagen> listProductoImagen = new ArrayList<ProductoImagen>();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblProductoImagen;
+
+			String where = "";
+			if (id > 0) {
+				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+			if (productoId > 0) {
+				String condition = DbHelper.tblProductoImagen_colProductoId + "=" + String.valueOf(productoId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					ProductoImagen productoImagen = new ProductoImagen();
+					productoImagen.id = c.getLong(c.getColumnIndex(DbHelper.tblProductoImagen_colId));
+					productoImagen.productoId = c.getLong(c.getColumnIndex(DbHelper.tblProductoImagen_colProductoId);
+					productoImagen.tipo = c.getString(c.getColumnIndex(DbHelper.tblProductoImagen_colTipo));
+					productoImagen.path = c.getString(c.getColumnIndex(DbHelper.tblProductoImagen_colPath));
+					listProductoImagen.add(productoImagen);
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listProductoImagen;
+	}
+
+	public long productoImagenEliminar(long id, long productoId) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			if (productoId > 0) {
+				String condition = DbHelper.tblProductoImagen_colProductoId + "=" + String.valueOf(productoId);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblProductoImagen, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public void productoImagenVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblProductoImagen, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+    */
 }

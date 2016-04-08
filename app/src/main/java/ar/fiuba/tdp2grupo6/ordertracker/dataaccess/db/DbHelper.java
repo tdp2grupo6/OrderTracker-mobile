@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 3;
+	static final int dbVersion = 4;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -28,7 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colLat = "lat";
 	public static final String tblCliente_colLng = "lng";
 
-	// Tabla CatalogoActivity
+	// Tabla Producto
 	public static final String tblProducto = "Producto";
 	public static final String tblProducto_colId = "id"; // Autoincremental
 	public static final String tblProducto_colNombre = "nombreCompleto";
@@ -36,6 +36,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProducto_colCaracteristicas = "caracteristicas";
 	public static final String tblProducto_colPrecio = "precio";
 	public static final String tblProducto_colStock = "stock";
+
+	// Tabla Producto Imagen
+	public static final String tblProductoImagen = "ProductoImagen";
+	public static final String tblProductoImagen_colId = "id"; // Autoincremental
+	public static final String tblProductoImagen_colProductoId = "productoid";
+	public static final String tblProductoImagen_colTipo = "tipo";
+	public static final String tblProductoImagen_colPath = "path";
 
 	public static synchronized DbHelper getInstance(Context context) {
 		if (helper == null) {
@@ -88,6 +95,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
+		// CatalogoActivity
+		createTable = "CREATE TABLE " + tblProductoImagen + " (";
+		createTable += tblProductoImagen_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblProductoImagen_colProductoId + " INTEGER";
+		createTable += ", " + tblProductoImagen_colTipo + " TEXT";
+		createTable += ", " + tblProductoImagen_colPath + " TEXT";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
+
 	}
 
 	@Override
@@ -98,6 +118,9 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(dropTable);
 
 			dropTable = "DROP TABLE IF EXISTS " + tblProducto;
+			db.execSQL(dropTable);
+
+			dropTable = "DROP TABLE IF EXISTS " + tblProductoImagen;
 			db.execSQL(dropTable);
 
 			onCreate(db);

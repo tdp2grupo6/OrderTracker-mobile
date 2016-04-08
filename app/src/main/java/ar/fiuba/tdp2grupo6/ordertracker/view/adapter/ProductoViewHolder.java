@@ -1,6 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view.adapter;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
@@ -11,6 +12,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 public class ProductoViewHolder {
     private View row;
     private TextView upperText = null, lowerText1 = null, lowerText2 = null, sideText = null;
+    private ImageView image;
 
     public ProductoViewHolder(View row) {
         this.row = row;
@@ -43,4 +45,13 @@ public class ProductoViewHolder {
         }
         return this.sideText;
     }
+
+    public ImageView getImage() {
+        if (this.image == null) {
+            this.image = (ImageView) row.findViewById(R.id.list_producto_imagen);
+        }
+        return this.image;
+    }
+
+
 }

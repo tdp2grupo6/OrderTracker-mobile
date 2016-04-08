@@ -103,7 +103,10 @@ public class CatalogoActivity extends AppBaseActivity {
             ArrayList<Producto> resultado = new ArrayList<Producto>();
 
             try {
+                //Si puede sincroniza los productos primero
+                //y luego busca el listado
                 ProductoBZ productoBz = new ProductoBZ(this.mContext);
+                productoBz.sincronizar();
                 resultado = productoBz.listar();
             }
             catch (Exception e) {

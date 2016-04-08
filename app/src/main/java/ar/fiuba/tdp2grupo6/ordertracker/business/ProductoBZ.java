@@ -79,6 +79,42 @@ public class ProductoBZ {
         return response;
     }
 
+    public void sincronizarImagenMini(Producto producto) throws ServiceException, BusinessException {
+
+        try {
+
+            ResponseObject responseDA = mWeb.getProductosImagenMiniatura(producto.id);
+
+            if (responseDA.getBitmap() != null) {
+                //Graba en la SD
+                ImagenBZ filaBZ  = new ImagenBZ();
+                filaBZ.grabar(producto.getNombreImagenMiniatura(), responseDA.getBitmap());
+            }
+
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), e.getMessage()));
+        }
+
+    }
+
+    public void sincronizarImagen(Producto producto) throws ServiceException, BusinessException {
+
+        try {
+
+            ResponseObject responseDA = mWeb.getProductosImagen(producto.id);
+
+            if (responseDA.getBitmap() != null) {
+                //Graba en la SD
+                ImagenBZ filaBZ  = new ImagenBZ();
+                filaBZ.grabar(producto.getNombreImagen(), responseDA.getBitmap());
+            }
+
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), e.getMessage()));
+        }
+
+    }
+
     public ArrayList<Producto> listar() throws BusinessException {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {

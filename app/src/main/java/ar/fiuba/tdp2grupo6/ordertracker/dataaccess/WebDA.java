@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
@@ -35,6 +37,9 @@ public class WebDA {
 	private static final String DELETE_METHOD = "DELETE";
 	private static final String TRACE_METHOD = "TRACE";
 	private static final String OPTIONS_METHOD = "OPTIONS";
+
+	private static final String STRING_RESPONSE_METHOD = "STRING";
+	private static final String BITMAP_RESPONSE_METHOD = "BITMAP";
 
 	private Context mContext;
 	private String mUrlEndpoint = "http://ordertracker-tdp2grupo6.rhcloud.com/";
@@ -85,7 +90,7 @@ public class WebDA {
 		return urlConnection;
 	}
 
-	private String readResponseStream(InputStream in) throws IOException{
+	private String readResponseString(InputStream in) throws IOException{
 		BufferedReader reader = null;
 		StringBuffer response = new StringBuffer();
 
@@ -108,7 +113,18 @@ public class WebDA {
 		return response.toString();
 	}
 
-	private ResponseObject makeRequest(String targetURL, String requestType, HashMap<String, String> headerMap, String entityString) throws ServiceException {
+	private Bitmap readResponseBitmap(InputStream in) throws IOException{
+		Bitmap bitmap = null;
+
+		if (in != null) {
+			bitmap = BitmapFactory.decodeStream(in);
+		}
+
+		return bitmap;
+	}
+
+
+	private ResponseObject makeRequest(String targetURL, String requestType, String responseType, HashMap<String, String> headerMap, String entityString) throws ServiceException {
 
 		ResponseObject response = new ResponseObject();
 		try {
@@ -125,10 +141,15 @@ public class WebDA {
 
 			// get stream
 			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				String responseString = readResponseStream(urlConnection.getInputStream());
-				response.setData(responseString);
+				if (responseType == STRING_RESPONSE_METHOD) {
+					String responseString = readResponseString(urlConnection.getInputStream());
+					response.setData(responseString);
+				} else if (responseType == BITMAP_RESPONSE_METHOD){
+					Bitmap responseBitmap = readResponseBitmap(urlConnection.getInputStream());
+					response.setBitmap(responseBitmap);
+				}
 			} else {
-				String errorString = readResponseStream(urlConnection.getErrorStream());
+				String errorString = readResponseString(urlConnection.getErrorStream());
 				response.setError(errorString);
 				throw new ServiceException(errorString, response, ServiceExceptionType.INTERNAL);
 			}
@@ -157,7 +178,7 @@ public class WebDA {
 			String targetURL = mUrlEndpoint + webMethod;
 
 			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, null, null);
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
 
 			return response; //validar_response(response);
 		} catch (Exception e) {
@@ -175,7 +196,41 @@ public class WebDA {
 			String targetURL = mUrlEndpoint + webMethod;
 
 			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, null, null);
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+
+			return response; //validar_response(response);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+	}
+
+	// Obtiene las imagenes para un producto
+	public ResponseObject getProductosImagen(long productoId) throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "imagen/ver/" + productoId;
+			String targetURL = mUrlEndpoint + webMethod;
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, null, null);
+
+			return response; //validar_response(response);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+	}
+
+	// Obtiene las imagenes miniatura para un producto
+	public ResponseObject getProductosImagenMiniatura(long productoId) throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "imagen/miniatura/" + productoId;
+			String targetURL = mUrlEndpoint + webMethod;
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, null, null);
 
 			return response; //validar_response(response);
 		} catch (Exception e) {

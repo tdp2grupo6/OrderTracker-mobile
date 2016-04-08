@@ -231,7 +231,10 @@ public class ClienteFueraRutaFragment extends Fragment {
             ArrayList<Cliente> resultado = new ArrayList<Cliente>();
 
             try {
+                //Si puede sincroniza los clientes primero
+                //y luego busca el listado
                 ClienteBZ clienteBz = new ClienteBZ(this.mContext);
+                clienteBz.sincronizar();
                 resultado = clienteBz.listar();
             } catch (Exception e) {
             }

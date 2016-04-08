@@ -1,5 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.contract;
 
+import android.graphics.Bitmap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +20,9 @@ public class Producto {
     public String caracteristicas;
     public Double precio;
     public int stock;
+
+    public Bitmap imagenMini;
+    public Bitmap imagen;
 
     public Producto() {
         super();
@@ -50,6 +55,14 @@ public class Producto {
     @Override
     public String toString() {
         return this.json.toString();
+    }
+
+    public String getNombreImagenMiniatura() {
+        return "prod_img_mini_" + this.id + ".png";
+    }
+
+    public String getNombreImagen() {
+        return "prod_img_" + this.id + ".png";
     }
 
     public String mostrarPrecio() {
