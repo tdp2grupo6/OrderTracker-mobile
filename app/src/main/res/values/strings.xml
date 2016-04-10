@@ -18,4 +18,19 @@
 
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
+
+    <string name="title_activity_detalle_producto">Detalle del Producto</string>
+
+    <string name="detalle_producto_nombre">Nombre del Producto</string>
+    <string name="detalle_producto_marca">Marca</string>
+    <string name="detalle_producto_precio">$0,00</string>
+    <string name="detalle_producto_descripcion_titulo">Descripcion</string>
+    <string name="detalle_producto_descripcion">Características del producto</string>
+    <string name="detalle_producto_codigo_titulo">Código del Producto</string>
+    <string name="detalle_producto_codigo">00000001</string>
+    <string name="detalle_producto_stock_titulo">Disponibles</string>
+    <string name="detalle_producto_stock">0</string>
+    <string name="detalle_producto_pedido_agregar">Agregar</string>
+
 </resources>
+

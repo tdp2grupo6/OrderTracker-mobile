@@ -88,6 +88,8 @@ public class Producto {
         return String.valueOf(stock);
     }
 
+    public String mostrarCodigo() { return String.valueOf(id); }        // TODO definir sistema codigo de productos
+
     public String mostrarEstado() {
         if (this.estado.equals("SUSP")) {
             return "Suspendido";
