@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ProductoBZTest {
-    private static String RESPONSE_CLIENTE = "[{\"id\": 1,\"nombre\": \"Mochila Deportiva Negra\",\"marca\": \"Adidas\",\"caracteristicas\": \"Mochila de alta capacidad y costura reforzada\",\"categoria\": [],\"rutaImagen\": \"\",\"stock\": 3,\"precio\": 849,\"estado\": \"No disponible\"},{\"id\": 2,\"nombre\": \"Bolso de la Seleccion\",\"marca\": \"Adidas\",\"caracteristicas\": \"Diseño y estilo de la Selección Argentina\",\"categoria\": [],\"rutaImagen\": \"\",\"stock\": 34,\"precio\": 1002.99,\"estado\": \"No disponible\"},{\"id\": 3,\"nombre\": \"Vestido Print\",\"marca\": \"A.Y. NOT DEAD\",\"caracteristicas\": \"Temporada otoño-invierno 2016\",\"categoria\": [],\"rutaImagen\": \"\",\"stock\": 12,\"precio\": 1433.99,\"estado\": \"No disponible\"}]";
+    private static String RESPONSE_CLIENTE = "[{\"id\":1,\"nombre\":\"Mochila Deportiva Negra\",\"marca\":\"Adidas\",\"caracteristicas\":\"Mochila de alta capacidad y costura reforzada\",\"categorias\":[{\"codigo\":1,\"nombre\":\"Ropa Deportiva\"}],\"rutaImagen\":\"imagen/ver/2\",\"rutaMiniatura\":\"imagen/miniatura/2\",\"stock\":3,\"precio\":849.0,\"estado\":{\"tipo\":\"NODISP\",\"nombre\":\"No disponible\"}},{\"id\":2,\"nombre\":\"Bolso de la Seleccion\",\"marca\":\"Adidas\",\"caracteristicas\":\"Diseño y estilo de la Selección Argentina\",\"categorias\":[{\"codigo\":1,\"nombre\":\"Ropa Deportiva\"}],\"rutaImagen\":\"imagen/ver/3\",\"rutaMiniatura\":\"imagen/miniatura/3\",\"stock\":34,\"precio\":1002.99,\"estado\":{\"tipo\":\"NODISP\",\"nombre\":\"No disponible\"}}]";
     private DbHelper mDatabase;
     private MockWebServer mServer;
     private SqlDA mSqlDA;

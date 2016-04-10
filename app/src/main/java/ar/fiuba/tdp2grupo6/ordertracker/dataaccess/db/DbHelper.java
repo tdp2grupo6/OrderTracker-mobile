@@ -27,6 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colEmail = "email";
 	public static final String tblCliente_colLat = "lat";
 	public static final String tblCliente_colLng = "lng";
+	public static final String tblCliente_colEstado = "estado";
 
 	// Tabla Producto
 	public static final String tblProducto = "Producto";
@@ -36,6 +37,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProducto_colCaracteristicas = "caracteristicas";
 	public static final String tblProducto_colPrecio = "precio";
 	public static final String tblProducto_colStock = "stock";
+	public static final String tblProducto_colEstado = "estado";
+	public static final String tblProducto_colRutaImg = "rutaImagen";
+	public static final String tblProducto_colRutaMini = "rutaMiniatura";
 
 	// Tabla Producto Imagen
 	public static final String tblProductoImagen = "ProductoImagen";
@@ -73,6 +77,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblCliente_colEmail + " TEXT";
 		createTable += ", " + tblCliente_colLat + " REAL";
 		createTable += ", " + tblCliente_colLng + " REAL";
+		createTable += ", " + tblCliente_colEstado + " TEXT";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);
@@ -88,6 +93,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblProducto_colCaracteristicas + " TEXT";
 		createTable += ", " + tblProducto_colPrecio + " REAL";
 		createTable += ", " + tblProducto_colStock + " INTEGER";
+		createTable += ", " + tblProducto_colEstado + " TEXT";
+		createTable += ", " + tblProducto_colRutaImg + " TEXT";
+		createTable += ", " + tblProducto_colRutaMini + " TEXT";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);
