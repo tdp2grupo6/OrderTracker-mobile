@@ -12,7 +12,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/text_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,48 +23,57 @@
                 android:id="@+id/detalle_producto_nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                style="@style/ItemTitulo"
+                style="@style/DetalleTitulo"
+                android:layout_margin="5dp"
                 android:text="@string/detalle_producto_nombre"/>
 
             <TextView
                 android:id="@+id/detalle_producto_marca"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
+                android:layout_margin="5dp"
+                style="@style/DetalleDescripcion"
                 android:text="@string/detalle_producto_marca"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/detalle_producto_precio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            style="@style/ItemPrecio"
-            android:text="@string/detalle_producto_precio"/>
-
-        <ImageView
-            android:id="@+id/detalle_producto_imagen"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="@dimen/nav_header_height"/>
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/detalle_producto_descripcion_titulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            style="@style/ItemTitulo"
-            android:text="@string/detalle_producto_descripcion_titulo"/>
+            <TextView
+                android:id="@+id/detalle_producto_precio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DetallePrecio"
+                android:layout_margin="5dp"
+                android:text="@string/detalle_producto_precio"/>
 
-        <TextView
-            android:id="@+id/detalle_producto_descripcion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            style="@style/ItemDescripcion"
-            android:text="@string/detalle_producto_descripcion"/>
+            <ImageView
+                android:id="@+id/detalle_producto_imagen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:minHeight="@dimen/nav_header_height"/>
+
+            <TextView
+                android:id="@+id/detalle_producto_descripcion_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                style="@style/DetalleTitulo"
+                android:text="@string/detalle_producto_descripcion_titulo"/>
+
+            <TextView
+                android:id="@+id/detalle_producto_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                style="@style/DetalleDescripcion"
+                android:text="@string/detalle_producto_descripcion"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,16 +83,16 @@
                 android:id="@+id/detalle_producto_codigo_titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                style="@style/ItemTitulo"
+                android:layout_margin="5dp"
+                style="@style/DetalleTitulo"
                 android:text="@string/detalle_producto_codigo_titulo"/>
 
             <TextView
                 android:id="@+id/detalle_producto_codigo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                style="@style/ItemDescripcion"
+                android:layout_margin="5dp"
+                style="@style/DetalleDescripcion"
                 android:text="@string/detalle_producto_codigo"/>
 
         </LinearLayout>
@@ -95,24 +105,23 @@
                 android:id="@+id/detalle_producto_stock_titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                style="@style/ItemTitulo"
+                android:layout_margin="5dp"
+                style="@style/DetalleTitulo"
                 android:text="@string/detalle_producto_stock_titulo"/>
 
             <TextView
                 android:id="@+id/detalle_producto_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                style="@style/ItemDescripcion"
+                style="@style/DetalleDescripcion"
+                android:layout_margin="5dp"
                 android:text="@string/detalle_producto_stock"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/text_margin">
+            android:layout_height="match_parent">
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -126,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:ems="4"/>
+                android:ems="5"/>
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -139,8 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detalle_producto_pedido_agregar"
-                android:id="@+id/detalle_producto_pedido_agregar"
-                android:layout_gravity="right"/>
+                android:id="@+id/detalle_producto_pedido_agregar"/>
 
         </LinearLayout>
 
