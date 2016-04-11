@@ -75,4 +75,16 @@ public class ClienteBZ {
         }
         return response;
     }
+
+	public Cliente obtener(long id) throws BusinessException {
+		Cliente response = null;
+		try {
+			ArrayList<Cliente> lista = mSql.clienteBuscar(id);
+			if (lista != null && lista.size() > 0)
+				response = lista.get(0);
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+		return response;
+	}
 }

@@ -57,8 +57,10 @@ public class ClienteAdapter extends BaseAdapter implements Filterable {
         else {
             holder = (ClienteViewHolder) convertView.getTag();
         }
-        holder.getUpperText().setText(mFilteredData.get(position).nombreCompleto);
-        holder.getLowerText().setText(mFilteredData.get(position).direccion);
+        Cliente cliente = mFilteredData.get(position);
+        holder.mCliente = cliente;
+        holder.getNombreView().setText(cliente.nombreCompleto);
+        holder.getDireccionView().setText(cliente.direccion);
 
         return convertView;
     }

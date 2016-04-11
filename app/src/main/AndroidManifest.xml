@@ -4,11 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
-        android:name="ar.fiuba.tdp2grupo6.ordertracker.view.app.OrderTrackerApplication"
+        android:name=".view.app.OrderTrackerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,13 +20,23 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.ClienteDetailActivity"
+            android:label="@string/title_cliente_detail"
+            android:parentActivityName=".view.ClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteActivity"/>
+        </activity>
+        <activity
             android:name=".view.CatalogoActivity"
             android:label="@string/title_activity_catalogo"
-            android:parentActivityName=".view.MainActivity"
+            android:parentActivityName=".view.ClienteActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
@@ -36,11 +46,11 @@
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.datain.DataInAlarmReceiver" />
-        <receiver android:name=".service.dataout.DataOutAlarmReceiver" />
+        <receiver android:name=".service.datain.DataInAlarmReceiver"/>
+        <receiver android:name=".service.dataout.DataOutAlarmReceiver"/>
 
-        <service android:name=".service.datain.DataInService" />
-        <service android:name=".service.dataout.DataOutService" />
+        <service android:name=".service.datain.DataInService"/>
+        <service android:name=".service.dataout.DataOutService"/>
 
 
     </application>
