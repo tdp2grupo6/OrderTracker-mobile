@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,18 +27,18 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
-import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter;
+import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter_;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteViewHolder;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ClienteFueraRutaFragment.OnFragmentInteractionListener} interface
+ * {@link ClienteFueraRutaFragment_.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ClienteFueraRutaFragment#newInstance} factory method to
+ * Use the {@link ClienteFueraRutaFragment_#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClienteFueraRutaFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ClienteFueraRutaFragment_ extends Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -49,15 +49,15 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
     private String mParam2;
 
     private boolean mTwoPane;
-    private ListView mListView;
+    private RecyclerView mReciclerView;
     private TextView mEmptyView;
-    private ClienteAdapter mListAdapter;
+    private ClienteAdapter_ mReciclerAdapter;
     private SwipeRefreshLayout mSwipeLayout;
     private ClientesBuscarTask mClientesBuscarTask;
 
     private OnFragmentInteractionListener mListener;
 
-    public ClienteFueraRutaFragment() {
+    public ClienteFueraRutaFragment_() {
         // Required empty public constructor
     }
 
@@ -70,8 +70,8 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
      * @return A new instance of fragment ClienteFueraRutaFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ClienteFueraRutaFragment newInstance(String param1, String param2) {
-        ClienteFueraRutaFragment fragment = new ClienteFueraRutaFragment();
+    public static ClienteFueraRutaFragment_ newInstance(String param1, String param2) {
+        ClienteFueraRutaFragment_ fragment = new ClienteFueraRutaFragment_();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -104,7 +104,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_cliente_fuera_ruta, container, false);
+        View view = inflater.inflate(R.layout.fragment_cliente_fuera_ruta_, container, false);
 
         //Set the swipe for refresh
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_cliente);
@@ -118,8 +118,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
 
         //Set the list of productos
         mEmptyView = (TextView) view.findViewById(R.id.clientes_list_empty);
-        mListView = (ListView) view.findViewById(R.id.clientes_list);
-        mListView.setOnItemClickListener(this);
+        mReciclerView = (RecyclerView) view.findViewById(R.id.cliente_r_list);
 
         if (view.findViewById(R.id.cliente_detail_container) != null) {
             // The detail container view will be present only in the
@@ -176,8 +175,8 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                if (mListAdapter != null) {
-                    mListAdapter.getFilter().filter(charSequence);
+                if (mReciclerAdapter != null) {
+                    mReciclerAdapter.getFilter().filter(charSequence);
                 }
             }
 
@@ -204,11 +203,11 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         try {
-            Cliente cliente = (Cliente)parent.getItemAtPosition(position);
-            if (cliente != null ) {
+            ClienteViewHolder item = (ClienteViewHolder)parent.getItemAtPosition(position);
+            if (item.mCliente != null ) {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putLong(ClienteDetailFragment.ARG_ITEM_ID, cliente.id);
+                    arguments.putLong(ClienteDetailFragment.ARG_ITEM_ID, item.mCliente.id);
                     ClienteDetailFragment fragment = new ClienteDetailFragment();
                     fragment.setArguments(arguments);
                     this.getFragmentManager().beginTransaction()
@@ -216,7 +215,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
                             .commit();
                 } else {
                     Intent intent = new Intent(this.getContext(), ClienteDetailActivity.class);
-                    intent.putExtra(ClienteDetailFragment.ARG_ITEM_ID, cliente.id);
+                    intent.putExtra(ClienteDetailFragment.ARG_ITEM_ID, item.mCliente.id);
 
                     this.getContext().startActivity(intent);
                 }
@@ -247,10 +246,10 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
     }
 
     private void actualizarLista(ArrayList<Cliente> clientes) {
-        if (mListView != null) {
-            mListAdapter = new ClienteAdapter(getContext(), clientes);
-            mListView.setAdapter(mListAdapter);
-            mListView.setEmptyView(mEmptyView);
+        if (mReciclerView != null) {
+            mReciclerAdapter = new ClienteAdapter_(this, clientes, mTwoPane);
+            mReciclerView.setAdapter(mReciclerAdapter);
+            //mReciclerView.setEmptyView(mEmptyView);
         }
     }
 
@@ -282,7 +281,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
 
         @Override
         protected void onPostExecute(ArrayList<Cliente> clientes) {
-            if (mListView != null && clientes!=null)
+            if (mReciclerView != null && clientes!=null)
             {
                 mSwipeLayout.setRefreshing(false);
                 actualizarLista(clientes);

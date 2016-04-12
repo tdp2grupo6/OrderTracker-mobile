@@ -20,7 +20,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
-public class DetalleProductoActivity extends AppCompatActivity {
+public class ProductoDetailActivity extends AppCompatActivity {
     Context mContext;
     Bundle mExtras;
     Long id;

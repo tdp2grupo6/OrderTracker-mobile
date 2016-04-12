@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.DetalleProductoActivity">
+    tools:context=".view.ProductoDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

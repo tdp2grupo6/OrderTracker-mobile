@@ -21,7 +21,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_catalogo" />
+    <include layout="@layout/layout_list_catalogo" />
 
     <!--
     <android.support.design.widget.FloatingActionButton

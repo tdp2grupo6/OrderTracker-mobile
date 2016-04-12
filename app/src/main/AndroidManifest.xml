@@ -25,8 +25,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.ClienteDetailActivity"
+            android:label="@string/title_cliente_detail"
+            android:parentActivityName=".view.ClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteActivity"/>
+        </activity>
+        <activity
             android:name=".view.CatalogoActivity"
             android:label="@string/title_activity_catalogo"
+            android:parentActivityName=".view.ClienteActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 

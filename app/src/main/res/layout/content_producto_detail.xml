@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.DetalleProductoActivity"
-    tools:showIn="@layout/activity_detalle_producto">
+    tools:context=".view.ProductoDetailActivity"
+    tools:showIn="@layout/activity_producto_detail">
 
     <LinearLayout
         android:orientation="vertical"

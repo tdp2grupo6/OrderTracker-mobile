@@ -20,6 +20,8 @@
     <string name="nav_catalogo">Catálogo</string>
 
     <string name="title_activity_detalle_producto">Detalle del Producto</string>
+    <string name="title_cliente_list">Clientes</string>
+    <string name="title_cliente_detail">Cliente Detail</string>
 
     <string name="detalle_producto_nombre">Nombre del Producto</string>
     <string name="detalle_producto_marca">Marca</string>
