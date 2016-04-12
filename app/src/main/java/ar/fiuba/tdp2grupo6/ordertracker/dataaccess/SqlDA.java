@@ -173,6 +173,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colNombre, producto.nombre);
 			cv.put(DbHelper.tblProducto_colMarca, producto.marca);
 			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
+			cv.put(DbHelper.tblProducto_colCategoria, producto.categoria);
 			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
 			cv.put(DbHelper.tblProducto_colStock, producto.stock);
 			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
@@ -195,6 +196,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colNombre, producto.nombre);
 			cv.put(DbHelper.tblProducto_colMarca, producto.marca);
 			cv.put(DbHelper.tblProducto_colCaracteristicas, producto.caracteristicas);
+			cv.put(DbHelper.tblProducto_colCategoria, producto.categoria);
 			cv.put(DbHelper.tblProducto_colPrecio, producto.precio);
 			cv.put(DbHelper.tblProducto_colStock, producto.stock);
 			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
@@ -237,6 +239,7 @@ public class SqlDA {
 					producto.nombre = c.getString(c.getColumnIndex(DbHelper.tblProducto_colNombre));
 					producto.marca = c.getString(c.getColumnIndex(DbHelper.tblProducto_colMarca));
 					producto.caracteristicas = c.getString(c.getColumnIndex(DbHelper.tblProducto_colCaracteristicas));
+					producto.categoria = c.getString(c.getColumnIndex(DbHelper.tblProducto_colCategoria));
 					producto.precio = c.getDouble(c.getColumnIndex(DbHelper.tblProducto_colPrecio));
 					producto.stock = c.getInt(c.getColumnIndex(DbHelper.tblProducto_colStock));
 					producto.estado = c.getString(c.getColumnIndex(DbHelper.tblProducto_colEstado));

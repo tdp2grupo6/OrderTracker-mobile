@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -70,7 +69,7 @@ public class CatalogoActivity extends AppBaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), DetalleProductoActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ProductoDetailActivity.class);
                 Producto prod = (Producto) parent.getItemAtPosition(position);
                 //Toast.makeText(mContext, "Seleccionando el producto (" + prod.id + ") " + prod.nombre, Toast.LENGTH_SHORT).show();
                 intent.putExtra("productoId", prod.id);
@@ -81,7 +80,7 @@ public class CatalogoActivity extends AppBaseActivity {
                 intent.putExtra("productoCodigo", prod.mostrarCodigo());
                 intent.putExtra("productoStock", prod.mostrarStock());
                 intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
-                //intent.putExtra("productoId", prod.categoria);
+                intent.putExtra("productoCategoria", prod.categoria);
                 startActivity(intent);
             }
         });

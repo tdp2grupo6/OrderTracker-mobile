@@ -22,8 +22,8 @@ public class ClienteViewHolder_ extends RecyclerView.ViewHolder {
     public ClienteViewHolder_(View view) {
         super(view);
         mView = view;
-        mNombreView = (TextView) view.findViewById(R.id.id);
-        mDireccionView = (TextView) view.findViewById(R.id.content);
+        //mNombreView = (TextView) view.findViewById(R.id.id);        // dgacitua
+        //mDireccionView = (TextView) view.findViewById(R.id.content);
     }
 
     public TextView getNombreView() {

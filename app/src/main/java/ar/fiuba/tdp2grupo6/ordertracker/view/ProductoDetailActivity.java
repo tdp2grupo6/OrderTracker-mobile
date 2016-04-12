@@ -2,23 +2,17 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.sax.TextElementListener;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONException;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
 public class ProductoDetailActivity extends AppCompatActivity {
     Context mContext;
@@ -29,11 +23,13 @@ public class ProductoDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalle_producto);
+        setContentView(R.layout.activity_producto_detail);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.detalle_producto_toolbar_layout);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -48,6 +44,14 @@ public class ProductoDetailActivity extends AppCompatActivity {
 
         mContext = (Context)this;
 
+        ImageView imgView = (ImageView)findViewById(R.id.bar_producto_detail);
+        Drawable draw = ContextCompat.getDrawable(mContext, R.drawable.image_producto_detail);
+
+        if (imgView != null && draw != null) {
+            imgView.setImageDrawable(draw);
+        }
+
+
         // dgacitua: Obtener datos de CatalogoActivity
         mExtras = getIntent().getExtras();
         if (mExtras != null) {
@@ -59,37 +63,52 @@ public class ProductoDetailActivity extends AppCompatActivity {
             stock = mExtras.getString("productoStock");
             codigo = mExtras.getString("productoCodigo");
             rutaImagen = mExtras.getString("productoRutaImagen");
-            //categoria = mExtras.getString("productoCategoria");
+            categoria = mExtras.getString("productoCategoria");
 
-            poblarVista(nombre, marca, precio, descripcion, stock, codigo, rutaImagen);
+            collapsingToolbar.setTitle(categoria);
+
+			poblarVista(nombre, marca, precio, descripcion, stock, codigo, rutaImagen);
         }
     }
 
     private void poblarVista(String nombre, String marca, String precio, String descripcion, String stock, String codigo, String rutaImagen) {
-        TextView categoriaTV, nombreTV, marcaTV, precioTV, descripcionTV, codigoTV, stockTV, campoTV;
+        TextView nombreTV, marcaTV, precioTV, descripcionTV, codigoTV, stockTV, campoTV;
         ImageView imagenIV;
 
-        //categoriaTV = (TextView) findViewById(R.id.detalle_producto_categoria);
         nombreTV = (TextView) findViewById(R.id.detalle_producto_nombre);
         marcaTV = (TextView) findViewById(R.id.detalle_producto_marca);
         precioTV = (TextView) findViewById(R.id.detalle_producto_precio);
         descripcionTV = (TextView) findViewById(R.id.detalle_producto_descripcion);
         codigoTV = (TextView) findViewById(R.id.detalle_producto_codigo);
         stockTV = (TextView) findViewById(R.id.detalle_producto_stock);
+        //categoriaTV = (TextView) findViewById(R.id.detalle_producto_categoria);
         //campoTV = (TextView) findViewById(R.id.detalle_producto_pedido_campo);
 
         imagenIV = (ImageView) findViewById(R.id.detalle_producto_imagen);
 
-        nombreTV.setText(nombre);
-        marcaTV.setText(marca);
-        precioTV.setText(precio);
-        descripcionTV.setText(descripcion);
-        codigoTV.setText(codigo);
-        stockTV.setText(stock);
+        if (nombreTV != null) {
+            nombreTV.setText(nombre);
+        }
+        if (marcaTV != null) {
+            marcaTV.setText(marca);
+        }
+        if (precioTV != null) {
+            precioTV.setText(precio);
+        }
+        if (descripcionTV != null) {
+            descripcionTV.setText(descripcion);
+        }
+        if (codigoTV != null) {
+            codigoTV.setText(codigo);
+        }
+        if (stockTV != null) {
+            stockTV.setText(stock);
+        }
 
         ImagenBZ imagenBZ = new ImagenBZ();
         Bitmap imagen = imagenBZ.leer(rutaImagen);
-        if (imagen != null)
+        if (imagen != null && imagenIV != null) {
             imagenIV.setImageBitmap(imagen);
+        }
     }
 }

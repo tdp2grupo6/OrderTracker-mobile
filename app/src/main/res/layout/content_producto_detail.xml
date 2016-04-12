@@ -12,8 +12,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/text_margin">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:paddingBottom="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                style="@style/DetalleDescripcion"
+                style="@style/DetalleSubtexto"
                 android:text="@string/detalle_producto_marca"/>
 
         </LinearLayout>
@@ -48,6 +49,8 @@
                 android:layout_height="wrap_content"
                 style="@style/DetallePrecio"
                 android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/detalle_producto_precio"/>
 
             <ImageView
@@ -55,23 +58,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:minHeight="@dimen/nav_header_height"/>
+                android:minHeight="240dp"
+                android:contentDescription="@string/imagen_descripcion"/>
 
-            <TextView
-                android:id="@+id/detalle_producto_descripcion_titulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleTitulo"
-                android:text="@string/detalle_producto_descripcion_titulo"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/detalle_producto_descripcion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleDescripcion"
-                android:text="@string/detalle_producto_descripcion"/>
+                <TextView
+                    android:id="@+id/detalle_producto_descripcion_titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    style="@style/DetalleTitulo"
+                    android:text="@string/detalle_producto_descripcion_titulo"/>
+
+                <TextView
+                    android:id="@+id/detalle_producto_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    style="@style/DetalleDescripcion"
+                    android:text="@string/detalle_producto_descripcion"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -84,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                style="@style/DetalleTitulo"
+                style="@style/DetalleSubtitulo"
                 android:text="@string/detalle_producto_codigo_titulo"/>
 
             <TextView
@@ -92,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                style="@style/DetalleDescripcion"
+                style="@style/DetalleSubtexto"
                 android:text="@string/detalle_producto_codigo"/>
 
         </LinearLayout>
@@ -106,19 +118,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                style="@style/DetalleTitulo"
+                style="@style/DetalleSubtitulo"
                 android:text="@string/detalle_producto_stock_titulo"/>
 
             <TextView
                 android:id="@+id/detalle_producto_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/DetalleDescripcion"
+                style="@style/DetalleSubtexto"
                 android:layout_margin="5dp"
                 android:text="@string/detalle_producto_stock"/>
 
         </LinearLayout>
 
+        <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -151,7 +164,7 @@
                 android:id="@+id/detalle_producto_pedido_agregar"/>
 
         </LinearLayout>
-
+        -->
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

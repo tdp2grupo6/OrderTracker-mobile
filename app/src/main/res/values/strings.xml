@@ -19,10 +19,13 @@
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
 
-    <string name="title_activity_detalle_producto">Detalle del Producto</string>
     <string name="title_cliente_list">Clientes</string>
     <string name="title_cliente_detail">Cliente Detail</string>
+    <string name="title_activity_producto_detail">Detalle Producto</string>
 
+    <string name="imagen_descripcion">Imagen</string>
+
+    <string name="detalle_producto_categoria">Categoria</string>
     <string name="detalle_producto_nombre">Nombre del Producto</string>
     <string name="detalle_producto_marca">Marca</string>
     <string name="detalle_producto_precio">$0,00</string>

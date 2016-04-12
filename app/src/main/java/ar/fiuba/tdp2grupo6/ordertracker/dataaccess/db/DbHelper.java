@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 4;
+	static final int dbVersion = 5;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -35,6 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProducto_colNombre = "nombreCompleto";
 	public static final String tblProducto_colMarca = "marca";
 	public static final String tblProducto_colCaracteristicas = "caracteristicas";
+	public static final String tblProducto_colCategoria = "categoria";
 	public static final String tblProducto_colPrecio = "precio";
 	public static final String tblProducto_colStock = "stock";
 	public static final String tblProducto_colEstado = "estado";
@@ -91,6 +92,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblProducto_colNombre + " TEXT";
 		createTable += ", " + tblProducto_colMarca + " TEXT";
 		createTable += ", " + tblProducto_colCaracteristicas + " TEXT";
+		createTable += ", " + tblProducto_colCategoria + " TEXT";
 		createTable += ", " + tblProducto_colPrecio + " REAL";
 		createTable += ", " + tblProducto_colStock + " INTEGER";
 		createTable += ", " + tblProducto_colEstado + " TEXT";

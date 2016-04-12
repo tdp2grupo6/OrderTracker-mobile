@@ -41,8 +41,8 @@
         </activity>
 
         <activity
-            android:name=".view.DetalleProductoActivity"
-            android:label="@string/title_activity_detalle_producto"
+            android:name=".view.ProductoDetailActivity"
+            android:label="@string/title_activity_producto_detail"
             android:parentActivityName=".view.CatalogoActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
