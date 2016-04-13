@@ -25,16 +25,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/DetalleTitulo"
-                android:layout_margin="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/detalle_producto_nombre"/>
 
+            <!--
             <TextView
                 android:id="@+id/detalle_producto_marca"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleSubtexto"
+                android:layout_marginBottom="5dp"
+                style="@style/DetalleMarca"
                 android:text="@string/detalle_producto_marca"/>
+            -->
 
         </LinearLayout>
 
@@ -48,16 +51,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/DetallePrecio"
-                android:layout_margin="5dp"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_marginBottom="5dp"
                 android:text="@string/detalle_producto_precio"/>
 
             <ImageView
                 android:id="@+id/detalle_producto_imagen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
                 android:minHeight="240dp"
                 android:contentDescription="@string/imagen_descripcion"/>
 
@@ -71,15 +72,13 @@
                     android:id="@+id/detalle_producto_descripcion_titulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    style="@style/DetalleTitulo"
+                    style="@style/DetalleDescripcionTitulo"
                     android:text="@string/detalle_producto_descripcion_titulo"/>
 
                 <TextView
                     android:id="@+id/detalle_producto_descripcion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     style="@style/DetalleDescripcion"
                     android:text="@string/detalle_producto_descripcion"/>
 
@@ -89,25 +88,50 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="14dp">
 
             <TextView
                 android:id="@+id/detalle_producto_codigo_titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleSubtitulo"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                style="@style/DetalleCodigo"
                 android:text="@string/detalle_producto_codigo_titulo"/>
 
             <TextView
                 android:id="@+id/detalle_producto_codigo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleSubtexto"
+                android:layout_marginBottom="5dp"
+                style="@style/DetalleCodigo"
                 android:text="@string/detalle_producto_codigo"/>
 
         </LinearLayout>
+
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/detalle_producto_estado_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="7dp"
+                style="@style/DetalleStock"
+                android:text="@string/detalle_producto_estado_titulo"/>
+
+            <TextView
+                android:id="@+id/detalle_producto_estado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DetalleStock"
+                android:text="@string/detalle_producto_estado"/>
+
+        </LinearLayout>
+        -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,16 +141,17 @@
                 android:id="@+id/detalle_producto_stock_titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                style="@style/DetalleSubtitulo"
+                android:layout_marginRight="7dp"
+                android:layout_marginBottom="5dp"
+                style="@style/DetalleStock"
                 android:text="@string/detalle_producto_stock_titulo"/>
 
             <TextView
                 android:id="@+id/detalle_producto_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/DetalleSubtexto"
-                android:layout_margin="5dp"
+                style="@style/DetalleStock"
+                android:layout_marginBottom="5dp"
                 android:text="@string/detalle_producto_stock"/>
 
         </LinearLayout>

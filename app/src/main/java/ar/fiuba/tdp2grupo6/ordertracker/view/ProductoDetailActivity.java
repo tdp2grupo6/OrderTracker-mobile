@@ -18,7 +18,7 @@ public class ProductoDetailActivity extends AppCompatActivity {
     Context mContext;
     Bundle mExtras;
     Long id;
-    String categoria, nombre, marca, precio, descripcion, codigo, stock, campo, rutaImagen;
+    String categoria, nombre, marca, precio, descripcion, codigo, stock, estado, campo, rutaImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,24 +64,25 @@ public class ProductoDetailActivity extends AppCompatActivity {
             codigo = mExtras.getString("productoCodigo");
             rutaImagen = mExtras.getString("productoRutaImagen");
             categoria = mExtras.getString("productoCategoria");
+            estado = mExtras.getString("productoEstado");
 
             collapsingToolbar.setTitle(categoria);
 
-			poblarVista(nombre, marca, precio, descripcion, stock, codigo, rutaImagen);
+			poblarVista(nombre, marca, precio, descripcion, stock, codigo, rutaImagen, estado);
         }
     }
 
-    private void poblarVista(String nombre, String marca, String precio, String descripcion, String stock, String codigo, String rutaImagen) {
-        TextView nombreTV, marcaTV, precioTV, descripcionTV, codigoTV, stockTV, campoTV;
+    private void poblarVista(String nombre, String marca, String precio, String descripcion, String stock, String codigo, String rutaImagen, String estado) {
+        TextView nombreTV, marcaTV, precioTV, descripcionTV, codigoTV, stockTV, estadoTV, campoTV;
         ImageView imagenIV;
 
         nombreTV = (TextView) findViewById(R.id.detalle_producto_nombre);
-        marcaTV = (TextView) findViewById(R.id.detalle_producto_marca);
+        //marcaTV = (TextView) findViewById(R.id.detalle_producto_marca);
         precioTV = (TextView) findViewById(R.id.detalle_producto_precio);
         descripcionTV = (TextView) findViewById(R.id.detalle_producto_descripcion);
         codigoTV = (TextView) findViewById(R.id.detalle_producto_codigo);
         stockTV = (TextView) findViewById(R.id.detalle_producto_stock);
-        //categoriaTV = (TextView) findViewById(R.id.detalle_producto_categoria);
+        //estadoTV = (TextView) findViewById(R.id.detalle_producto_estado);
         //campoTV = (TextView) findViewById(R.id.detalle_producto_pedido_campo);
 
         imagenIV = (ImageView) findViewById(R.id.detalle_producto_imagen);
@@ -89,9 +90,11 @@ public class ProductoDetailActivity extends AppCompatActivity {
         if (nombreTV != null) {
             nombreTV.setText(nombre);
         }
+        /*
         if (marcaTV != null) {
             marcaTV.setText(marca);
         }
+         */
         if (precioTV != null) {
             precioTV.setText(precio);
         }
@@ -104,6 +107,11 @@ public class ProductoDetailActivity extends AppCompatActivity {
         if (stockTV != null) {
             stockTV.setText(stock);
         }
+        /*
+        if (estadoTV != null) {
+            estadoTV.setText(estado);
+        }
+        */
 
         ImagenBZ imagenBZ = new ImagenBZ();
         Bitmap imagen = imagenBZ.leer(rutaImagen);
