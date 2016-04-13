@@ -16,6 +16,9 @@
     <string name="no_hay_clientes">No hay clientes</string>
     <string name="no_hay_productos">No hay productos</string>
 
+    <string name="buscar_clientes">Buscar clientes</string>
+    <string name="buscar_productos">Buscar productos</string>
+
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
 

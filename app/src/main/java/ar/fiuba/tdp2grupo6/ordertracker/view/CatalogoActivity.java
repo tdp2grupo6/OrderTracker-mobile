@@ -4,10 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +33,7 @@ public class CatalogoActivity extends AppBaseActivity {
     private Context mContext;
     private ListView mListView;
     private TextView mEmptyView;
+    private ProductoAdapter mListAdapter;
     private SwipeRefreshLayout mSwipeLayout;
     private ProductosBuscarTask mProductosBuscarTask;
 
@@ -88,6 +97,41 @@ public class CatalogoActivity extends AppBaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_menu_catalogo, menu);
+
+        MenuItem search = menu.findItem(R.id.action_search_producto);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        EditText searchField = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        /*
+        final EditText searchField = (EditText) menu.findItem(R.id.action_search).getActionView();
+        */
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                if (mListAdapter != null) {
+                    mListAdapter.getFilter().filter(charSequence);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -96,6 +140,19 @@ public class CatalogoActivity extends AppBaseActivity {
         this.refrescarLista();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_search_producto:
+                // do stuff
+                return true;
+        }
+        return false;
+    }
+
+    //------------//
+
     private void refrescarLista() {
         mProductosBuscarTask = new ProductosBuscarTask(this);
         mProductosBuscarTask.execute((Void) null);
@@ -103,8 +160,8 @@ public class CatalogoActivity extends AppBaseActivity {
 
     private void actualizarLista(ArrayList<Producto> productos) {
         if (mListView != null) {
-            ProductoAdapter adapter = new ProductoAdapter(this, productos);
-            mListView.setAdapter(adapter);
+            mListAdapter = new ProductoAdapter(this, productos);
+            mListView.setAdapter(mListAdapter);
             mListView.setEmptyView(mEmptyView);
         }
     }
