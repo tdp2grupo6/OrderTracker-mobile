@@ -46,6 +46,13 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".view.ProductoDetailActivity"
+            android:label="@string/title_activity_producto_detail"
+            android:parentActivityName=".view.CatalogoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <receiver android:name=".service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -57,8 +64,6 @@
 
         <service android:name=".service.datain.DataInService"/>
         <service android:name=".service.dataout.DataOutService"/>
-
-
     </application>
 
 </manifest>

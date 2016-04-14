@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
-import ar.fiuba.tdp2grupo6.ordertracker.service.BootReceiver;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class CatalogoActivity extends AppBaseActivity {
@@ -64,6 +64,27 @@ public class CatalogoActivity extends AppBaseActivity {
         //Set the item selected
         mDrawerMenu.getItem(MENU_INDEX).setChecked(true);
         mContext = (Context)this;
+
+        // dgacitua: Soporte para detalle producto
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ProductoDetailActivity.class);
+                Producto prod = (Producto) parent.getItemAtPosition(position);
+                //Toast.makeText(mContext, "Seleccionando el producto (" + prod.id + ") " + prod.nombre, Toast.LENGTH_SHORT).show();
+                intent.putExtra("productoId", prod.id);
+                intent.putExtra("productoNombre", prod.nombre);
+                intent.putExtra("productoMarca", prod.marca);
+                intent.putExtra("productoPrecio", prod.mostrarPrecio());
+                intent.putExtra("productoDescripcion", prod.caracteristicas);
+                intent.putExtra("productoCodigo", prod.mostrarCodigo());
+                intent.putExtra("productoStock", prod.mostrarStock());
+                intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
+                intent.putExtra("productoCategoria", prod.categoria);
+                intent.putExtra("productoEstado", prod.mostrarEstado());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

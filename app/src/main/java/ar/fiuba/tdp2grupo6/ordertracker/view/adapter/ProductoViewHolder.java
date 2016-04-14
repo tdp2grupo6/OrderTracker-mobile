@@ -52,6 +52,4 @@ public class ProductoViewHolder {
         }
         return this.image;
     }
-
-
 }
