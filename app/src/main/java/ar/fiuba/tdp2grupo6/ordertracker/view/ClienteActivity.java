@@ -161,7 +161,7 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
                     //return ClienteFueraRutaFragment.newInstance("", "Page # 1");
-                    return ClienteFueraRutaFragment.newInstance("", "Page # 1");
+                    return ClienteFueraRutaFragment.newInstance();
                 case 1: // Fragment # 0 - This will show FirstFragment different title
                     return PlaceholderFragment.newInstance(1);
                 case 2: // Fragment # 1 - This will show SecondFragment

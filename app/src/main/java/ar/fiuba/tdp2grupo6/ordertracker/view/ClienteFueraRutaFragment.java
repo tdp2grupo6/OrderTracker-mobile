@@ -28,7 +28,6 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter;
-import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteViewHolder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,14 +38,6 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteViewHolder;
  * create an instance of this fragment.
  */
 public class ClienteFueraRutaFragment extends Fragment implements AdapterView.OnItemClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private boolean mTwoPane;
     private ListView mListView;
@@ -61,21 +52,8 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ClienteFueraRutaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ClienteFueraRutaFragment newInstance(String param1, String param2) {
+    public static ClienteFueraRutaFragment newInstance() { //String param1, String param2) {
         ClienteFueraRutaFragment fragment = new ClienteFueraRutaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -83,11 +61,8 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
 
     @Override
     public void onResume() {
@@ -164,10 +139,6 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         EditText searchField = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
 
-        /*
-        final EditText searchField = (EditText) menu.findItem(R.id.action_search).getActionView();
-        */
-
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -207,16 +178,13 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
             Cliente cliente = (Cliente)parent.getItemAtPosition(position);
             if (cliente != null ) {
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putLong(ClienteDetailFragment.ARG_ITEM_ID, cliente.id);
-                    ClienteDetailFragment fragment = new ClienteDetailFragment();
-                    fragment.setArguments(arguments);
+                    ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(cliente.id);
                     this.getFragmentManager().beginTransaction()
                             .replace(R.id.cliente_detail_container, fragment)
                             .commit();
                 } else {
                     Intent intent = new Intent(this.getContext(), ClienteDetailActivity.class);
-                    intent.putExtra(ClienteDetailFragment.ARG_ITEM_ID, cliente.id);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, cliente.id);
 
                     this.getContext().startActivity(intent);
                 }

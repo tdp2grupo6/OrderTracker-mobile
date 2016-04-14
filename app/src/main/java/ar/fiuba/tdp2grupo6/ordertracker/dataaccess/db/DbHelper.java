@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 4;
+	static final int dbVersion = 7;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -47,6 +47,19 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProductoImagen_colProductoId = "productoid";
 	public static final String tblProductoImagen_colTipo = "tipo";
 	public static final String tblProductoImagen_colPath = "path";
+
+	// Tabla Pedido
+	public static final String tblPedido = "Pedido";
+	public static final String tblPedido_colId = "id"; // Autoincremental
+	public static final String tblPedido_colClienteId = "clienteid";
+	public static final String tblPedido_colEstado = "estado";
+
+	// Tabla Pedido Item
+	public static final String tblPedidoItem = "PedidoItem";
+	public static final String tblPedidoItem_colId = "id"; // Autoincremental
+	public static final String tblPedidoItem_colPedidoId = "pedidoid";
+	public static final String tblPedidoItem_colProductoId = "productoid";
+	public static final String tblPedidoItem_colCantidad = "cantidad";
 
 	public static synchronized DbHelper getInstance(Context context) {
 		if (helper == null) {
@@ -103,12 +116,37 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
-		// CatalogoActivity
+		// Producto
 		createTable = "CREATE TABLE " + tblProductoImagen + " (";
 		createTable += tblProductoImagen_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblProductoImagen_colProductoId + " INTEGER";
 		createTable += ", " + tblProductoImagen_colTipo + " TEXT";
 		createTable += ", " + tblProductoImagen_colPath + " TEXT";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
+
+		// Pedido
+		createTable = "CREATE TABLE " + tblPedido + " (";
+		createTable += tblPedido_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblPedido_colClienteId + " INTEGER";
+		createTable += ", " + tblPedido_colEstado + " INTEGER";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
+
+		// Pedido Item
+		createTable = "CREATE TABLE " + tblPedidoItem + " (";
+		createTable += tblPedidoItem_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblPedidoItem_colPedidoId + " INTEGER";
+		createTable += ", " + tblPedidoItem_colProductoId + " INTEGER";
+		createTable += ", " + tblPedidoItem_colCantidad + " INTEGER";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);
@@ -129,6 +167,12 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(dropTable);
 
 			dropTable = "DROP TABLE IF EXISTS " + tblProductoImagen;
+			db.execSQL(dropTable);
+
+			dropTable = "DROP TABLE IF EXISTS " + tblPedido;
+			db.execSQL(dropTable);
+
+			dropTable = "DROP TABLE IF EXISTS " + tblPedidoItem;
 			db.execSQL(dropTable);
 
 			onCreate(db);

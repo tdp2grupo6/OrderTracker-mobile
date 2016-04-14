@@ -27,22 +27,26 @@ public class ClienteDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_CLIENTE_ID = "cliente_id";
 
     private CollapsingToolbarLayout mAppBarLayout;
     private View mRootView;
 
-    private long mId;
-    private Cliente mItem;
+    private long mClienteId;
+    private Cliente mCliente;
     private ClienteObtenerTask mClienteObtenerTask;
     private OnFragmentClienteDetailListener mListener;
 
     public interface OnFragmentClienteDetailListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onClienteAgregarPedido();
     }
 
-    public ClienteDetailFragment() {
+    public static ClienteDetailFragment newInstance(long clienteId) {
+        ClienteDetailFragment fragment = new ClienteDetailFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_CLIENTE_ID, clienteId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -51,8 +55,8 @@ public class ClienteDetailFragment extends Fragment {
 
         Activity activity = this.getActivity();
         mAppBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            this.mId = getArguments().getLong(ARG_ITEM_ID);
+        if (getArguments().containsKey(ARG_CLIENTE_ID)) {
+            this.mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
         }
     }
 
@@ -90,19 +94,19 @@ public class ClienteDetailFragment extends Fragment {
     }
 
     private void refrescar() {
-        mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mId);
+        mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mClienteId);
         mClienteObtenerTask.execute((Void) null);
     }
 
     private void actualizar(Cliente cliente) {
         if (cliente != null) {
-            this.mItem = cliente;
+            this.mCliente = cliente;
 
             if (mAppBarLayout != null) {
-                mAppBarLayout.setTitle(mItem.nombreCompleto);
+                mAppBarLayout.setTitle(mCliente.nombreCompleto);
             }
 
-            ((TextView) this.mRootView.findViewById(R.id.cliente_detail)).setText(mItem.direccion);
+            ((TextView) this.mRootView.findViewById(R.id.cliente_detail)).setText(mCliente.direccion);
 
         }
     }

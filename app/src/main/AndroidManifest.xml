@@ -39,6 +39,12 @@
             android:parentActivityName=".view.ClienteActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".view.PedidoActivity"
+            android:label="@string/title_activity_catalogo"
+            android:parentActivityName=".view.ClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <receiver android:name=".service.BootReceiver">
             <intent-filter>

@@ -3,6 +3,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,10 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
  * in a {@link ClienteFueraRutaFragment}.
  */
 public class ClienteDetailActivity extends AppCompatActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
+
+    public static final String ARG_CLIENTE_ID = "cliente_id";
+
+    private long mClienteId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +58,10 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ClienteDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ClienteDetailFragment.ARG_ITEM_ID));
-            ClienteDetailFragment fragment = new ClienteDetailFragment();
-            fragment.setArguments(arguments);
+            this.mClienteId = getIntent().getLongExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
+
+            // Create the detail fragment and add it to the activity using a fragment transaction.
+            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.cliente_detail_container, fragment)
                     .commit();
@@ -83,7 +85,10 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onClienteAgregarPedido() {
+        Intent intent = new Intent(this, PedidoActivity.class);
+        intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, this.mClienteId);
 
+        this.startActivity(intent);
     }
 }

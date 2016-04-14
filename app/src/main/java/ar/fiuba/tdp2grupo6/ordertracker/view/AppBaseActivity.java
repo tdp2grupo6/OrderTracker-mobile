@@ -121,7 +121,11 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
                 Intent b = new Intent(this, CatalogoActivity.class);
                 startActivity(b);
                 break;
-            // and so on...
+            case R.id.nav_pedido:
+                Intent c = new Intent(this, PedidoActivity.class);
+                c.putExtra(PedidoActivity.ARG_CLIENTE_ID, 1);
+                startActivity(c);
+                break;            // and so on...
         }
         return false;
     }

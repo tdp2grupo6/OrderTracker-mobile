@@ -9,20 +9,13 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:context=".view.ClienteActivity"
-                tools:showIn="@layout/activity_cliente">
+                tools:context=".view.PedidoActivity"
+                tools:showIn="@layout/activity_pedido">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container_cliente"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <include layout="@layout/layout_list_cliente"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/layout_list_pedido"/>
 
     <TextView
-        android:id="@+id/clientes_list_empty"
+        android:id="@+id/productos_pedido_list_empty"
         android:text="@string/no_hay_clientes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

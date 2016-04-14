@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ProductoImagen;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
@@ -49,7 +51,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
 			cv.put(DbHelper.tblCliente_colEstado, cliente.lng);
 
-			db.insert(DbHelper.tblCliente, null, cv);
+            cliente.id = db.insert(DbHelper.tblCliente, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
@@ -178,7 +180,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
 			cv.put(DbHelper.tblProducto_colRutaImg, producto.rutaImagen);
 			cv.put(DbHelper.tblProducto_colRutaMini, producto.rutaMiniatura);
-			db.insert(DbHelper.tblProducto, null, cv);
+            producto.id = db.insert(DbHelper.tblProducto, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
@@ -285,6 +287,231 @@ public class SqlDA {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
 	}
+
+	/******************************************************************************************************/
+	// Pedido
+
+	public Pedido pedidoGuardar(Pedido pedido) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			//cv.put(DbHelper.tblPedido_colId, pedido.id);
+			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
+			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
+            pedido.id = db.insert(DbHelper.tblPedido, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return pedido;
+	}
+
+	public long pedidoActualizar(Pedido pedido) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
+			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
+
+			String where = "";
+			if (pedido != null) {
+				String condition = DbHelper.tblPedido_colId + "=" + String.valueOf(pedido.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblPedido, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public ArrayList<Pedido> pedidoBuscar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<Pedido> listPedido = new ArrayList<Pedido>();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblPedido;
+
+			String where = "";
+			if (id > 0) {
+				String condition = DbHelper.tblPedido_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					Pedido pedido = new Pedido();
+					pedido.id = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colId));
+					pedido.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colClienteId));
+					pedido.estado = c.getShort(c.getColumnIndex(DbHelper.tblPedido_colEstado));
+					listPedido.add(pedido);
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listPedido;
+	}
+
+	public long pedidoEliminar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblPedido_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblPedido, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public void pedidoVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblPedido, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+
+    /******************************************************************************************************/
+    // PedidoItem
+
+    public PedidoItem pedidoItemGuardar(long pedidoId, PedidoItem pedidoItem) throws LocalException {
+        SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+        try {
+            ContentValues cv = new ContentValues();
+            //cv.put(DbHelper.tblPedidoItem_colId, pedidoItem.id);
+            cv.put(DbHelper.tblPedidoItem_colPedidoId, pedidoId);
+            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.producto.id);
+            cv.put(DbHelper.tblPedidoItem_colCantidad, pedidoItem.cantidad);
+            pedidoItem.id = db.insert(DbHelper.tblPedidoItem, null, cv);
+        } catch (Exception e) {
+            throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+
+        return pedidoItem;
+    }
+
+    public long pedidoItemActualizar(long pedidoId, PedidoItem pedidoItem) throws LocalException {
+        SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+        long cant = 0;
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(DbHelper.tblPedidoItem_colPedidoId, pedidoId);
+            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.producto.id);
+            cv.put(DbHelper.tblPedidoItem_colCantidad, pedidoItem.cantidad);
+
+            String where = "";
+            if (pedidoItem != null) {
+                String condition = DbHelper.tblPedidoItem_colId + "=" + String.valueOf(pedidoItem.id);
+                where = UtilsDA.AddCondition(where, condition, "and");
+            }
+
+            cant = db.update(DbHelper.tblPedidoItem, cv, where, null);
+        } catch (Exception e) {
+            throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+
+        return cant;
+    }
+
+    public ArrayList<PedidoItem> pedidoItemBuscar(long id, long pedidoId) throws LocalException {
+        SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+        ArrayList<PedidoItem> listPedidoItem = new ArrayList<PedidoItem>();
+        try {
+
+            String select = "SELECT * FROM " + DbHelper.tblPedidoItem;
+
+            String where = "";
+            if (id > 0) {
+                String condition = DbHelper.tblPedidoItem_colId + "=" + String.valueOf(id);
+                where = UtilsDA.AddWhereCondition(where, condition, "and");
+            }
+
+            if (pedidoId > 0) {
+                String condition = DbHelper.tblPedidoItem_colPedidoId + "=" + String.valueOf(pedidoId);
+                where = UtilsDA.AddWhereCondition(where, condition, "and");
+            }
+
+            Cursor c = db.rawQuery(select + where, null);
+            if (c.moveToFirst()) {
+                do {
+                    PedidoItem pedidoItem = new PedidoItem();
+                    pedidoItem.id = c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colId));
+                    pedidoItem.cantidad = c.getInt(c.getColumnIndex(DbHelper.tblPedidoItem_colCantidad));
+
+                    ArrayList<Producto> productos = this.productoBuscar(c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colProductoId)));
+                    if (productos != null && productos.size() > 0)
+                        pedidoItem.producto = productos.get(0);
+
+                    listPedidoItem.add(pedidoItem);
+                } while (c.moveToNext());
+            }
+            if (c != null && !c.isClosed())
+                c.close();
+
+        } catch (Exception e) {
+            throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+
+        return listPedidoItem;
+    }
+
+    public long pedidoItemEliminar(long id) throws LocalException {
+        SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+        long cant = 0;
+        try {
+
+            String where = "";
+
+            if (id > 0) {
+                String condition = DbHelper.tblPedidoItem_colId + "=" + String.valueOf(id);
+                where = UtilsDA.AddCondition(where, condition, "and");
+            }
+
+            cant = db.delete(DbHelper.tblPedidoItem, where, null);
+        } catch (Exception e) {
+            throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+
+        return cant;
+    }
+
+    public void pedidoItemVaciar() throws LocalException {
+        SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+        try {
+            db.delete(DbHelper.tblPedidoItem, null, null);
+        } catch (Exception e) {
+            throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
 
 	/******************************************************************************************************/
 	// ProductoImagen
