@@ -38,6 +38,7 @@
     <string name="detalle_producto_stock_titulo">Disponibles</string>
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
 

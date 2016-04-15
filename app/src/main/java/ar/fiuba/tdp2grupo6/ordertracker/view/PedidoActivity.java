@@ -55,6 +55,8 @@ public class PedidoActivity extends AppBaseActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
+            this.mClienteId = getIntent().getLongExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
+
             //Crea un nuevo pedido
             mPedido = new Pedido();
             mPedido.clienteId = mClienteId;

@@ -123,16 +123,21 @@ public class CatalogoActivity extends AppBaseActivity {
         protected ArrayList<Producto> doInBackground(Void... params) {
             ArrayList<Producto> resultado = new ArrayList<Producto>();
 
+            ProductoBZ productoBz = new ProductoBZ(this.mContext);
             try {
                 //Si puede sincroniza los productos primero
-                //y luego busca el listado
-                ProductoBZ productoBz = new ProductoBZ(this.mContext);
                 productoBz.sincronizar();
+            }
+            catch (Exception e) {
+            }
+
+            try {
+                //y luego busca el listado
                 resultado = productoBz.listar();
             }
             catch (Exception e) {
-
             }
+
             return resultado;
         }
 

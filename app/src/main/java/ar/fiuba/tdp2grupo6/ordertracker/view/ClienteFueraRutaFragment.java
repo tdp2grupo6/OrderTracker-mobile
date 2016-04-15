@@ -236,11 +236,15 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
         protected ArrayList<Cliente> doInBackground(Void... params) {
             ArrayList<Cliente> resultado = new ArrayList<Cliente>();
 
+            ClienteBZ clienteBz = new ClienteBZ(this.mContext);
             try {
                 //Si puede sincroniza los clientes primero
-                //y luego busca el listado
-                ClienteBZ clienteBz = new ClienteBZ(this.mContext);
                 clienteBz.sincronizar();
+            } catch (Exception e) {
+            }
+
+            try {
+                //y luego busca el listado
                 resultado = clienteBz.listar();
             } catch (Exception e) {
             }

@@ -10,10 +10,12 @@
             android:id="@+id/nav_catalogo"
             android:icon="@drawable/ic_add_shopping_cart_24dp"
             android:title="@string/nav_catalogo" />
+        <!--
         <item
             android:id="@+id/nav_pedido"
             android:icon="@drawable/ic_add_shopping_cart_24dp"
             android:title="@string/nav_catalogo" />
+            -->
     </group>
 
 </menu>

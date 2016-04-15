@@ -2,6 +2,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,7 +11,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
@@ -22,7 +34,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
  * in two-pane mode (on tablets) or a {@link ClienteDetailActivity}
  * on handsets.
  */
-public class ClienteDetailFragment extends Fragment {
+public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCallback {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -35,6 +47,10 @@ public class ClienteDetailFragment extends Fragment {
     private long mClienteId;
     private Cliente mCliente;
     private ClienteObtenerTask mClienteObtenerTask;
+    private MapView mMapView;
+    private GoogleMap mMap;
+
+
     private OnFragmentClienteDetailListener mListener;
 
     public interface OnFragmentClienteDetailListener {
@@ -65,16 +81,53 @@ public class ClienteDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         this.mRootView = inflater.inflate(R.layout.fragment_cliente_detail, container, false);
 
+        /*
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        */
+        // Gets the MapView from the XML layout and creates it
+        mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
+        mMapView.onCreate(savedInstanceState);
+
+        // Gets to GoogleMap from the MapView and does initialization stuff
+        mMap = mMapView.getMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        try {
+            MapsInitializer.initialize(this.getActivity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return mRootView;
     }
 
     @Override
     public void onResume() {
+        if (mMapView != null)
+            mMapView.onResume();
         super.onResume();
 
         // Refresca la lista de clientes
         this.refrescar();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMapView != null)
+            mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mMapView != null)
+            mMapView.onLowMemory();
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -93,6 +146,18 @@ public class ClienteDetailFragment extends Fragment {
         mListener = null;
     }
 
+    /*
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+    */
+
     private void refrescar() {
         mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mClienteId);
         mClienteObtenerTask.execute((Void) null);
@@ -105,9 +170,28 @@ public class ClienteDetailFragment extends Fragment {
             if (mAppBarLayout != null) {
                 mAppBarLayout.setTitle(mCliente.nombreCompleto);
             }
+            String razonSocial = mCliente.razonSocial.trim().isEmpty()? "NO DISPONIBLE":mCliente.razonSocial.trim();
+            String telefono = mCliente.telefono.trim().isEmpty()? "NO DISPONIBLE":mCliente.telefono.trim();
+            String mail = mCliente.email.trim().isEmpty()? "NO DISPONIBLE":mCliente.email.trim();
+            String direccion = mCliente.direccion.trim().isEmpty()? "NO DISPONIBLE":mCliente.direccion.trim();
 
-            ((TextView) this.mRootView.findViewById(R.id.cliente_detail)).setText(mCliente.direccion);
+            ((TextView) this.mRootView.findViewById(R.id.cliente_razon_social)).setText(razonSocial);
+            ((TextView) this.mRootView.findViewById(R.id.cliente_telefono)).setText(telefono);
+            ((TextView) this.mRootView.findViewById(R.id.cliente_direccion)).setText(direccion);
+            ((TextView) this.mRootView.findViewById(R.id.cliente_mail)).setText(mail);
+            ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent c = new Intent(getContext(), PedidoActivity.class);
+                    c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
+                    startActivity(c);
+                }
+            });
 
+            // Add a marker in client location
+            LatLng position = new LatLng(mCliente.lat, mCliente.lng);
+            mMap.addMarker(new MarkerOptions().position(position).title(mCliente.nombreCompleto));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
         }
     }
 
