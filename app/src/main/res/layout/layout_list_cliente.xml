@@ -13,5 +13,5 @@
                                         android:paddingRight="5dp"
                                         android:paddingTop="10dp"
                                         app:layoutManager="LinearLayoutManager"
-                                        tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteListActivity"
+                                        tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.PedidoActivity"
                                         tools:listitem="@layout/layout_item_cliente"/>

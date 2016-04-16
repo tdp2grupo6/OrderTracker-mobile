@@ -57,7 +57,7 @@ public class CatalogoActivity extends AppBaseActivity {
             }
         });
 
-        //Set the list of productos
+        //Set the list of items
         mListView = (ListView) findViewById(R.id.productos_list);
         mEmptyView = (TextView) findViewById(R.id.productos_list_empty);
 
@@ -125,7 +125,7 @@ public class CatalogoActivity extends AppBaseActivity {
 
             ProductoBZ productoBz = new ProductoBZ(this.mContext);
             try {
-                //Si puede sincroniza los productos primero
+                //Si puede sincroniza los items primero
                 productoBz.sincronizar();
             }
             catch (Exception e) {

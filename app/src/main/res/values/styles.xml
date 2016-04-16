@@ -32,7 +32,7 @@
 
     <style name="ItemTitulo">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

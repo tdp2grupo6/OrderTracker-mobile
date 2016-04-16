@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/list_producto_imagen"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/ic_camera_alt_24dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical|start"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical|start"
+            >
+
+            <TextView
+                android:id="@+id/list_producto_nombre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ItemTitulo"
+                android:text="Lente XXX"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/list_producto_precio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="end"
+                android:textAlignment="viewEnd"
+                style="@style/ItemPrecio"
+                android:text="$ 123,45">
+            </TextView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/list_producto_minus"
+        android:layout_width="25dp"
+        android:layout_height="50dp"
+        android:layout_margin="2dp"
+        android:layout_gravity="center"
+        android:background="@drawable/item_producto_stock"
+        android:gravity="center"
+        style="@style/ItemStock"
+        android:text="-"/>
+
+    <TextView
+        android:id="@+id/list_producto_pedido_quantity"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:background="@drawable/item_producto_stock"
+        android:gravity="center"
+        style="@style/ItemStock"
+        android:text="12"/>
+
+    <TextView
+        android:id="@+id/list_producto_plus"
+        android:layout_width="25dp"
+        android:layout_height="50dp"
+        android:layout_margin="2dp"
+        android:layout_gravity="center"
+        android:background="@drawable/item_producto_stock"
+        android:gravity="center"
+        style="@style/ItemStock"
+        android:text="+"/>
+</LinearLayout>

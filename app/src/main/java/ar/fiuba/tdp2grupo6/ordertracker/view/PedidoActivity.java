@@ -1,30 +1,20 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
-
 import ar.fiuba.tdp2grupo6.ordertracker.R;
-import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
-import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
-import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoAdapter;
 
 /**
  * An activity representing a single Cliente detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link ClienteFueraRutaFragment}.
+ * in a {@link ClienteFueraRutaListFragment}.
  */
 public class PedidoActivity extends AppBaseActivity
         implements PedidoListFragment.OnPedidoListFragmentListener {
@@ -57,11 +47,7 @@ public class PedidoActivity extends AppBaseActivity
         if (savedInstanceState == null) {
             this.mClienteId = getIntent().getLongExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
 
-            //Crea un nuevo pedido
-            mPedido = new Pedido();
-            mPedido.clienteId = mClienteId;
-
-            PedidoListFragment fragment = PedidoListFragment.newInstance(0);
+            PedidoListFragment fragment = PedidoListFragment.newInstance(0, mClienteId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.pedido_container, fragment)
                     .commit();
@@ -81,8 +67,8 @@ public class PedidoActivity extends AppBaseActivity
     }
 
     @Override
-    public void onPedidoActualizar() {
-
+    public void onPedidoActualizar(Pedido pedido) {
+        this.mPedido = pedido;
     }
 
     private void actualizarCarrito(Pedido pedido) {

@@ -1,9 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +16,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
  * An activity representing a single Cliente detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link ClienteFueraRutaFragment}.
+ * in a {@link ClienteFueraRutaListFragment}.
  */
 public class ClienteDetailActivity extends AppCompatActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
 

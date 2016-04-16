@@ -9,7 +9,9 @@ import java.util.Map;
 public class PedidoItem {
 
     public long id;
-    public Producto producto;
     public int cantidad;
+    public long productoId;
+
+    public Producto producto;
 
 }

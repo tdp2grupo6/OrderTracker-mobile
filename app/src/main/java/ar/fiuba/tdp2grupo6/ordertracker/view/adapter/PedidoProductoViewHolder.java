@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 
 public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
@@ -17,19 +17,19 @@ public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
     public TextView mPrecioView;
     public TextView mPlusView;
     public TextView mMinusView;
-    public EditText mQuantityText;
-    public Producto mProducto;
+    public TextView mQuantityView;
+    public PedidoItem mPedidoItem;
 
     public PedidoProductoViewHolder(View view)  {
         super(view);
         mView = view;
         mImageView = (ImageView) view.findViewById(R.id.list_producto_imagen);
         mNombreView = (TextView) view.findViewById(R.id.list_producto_nombre);
-        //mStockView = (TextView) view.findViewById(R.id.list_producto_stock);
+        mStockView = (TextView) view.findViewById(R.id.list_producto_stock);
         mPrecioView = (TextView) view.findViewById(R.id.list_producto_precio);
         mMinusView = (TextView) view.findViewById(R.id.list_producto_minus);
         mPlusView = (TextView) view.findViewById(R.id.list_producto_plus);
-        mQuantityText = (EditText) view.findViewById(R.id.list_producto_pedido_quantity);
+        mQuantityView = (TextView) view.findViewById(R.id.list_producto_pedido_quantity);
     }
 
     public ImageView getImagenView() {
@@ -46,14 +46,14 @@ public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
         return this.mNombreView;
     }
 
-    /*
+
     public TextView getStockView() {
         if (this.mStockView == null) {
             this.mStockView = (TextView) mView.findViewById(R.id.list_producto_stock);
         }
         return this.mStockView;
     }
-    */
+
 
     public TextView getPrecioView() {
         if (this.mPrecioView == null) {
@@ -76,11 +76,11 @@ public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
         return this.mPlusView;
     }
 
-    public EditText getQuantityText() {
-        if (this.mQuantityText == null) {
-            mQuantityText = (EditText) mView.findViewById(R.id.list_producto_pedido_quantity);
+    public TextView getQuantityText() {
+        if (this.mQuantityView == null) {
+            mQuantityView = (TextView) mView.findViewById(R.id.list_producto_pedido_quantity);
         }
-        return this.mQuantityText;
+        return this.mQuantityView;
     }
 
 }

@@ -20,7 +20,10 @@ import android.widget.TextView;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 
-public class ClienteActivity extends AppBaseActivity implements ClienteFueraRutaFragment.OnFragmentInteractionListener {
+public class ClienteActivity extends AppBaseActivity implements
+        ClienteFueraRutaListFragment.OnFragmentInteractionListener,
+        ClienteFueraRutaMapFragment.OnClienteFueraRutaMapFragment {
+
     private final int MENU_INDEX = 0;
     private Context mContext;
 
@@ -160,10 +163,10 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    //return ClienteFueraRutaFragment.newInstance("", "Page # 1");
-                    return ClienteFueraRutaFragment.newInstance();
+                    //return ClienteFueraRutaListFragment.newInstance("", "Page # 1");
+                    return ClienteFueraRutaListFragment.newInstance();
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return PlaceholderFragment.newInstance(1);
+                    return ClienteFueraRutaMapFragment.newInstance();
                 case 2: // Fragment # 1 - This will show SecondFragment
                     return PlaceholderFragment.newInstance(2);
                 default:
@@ -184,7 +187,7 @@ public class ClienteActivity extends AppBaseActivity implements ClienteFueraRuta
                 case 0:
                     return "FUERA DE RUTA";
                 case 1:
-                    return "SECTION 2";
+                    return "MAPA";
                 case 2:
                     return "SECTION 3";
             }

@@ -32,12 +32,12 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ClienteFueraRutaFragment.OnFragmentInteractionListener} interface
+ * {@link ClienteFueraRutaListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ClienteFueraRutaFragment#newInstance} factory method to
+ * Use the {@link ClienteFueraRutaListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClienteFueraRutaFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ClienteFueraRutaListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private boolean mTwoPane;
     private ListView mListView;
@@ -48,12 +48,12 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
 
     private OnFragmentInteractionListener mListener;
 
-    public ClienteFueraRutaFragment() {
+    public ClienteFueraRutaListFragment() {
         // Required empty public constructor
     }
 
-    public static ClienteFueraRutaFragment newInstance() { //String param1, String param2) {
-        ClienteFueraRutaFragment fragment = new ClienteFueraRutaFragment();
+    public static ClienteFueraRutaListFragment newInstance() { //String param1, String param2) {
+        ClienteFueraRutaListFragment fragment = new ClienteFueraRutaListFragment();
         return fragment;
     }
 
@@ -79,7 +79,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_cliente_fuera_ruta, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_cliente_fuera_ruta, container, false);
 
         //Set the swipe for refresh
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_cliente);
@@ -91,7 +91,7 @@ public class ClienteFueraRutaFragment extends Fragment implements AdapterView.On
 
         });
 
-        //Set the list of productos
+        //Set the list of items
         mEmptyView = (TextView) view.findViewById(R.id.clientes_list_empty);
         mListView = (ListView) view.findViewById(R.id.clientes_list);
         mListView.setOnItemClickListener(this);

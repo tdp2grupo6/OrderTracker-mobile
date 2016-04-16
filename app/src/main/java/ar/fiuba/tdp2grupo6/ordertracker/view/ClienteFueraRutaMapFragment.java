@@ -2,23 +2,24 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
@@ -30,34 +31,30 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
  * in two-pane mode (on tablets) or a {@link ClienteDetailActivity}
  * on handsets.
  */
-public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCallback {
+public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapReadyCallback {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_CLIENTE_ID = "cliente_id";
 
     private CollapsingToolbarLayout mAppBarLayout;
     private View mRootView;
 
-    private long mClienteId;
-    private Cliente mCliente;
-    private ClienteObtenerTask mClienteObtenerTask;
+    private ClientesBuscarTask mClientesBuscarTask;
     private MapView mMapView;
     private GoogleMap mMap;
 
 
-    private OnFragmentClienteDetailListener mListener;
+    private OnClienteFueraRutaMapFragment mListener;
 
-    public interface OnFragmentClienteDetailListener {
-        void onClienteAgregarPedido();
+    public interface OnClienteFueraRutaMapFragment {
     }
 
-    public static ClienteDetailFragment newInstance(long clienteId) {
-        ClienteDetailFragment fragment = new ClienteDetailFragment();
-        Bundle args = new Bundle();
-        args.putLong(ARG_CLIENTE_ID, clienteId);
-        fragment.setArguments(args);
+    public static ClienteFueraRutaMapFragment newInstance() {
+        ClienteFueraRutaMapFragment fragment = new ClienteFueraRutaMapFragment();
+        //Bundle args = new Bundle();
+        //args.putLong(ARG_CLIENTE_ID, clienteId);
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -67,15 +64,15 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
 
         Activity activity = this.getActivity();
         mAppBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        if (getArguments().containsKey(ARG_CLIENTE_ID)) {
-            this.mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
-        }
+        //if (getArguments().containsKey(ARG_CLIENTE_ID)) {
+        //    this.mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
+        //}
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        this.mRootView = inflater.inflate(R.layout.fragment_cliente_detail, container, false);
+        this.mRootView = inflater.inflate(R.layout.fragment_map_cliente_fuera_ruta, container, false);
 
         /*
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -128,11 +125,11 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentClienteDetailListener) {
-            mListener = (OnFragmentClienteDetailListener) context;
+        if (context instanceof OnClienteFueraRutaMapFragment) {
+            mListener = (OnClienteFueraRutaMapFragment) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnClienteFueraRutaMapFragment");
         }
     }
 
@@ -155,49 +152,41 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     */
 
     private void refrescar() {
-        mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mClienteId);
-        mClienteObtenerTask.execute((Void) null);
+        mClientesBuscarTask = new ClientesBuscarTask(getContext());
+        mClientesBuscarTask.execute((Void) null);
     }
 
-    private void actualizar(Cliente cliente) {
-        if (cliente != null) {
-            this.mCliente = cliente;
+    private void actualizar(ArrayList<Cliente> clientes) {
 
-            if (mAppBarLayout != null) {
-                mAppBarLayout.setTitle(mCliente.nombreCompleto);
+        if (clientes != null) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for (Cliente cliente: clientes) {
+                // Add a marker in client location
+                LatLng position = new LatLng(cliente.lat, cliente.lng);
+                MarkerOptions marker = new MarkerOptions().position(position).title(cliente.nombreCompleto);
+                mMap.addMarker(marker);
+
+                //agrega para luego calcular los limites
+                builder.include(marker.getPosition());
             }
-            String razonSocial = mCliente.razonSocial.trim().isEmpty()? "NO DISPONIBLE":mCliente.razonSocial.trim();
-            String telefono = mCliente.telefono.trim().isEmpty()? "NO DISPONIBLE":mCliente.telefono.trim();
-            String mail = mCliente.email.trim().isEmpty()? "NO DISPONIBLE":mCliente.email.trim();
-            String direccion = mCliente.direccion.trim().isEmpty()? "NO DISPONIBLE":mCliente.direccion.trim();
 
-            ((TextView) this.mRootView.findViewById(R.id.cliente_razon_social)).setText(razonSocial);
-            ((TextView) this.mRootView.findViewById(R.id.cliente_telefono)).setText(telefono);
-            ((TextView) this.mRootView.findViewById(R.id.cliente_direccion)).setText(direccion);
-            ((TextView) this.mRootView.findViewById(R.id.cliente_mail)).setText(mail);
-            ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent c = new Intent(getContext(), PedidoActivity.class);
-                    c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
-                    startActivity(c);
-                }
-            });
+            //Calcula los limites para hacer zoom
+            LatLngBounds bounds = builder.build();
+            int padding = 8; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            // Add a marker in client location
-            LatLng position = new LatLng(mCliente.lat, mCliente.lng);
-            mMap.addMarker(new MarkerOptions().position(position).title(mCliente.nombreCompleto));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+            //Hace el zoom en el mapa
+            mMap.animateCamera(cu);
+            //mMap.moveCamera(cu);
         }
+
     }
 
-    public class ClienteObtenerTask extends AsyncTask<Void, String, Cliente> {
+    public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
         private Context mContext;
-        private long mId;
-
-        public ClienteObtenerTask(Context context, long id) {
+        public ClientesBuscarTask(Context context) {
             this.mContext = context;
-            this.mId = id;
         }
 
         @Override
@@ -205,14 +194,19 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
         }
 
         @Override
-        protected Cliente doInBackground(Void... params) {
-            Cliente resultado = null;
+        protected ArrayList<Cliente> doInBackground(Void... params) {
+            ArrayList<Cliente> resultado = new ArrayList<Cliente>();
 
+            ClienteBZ clienteBz = new ClienteBZ(this.mContext);
             try {
                 //Si puede sincroniza los clientes primero
+                clienteBz.sincronizar();
+            } catch (Exception e) {
+            }
+
+            try {
                 //y luego busca el listado
-                ClienteBZ clienteBz = new ClienteBZ(this.mContext);
-                resultado = clienteBz.obtener(this.mId);
+                resultado = clienteBz.listar();
             } catch (Exception e) {
             }
 
@@ -220,8 +214,8 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
         }
 
         @Override
-        protected void onPostExecute(Cliente cliente) {
-            actualizar(cliente);
+        protected void onPostExecute(ArrayList<Cliente> clientes) {
+            actualizar(clientes);
         }
 
     }

@@ -1,6 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoViewHolder;
@@ -33,12 +36,17 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoViewHolder;
 public class PedidoListFragment extends Fragment implements PedidoProductoAdapter.OnItemClickListener {
 
     private static final String ARG_CATEGORIA_ID = "categoria_id";
+    private static final String ARG_CLIENTE_ID = "cliente_id";
 
     private long mCategoriaId;
+    private long mClienteId;
+
 
     private boolean mTwoPane;
     private RecyclerView mReciclerView;
     private TextView mEmptyView;
+    private TextView mTotalView;
+    private LinearLayout mListFooter;
     private PedidoProductoAdapter mReciclerAdapter;
     private PedidoProductosBuscarTask mPedidoProductosBuscarTask;
     private PedidoActualizarTask mPedidoActualizarTask;
@@ -46,13 +54,14 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     private OnPedidoListFragmentListener mListener;
     public interface OnPedidoListFragmentListener {
         void onPedidoItemClick(Producto producto);
-        void onPedidoActualizar();
+        void onPedidoActualizar(Pedido pedido);
     }
 
-    public static PedidoListFragment newInstance(long categoriaId) {
+    public static PedidoListFragment newInstance(long categoriaId, long clienteId) {
         PedidoListFragment fragment = new PedidoListFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CATEGORIA_ID, categoriaId);
+        args.putLong(ARG_CLIENTE_ID, clienteId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,8 +91,10 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_pedido, container, false);
 
-        //Set the list of productos
-        mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
+        //Set the list of items
+        //mListFooter = (LinearLayout) view.findViewById(R.id.producto_pedido_list_footer);
+        mTotalView = (TextView) view.findViewById(R.id.productos_pedido_list_money);
+        //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
         mReciclerView = (RecyclerView) view.findViewById(R.id.productos_pedido_list);
 
         if (view.findViewById(R.id.producto_pedido_detail_container) != null) {
@@ -161,18 +172,35 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     @Override
     public void onItemClick(PedidoProductoViewHolder holder, int position) {
         try {
-            if (holder.mProducto != null ) {
+            /*
+            // TODO: hay que cambiar el detalle de producto para que sea un fragment
+
+            if (holder.mPedidoItem != null ) {
                 //ProductoDetailFragment fragment = ProductoDetailFragment.newInstance();
                 if (mTwoPane) {
-                    /*
                     this.getFragmentManager().beginTransaction()
                             .replace(R.id.pedido_detail_container, fragment)
                             .commit();
-                    */
+
                 } else {
-                    mListener.onPedidoItemClick(holder.mProducto);
+                    mListener.onPedidoItemClick(holder.mPedidoItem);
                 }
             }
+            */
+
+            Intent intent = new Intent(getContext(), ProductoDetailActivity.class);
+            Producto prod = holder.mPedidoItem.producto;
+            intent.putExtra("productoId", prod.id);
+            intent.putExtra("productoNombre", prod.nombre);
+            intent.putExtra("productoMarca", prod.marca);
+            intent.putExtra("productoPrecio", prod.mostrarPrecio());
+            intent.putExtra("productoDescripcion", prod.caracteristicas);
+            intent.putExtra("productoCodigo", prod.mostrarCodigo());
+            intent.putExtra("productoStock", prod.mostrarStock());
+            intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
+            intent.putExtra("productoCategoria", prod.categoria);
+            intent.putExtra("productoEstado", prod.mostrarEstado());
+            startActivity(intent);
         } catch (Exception e) {
         }
     }
@@ -180,7 +208,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     @Override
     public void onItemPlusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
 
-        if (nuevaCantidad <= holder.mProducto.stock) {
+        if (nuevaCantidad <= holder.mPedidoItem.producto.stock) {
             holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
             Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
 
@@ -188,7 +216,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
             mPedidoActualizarTask.execute((Void) null);
         } else {
             holder.getQuantityText().setText(String.valueOf(viejaCantidad));
-            Toast.makeText(getContext(), "No se puede agregar mas items", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No se puede agregar mas items, alcanzo la disponibilidad maxima", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -212,8 +240,8 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     @Override
     public void onItemQuantityClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
 
-        if (nuevaCantidad > 0 && nuevaCantidad <= holder.mProducto.stock ) {
-            //holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
+        if (nuevaCantidad > 0 && nuevaCantidad <= holder.mPedidoItem.producto.stock ) {
+            holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
             Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
 
             mPedidoActualizarTask = new PedidoActualizarTask(getContext(), pedido, holder, nuevaCantidad);
@@ -226,23 +254,35 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     }
 
     private void refrescarLista() {
-        mPedidoProductosBuscarTask = new PedidoProductosBuscarTask(getContext());
+        mPedidoProductosBuscarTask = new PedidoProductosBuscarTask(getContext(), mClienteId);
         mPedidoProductosBuscarTask.execute((Void) null);
     }
 
-    private void actualizarLista(ArrayList<Producto> pedidoProductos) {
+    private void actualizarLista(Pedido pedido) {
         if (mReciclerView != null) {
-            mReciclerAdapter = new PedidoProductoAdapter(this, pedidoProductos, mTwoPane);
+            ArrayList<PedidoItem> list = new ArrayList<PedidoItem>(pedido.items.values());
+            mReciclerAdapter = new PedidoProductoAdapter(this, list, mTwoPane);
             mReciclerView.setAdapter(mReciclerAdapter);
-            //mReciclerView.setEmptyView(mEmptyView);
+
+            actualizarFooter(pedido);
+
+            mListener.onPedidoActualizar(pedido);
         }
     }
 
-    public class PedidoProductosBuscarTask extends AsyncTask<Void, String, ArrayList<Producto>> {
-        private Context mContext;
+    private void actualizarFooter(Pedido pedido) {
+        if (pedido != null) {
+            mTotalView.setText("Total: $" + String.format("%.2f", pedido.importe));
+        }
+    }
 
-        public PedidoProductosBuscarTask(Context context) {
+    public class PedidoProductosBuscarTask extends AsyncTask<Void, String, Pedido> {
+        private Context mContext;
+        private long mCliente;
+
+        public PedidoProductosBuscarTask(Context context, long clienteId) {
             this.mContext = context;
+            this.mCliente = clienteId;
         }
 
         @Override
@@ -250,25 +290,26 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         }
 
         @Override
-        protected ArrayList<Producto> doInBackground(Void... params) {
-            ArrayList<Producto> resultado = new ArrayList<Producto>();
+        protected Pedido doInBackground(Void... params) {
+            Pedido resultado = null;
 
             try {
                 //Si puede sincroniza los clientes primero
                 //y luego busca el listado
-                ProductoBZ productoBZ = new ProductoBZ(this.mContext);
-                resultado = productoBZ.listar();
+                PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
+                resultado = pedidoBZ.obtener(mClienteId);
             } catch (Exception e) {
+                String err = e.getLocalizedMessage();
             }
 
             return resultado;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Producto> pedidoProductos) {
-            if (mReciclerView != null && pedidoProductos!=null)
+        protected void onPostExecute(Pedido pedido) {
+            if (mReciclerView != null && pedido!=null)
             {
-                actualizarLista(pedidoProductos);
+                actualizarLista(pedido);
             }
         }
 
@@ -296,8 +337,12 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
             Pedido resultado = null;
 
             try {
+                //Actualiza la cantida en el item
+                mHolder.mPedidoItem.cantidad = mCantidad;
+
+                //Procesa el cambio
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                resultado = pedidoBZ.actualizarProducto(mPedido, mHolder.mProducto, mCantidad);
+                resultado = pedidoBZ.actualizar(mPedido, mHolder.mPedidoItem);
             } catch (Exception e) {
             }
 
@@ -306,7 +351,8 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
         @Override
         protected void onPostExecute(Pedido pedido) {
-            mListener.onPedidoActualizar();
+            actualizarFooter(pedido);
+            mListener.onPedidoActualizar(pedido);
         }
 
     }

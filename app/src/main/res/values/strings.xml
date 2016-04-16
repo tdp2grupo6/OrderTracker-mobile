@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Order Tracker</string>
 
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -9,9 +12,6 @@
     <string name="error_accediendo_bd">Error accediendo a la BD: %1$s</string>
     <string name="error_respuesta_servidor">Error al interpretar la respuesta del servidor: %1$s</string>
     <string name="error_procesando">Error inesperado al procesar: %1$s</string>
-    <string name="title_activity_catalogo">Catálogo</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_cliente">Cliente</string>
 
     <string name="no_hay_clientes">No hay clientes</string>
     <string name="no_hay_productos">No hay productos</string>
@@ -19,11 +19,15 @@
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
 
+    <string name="title_activity_catalogo">Catálogo</string>
+    <string name="title_activity_cliente">Cliente</string>
     <string name="title_cliente_list">Clientes</string>
     <string name="title_cliente_detail">Cliente Detail</string>
     <string name="title_activity_producto_detail">Detalle Producto</string>
+    <string name="title_popup_ingrese_cantidad">Ingrese la Cantidad</string>
 
     <string name="imagen_descripcion">Imagen</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="detalle_producto_categoria">Categoria</string>
     <string name="detalle_producto_nombre">Nombre del Producto</string>

@@ -333,7 +333,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Pedido> pedidoBuscar(long id) throws LocalException {
+	public ArrayList<Pedido> pedidoBuscar(long id, long clienteId, int estado) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Pedido> listPedido = new ArrayList<Pedido>();
@@ -344,6 +344,16 @@ public class SqlDA {
 			String where = "";
 			if (id > 0) {
 				String condition = DbHelper.tblPedido_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (clienteId > 0) {
+				String condition = DbHelper.tblPedido_colClienteId + "=" + String.valueOf(clienteId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (estado >= 0) {
+				String condition = DbHelper.tblPedido_colEstado + "=" + String.valueOf(estado);
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
@@ -408,7 +418,7 @@ public class SqlDA {
             ContentValues cv = new ContentValues();
             //cv.put(DbHelper.tblPedidoItem_colId, pedidoItem.id);
             cv.put(DbHelper.tblPedidoItem_colPedidoId, pedidoId);
-            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.producto.id);
+            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.productoId);
             cv.put(DbHelper.tblPedidoItem_colCantidad, pedidoItem.cantidad);
             pedidoItem.id = db.insert(DbHelper.tblPedidoItem, null, cv);
         } catch (Exception e) {
@@ -425,7 +435,7 @@ public class SqlDA {
         try {
             ContentValues cv = new ContentValues();
             cv.put(DbHelper.tblPedidoItem_colPedidoId, pedidoId);
-            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.producto.id);
+            cv.put(DbHelper.tblPedidoItem_colProductoId, pedidoItem.productoId);
             cv.put(DbHelper.tblPedidoItem_colCantidad, pedidoItem.cantidad);
 
             String where = "";
@@ -442,7 +452,7 @@ public class SqlDA {
         return cant;
     }
 
-    public ArrayList<PedidoItem> pedidoItemBuscar(long id, long pedidoId) throws LocalException {
+    public ArrayList<PedidoItem> pedidoItemBuscar(long id, long pedidoId, boolean loadProductos) throws LocalException {
         SQLiteDatabase db = this.mDb.getWritableDatabase();
 
         ArrayList<PedidoItem> listPedidoItem = new ArrayList<PedidoItem>();
@@ -467,10 +477,13 @@ public class SqlDA {
                     PedidoItem pedidoItem = new PedidoItem();
                     pedidoItem.id = c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colId));
                     pedidoItem.cantidad = c.getInt(c.getColumnIndex(DbHelper.tblPedidoItem_colCantidad));
+					pedidoItem.productoId = c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colProductoId));
 
-                    ArrayList<Producto> productos = this.productoBuscar(c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colProductoId)));
-                    if (productos != null && productos.size() > 0)
-                        pedidoItem.producto = productos.get(0);
+					if (loadProductos) {
+						ArrayList<Producto> productos = this.productoBuscar(c.getLong(c.getColumnIndex(DbHelper.tblPedidoItem_colProductoId)));
+						if (productos != null && productos.size() > 0)
+							pedidoItem.producto = productos.get(0);
+					}
 
                     listPedidoItem.add(pedidoItem);
                 } while (c.moveToNext());
@@ -485,7 +498,7 @@ public class SqlDA {
         return listPedidoItem;
     }
 
-    public long pedidoItemEliminar(long id) throws LocalException {
+    public long pedidoItemEliminar(long id, long pedidoId) throws LocalException {
         SQLiteDatabase db = this.mDb.getWritableDatabase();
 
         long cant = 0;
@@ -497,6 +510,11 @@ public class SqlDA {
                 String condition = DbHelper.tblPedidoItem_colId + "=" + String.valueOf(id);
                 where = UtilsDA.AddCondition(where, condition, "and");
             }
+
+			if (pedidoId > 0) {
+				String condition = DbHelper.tblPedidoItem_colPedidoId + "=" + String.valueOf(pedidoId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
 
             cant = db.delete(DbHelper.tblPedidoItem, where, null);
         } catch (Exception e) {

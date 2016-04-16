@@ -42,13 +42,13 @@ public class DataInService extends IntentService {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}
 
-			// Sincroniza los productos
+			// Sincroniza los items
 			try {
 				ProductoBZ productoBZ =  new ProductoBZ(context);
 				ArrayList<Producto> productos = productoBZ.sincronizar();
 
 				if (productos != null && productos.size() > 0) {
-					//Sincroniza la imagen de los productos que ho hayan sido ya descargados
+					//Sincroniza la imagen de los items que ho hayan sido ya descargados
 					ImagenBZ imagenBZ =  new ImagenBZ();
 					for(Producto producto: productos) {
 						boolean existeimagen = imagenBZ.existe(producto.getNombreImagenMiniatura());
@@ -61,7 +61,7 @@ public class DataInService extends IntentService {
 							productoBZ.sincronizarImagen(producto);
 						}
 					}
-					//Descarga las imagenes para los productos si no lo tiene
+					//Descarga las imagenes para los items si no lo tiene
 
 				}
 
