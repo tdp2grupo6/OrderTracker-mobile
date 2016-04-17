@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -164,7 +165,15 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
             for (Cliente cliente: clientes) {
                 // Add a marker in client location
                 LatLng position = new LatLng(cliente.lat, cliente.lng);
-                MarkerOptions marker = new MarkerOptions().position(position).title(cliente.nombreCompleto);
+
+                //Segun el estado, se cambia el color del pin
+                float color = BitmapDescriptorFactory.HUE_RED;
+
+                MarkerOptions marker = new MarkerOptions()
+                        .position(position)
+                        .title(cliente.nombreCompleto)
+                        .snippet(cliente.direccion)
+                        .icon(BitmapDescriptorFactory.defaultMarker(color));
                 mMap.addMarker(marker);
 
                 //agrega para luego calcular los limites
