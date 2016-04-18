@@ -2,6 +2,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +45,7 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
     private ClientesBuscarTask mClientesBuscarTask;
     private MapView mMapView;
     private GoogleMap mMap;
+    private boolean mCenterOnPosition;
 
 
     private OnClienteFueraRutaMapFragment mListener;
@@ -86,6 +89,23 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         // Gets to GoogleMap from the MapView and does initialization stuff
         mMap = mMapView.getMap();
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        try {
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location myLocation) {
+                    LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+
+                    //desactiva el localizador
+                    mMap.setOnMyLocationChangeListener(null);
+                    mCenterOnPosition = true;
+                }
+            });
+
+        } catch (SecurityException se) {
+            mCenterOnPosition = false;
+        }
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
@@ -95,6 +115,12 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         }
 
         return mRootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override
@@ -121,6 +147,17 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
             mMapView.onLowMemory();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            if (mCenterOnPosition)
+                Toast.makeText(getContext(), "Se centrara el mapa en la posicion actual, la aplicacion esta intentando de obtener su ubicacion!", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "No se podra centrar el mapa en la posicion actual, la aplicacion tiene permisos para obtener su ubicacion!", Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -159,26 +196,30 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
     private void actualizar(ArrayList<Cliente> clientes) {
 
         if (clientes != null) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (Cliente cliente: clientes) {
                 // Add a marker in client location
                 LatLng position = new LatLng(cliente.lat, cliente.lng);
-                MarkerOptions marker = new MarkerOptions().position(position).title(cliente.nombreCompleto);
+                MarkerOptions marker = new MarkerOptions().position(position).title(cliente.nombreCompleto + " - " + cliente.direccion);
                 mMap.addMarker(marker);
 
                 //agrega para luego calcular los limites
                 builder.include(marker.getPosition());
             }
 
-            //Calcula los limites para hacer zoom
-            LatLngBounds bounds = builder.build();
-            int padding = 8; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            //Hace el zoom en el mapa
-            mMap.animateCamera(cu);
-            //mMap.moveCamera(cu);
+            // Centra el mapa en la posicion actual
+            if (!mCenterOnPosition) {
+                //Calcula los limites para hacer zoom
+                LatLngBounds bounds = builder.build();
+                int padding = 8; // offset from edges of the map in pixels
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+                //Hace el zoom en el mapa
+                //mMap.animateCamera(cu);
+                mMap.moveCamera(cu);
+            }
         }
 
     }

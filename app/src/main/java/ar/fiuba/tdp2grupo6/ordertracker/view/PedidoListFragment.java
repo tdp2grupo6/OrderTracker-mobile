@@ -45,6 +45,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     private boolean mTwoPane;
     private RecyclerView mReciclerView;
     private TextView mEmptyView;
+    private TextView mClienteView;
     private TextView mTotalView;
     private LinearLayout mListFooter;
     private PedidoProductoAdapter mReciclerAdapter;
@@ -55,6 +56,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     public interface OnPedidoListFragmentListener {
         void onPedidoItemClick(Producto producto);
         void onPedidoActualizar(Pedido pedido);
+        void onPedidoConfirma(Pedido pedido);
     }
 
     public static PedidoListFragment newInstance(long categoriaId, long clienteId) {
@@ -71,6 +73,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCategoriaId = getArguments().getLong(ARG_CATEGORIA_ID);
+            mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
         }
     }
 
@@ -94,6 +97,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         //Set the list of items
         //mListFooter = (LinearLayout) view.findViewById(R.id.producto_pedido_list_footer);
         mTotalView = (TextView) view.findViewById(R.id.productos_pedido_list_money);
+        mClienteView = (TextView) view.findViewById(R.id.productos_pedido_list_cliente);
         //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
         mReciclerView = (RecyclerView) view.findViewById(R.id.productos_pedido_list);
 
@@ -172,35 +176,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     @Override
     public void onItemClick(PedidoProductoViewHolder holder, int position) {
         try {
-            /*
-            // TODO: hay que cambiar el detalle de producto para que sea un fragment
-
-            if (holder.mPedidoItem != null ) {
-                //ProductoDetailFragment fragment = ProductoDetailFragment.newInstance();
-                if (mTwoPane) {
-                    this.getFragmentManager().beginTransaction()
-                            .replace(R.id.pedido_detail_container, fragment)
-                            .commit();
-
-                } else {
-                    mListener.onPedidoItemClick(holder.mPedidoItem);
-                }
-            }
-            */
-
-            Intent intent = new Intent(getContext(), ProductoDetailActivity.class);
-            Producto prod = holder.mPedidoItem.producto;
-            intent.putExtra("productoId", prod.id);
-            intent.putExtra("productoNombre", prod.nombre);
-            intent.putExtra("productoMarca", prod.marca);
-            intent.putExtra("productoPrecio", prod.mostrarPrecio());
-            intent.putExtra("productoDescripcion", prod.caracteristicas);
-            intent.putExtra("productoCodigo", prod.mostrarCodigo());
-            intent.putExtra("productoStock", prod.mostrarStock());
-            intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
-            intent.putExtra("productoCategoria", prod.categoria);
-            intent.putExtra("productoEstado", prod.mostrarEstado());
-            startActivity(intent);
+            mListener.onPedidoItemClick(holder.mPedidoItem.producto);
         } catch (Exception e) {
         }
     }
@@ -272,7 +248,8 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
     private void actualizarFooter(Pedido pedido) {
         if (pedido != null) {
-            mTotalView.setText("Total: $" + String.format("%.2f", pedido.importe));
+            mClienteView.setText(pedido.cliente.nombreCompleto);
+            mTotalView.setText(String.format("%.2f", pedido.importe));
         }
     }
 

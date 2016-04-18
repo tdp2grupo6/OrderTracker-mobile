@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
@@ -92,6 +93,26 @@ public class PedidoBZ {
     }
     */
 
+    public Pedido confirmar(Pedido pedido) throws ServiceException, BusinessException {
+        try {
+
+            //Actualiza el pedido
+            pedido.estado = Pedido.ESTADO_CONFIRMADO;
+
+            //Actualiza el pedido en la bd
+            if (pedido.id == 0) {
+                pedido = mSql.pedidoGuardar(pedido);
+            } else {
+                mSql.pedidoActualizar(pedido);
+            }
+
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+
+        return pedido;
+    }
+
     public Pedido actualizar(Pedido pedido, PedidoItem pedidoItem) throws ServiceException, BusinessException {
         try {
 
@@ -138,6 +159,9 @@ public class PedidoBZ {
     public Pedido obtener(long clienteId) throws BusinessException {
         Pedido response = null;
         try {
+            //Obtiene el cliente
+            Cliente cliente = mSql.clienteBuscar(clienteId).get(0);
+
             ArrayList<PedidoItem> responseitems = null;
             ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, clienteId, Pedido.ESTADO_PENDIENTE);
             if (pedidos != null && pedidos.size() > 0) {
@@ -152,6 +176,13 @@ public class PedidoBZ {
                 //Borra todos los pendientes (solo guarda el ultimo pendiente)
                 borrarPendientes();
             }
+
+            //Guarda el cliente
+            response.clienteId = clienteId;
+            response.cliente = cliente;
+
+            // Setea el estado
+            response.estado = Pedido.ESTADO_PENDIENTE;
 
             //Arma el catalogo
             ArrayList<Producto> catalogo = mSql.productoBuscar(0);

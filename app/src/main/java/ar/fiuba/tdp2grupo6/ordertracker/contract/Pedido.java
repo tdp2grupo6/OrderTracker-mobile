@@ -24,6 +24,8 @@ public class Pedido {
 
     public long id;
     public long clienteId;
+    public Cliente cliente;
+
     //public ArrayList<Producto> catalogo = new ArrayList<Producto>();
     public Map<String, PedidoItem> items = new HashMap<String, PedidoItem>();
     public double importe;

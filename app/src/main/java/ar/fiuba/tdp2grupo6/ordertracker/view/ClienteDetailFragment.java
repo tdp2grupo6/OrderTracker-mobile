@@ -132,7 +132,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             mListener = (OnFragmentClienteDetailListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentClienteDetailListener");
         }
     }
 
@@ -178,9 +178,10 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent c = new Intent(getContext(), PedidoActivity.class);
-                    c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
-                    startActivity(c);
+                    mListener.onClienteAgregarPedido();
+                    //Intent c = new Intent(getContext(), PedidoActivity.class);
+                    //c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
+                    //startActivity(c);
                 }
             });
 

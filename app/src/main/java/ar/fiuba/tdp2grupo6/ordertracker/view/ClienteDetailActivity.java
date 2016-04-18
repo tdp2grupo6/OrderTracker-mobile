@@ -1,5 +1,6 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 
@@ -21,6 +23,8 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 public class ClienteDetailActivity extends AppCompatActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
 
     public static final String ARG_CLIENTE_ID = "cliente_id";
+
+    private static final int ACTIVITY_PEDIDO = 1000;
 
     private long mClienteId;
 
@@ -83,10 +87,23 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (ACTIVITY_PEDIDO) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(this, "Se ha confirmado el Pedido!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
     public void onClienteAgregarPedido() {
         Intent intent = new Intent(this, PedidoActivity.class);
-        intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, this.mClienteId);
-
-        this.startActivity(intent);
+        intent.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
+        startActivityForResult(intent, ACTIVITY_PEDIDO);
+        //this.startActivity(intent);
     }
 }

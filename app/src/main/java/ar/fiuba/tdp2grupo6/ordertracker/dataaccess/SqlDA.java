@@ -513,7 +513,7 @@ public class SqlDA {
 
 			if (pedidoId > 0) {
 				String condition = DbHelper.tblPedidoItem_colPedidoId + "=" + String.valueOf(pedidoId);
-				where = UtilsDA.AddWhereCondition(where, condition, "and");
+				where = UtilsDA.AddCondition(where, condition, "and");
 			}
 
             cant = db.delete(DbHelper.tblPedidoItem, where, null);
