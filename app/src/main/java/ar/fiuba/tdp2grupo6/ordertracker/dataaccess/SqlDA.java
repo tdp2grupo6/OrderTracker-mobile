@@ -90,7 +90,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Cliente> clienteBuscar(long id) throws LocalException {
+	public ArrayList<Cliente> clienteBuscar(long id, String nombreCompleto) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Cliente> listCliente = new ArrayList<Cliente>();
@@ -104,7 +104,14 @@ public class SqlDA {
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
-			Cursor c = db.rawQuery(select + where, null);
+			if (nombreCompleto.trim().length() > 0) {
+				String condition = DbHelper.tblCliente_colNombreCompleto + "=" + nombreCompleto;
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			String collate = " COLLATE NOCASE";
+
+			Cursor c = db.rawQuery(select + where + collate, null);
 			if (c.moveToFirst()) {
 				do {
 					Cliente cliente = new Cliente();

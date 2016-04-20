@@ -69,17 +69,17 @@ public class ClienteBZ {
     public ArrayList<Cliente> listar() throws BusinessException {
         ArrayList<Cliente> response = new ArrayList<Cliente>();
         try {
-            response = mSql.clienteBuscar(0);
+            response = mSql.clienteBuscar(0, "");
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
         return response;
     }
 
-	public Cliente obtener(long id) throws BusinessException {
+	public Cliente obtener(long id, String nombreCompleto) throws BusinessException {
 		Cliente response = null;
 		try {
-			ArrayList<Cliente> lista = mSql.clienteBuscar(id);
+			ArrayList<Cliente> lista = mSql.clienteBuscar(id, nombreCompleto);
 			if (lista != null && lista.size() > 0)
 				response = lista.get(0);
 		} catch (Exception e) {

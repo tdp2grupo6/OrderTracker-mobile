@@ -2,6 +2,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -91,6 +93,29 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
             MapsInitializer.initialize(this.getActivity());
+            /*
+            MapsInitializer.initialize(getActivity());
+            switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
+                case ConnectionResult.SUCCESS:
+                    Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show();
+                    mapView = (MapView) view.findViewById(R.id.map);
+                    mapView.onCreate(savedInstanceState);
+                    if (mapView != null) {
+                        map = mapView.getMap();
+                        map.getUiSettings().setMyLocationButtonEnabled(false);
+                        map.setMyLocationEnabled(true);
+                    }
+                    break;
+                case ConnectionResult.SERVICE_MISSING:
+                    Toast.makeText(getActivity(), "SERVICE MISSING", Toast.LENGTH_SHORT).show();
+                    break;
+                case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                    Toast.makeText(getActivity(), "UPDATE REQUIRED", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
+            }
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,7 +205,18 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
                 builder.include(marker.getPosition());
             }
 
-            //Calcula los limites para hacer zoom
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    String nombreCompleto = marker.getTitle();
+                    Intent intent = new Intent(getContext(), ClienteDetailActivity.class);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_NOMBRE_COMPLETO, nombreCompleto);
+                    getContext().startActivity(intent);
+                }
+            });
+
+                    //Calcula los limites para hacer zoom
             LatLngBounds bounds = builder.build();
             int padding = 8; // offset from edges of the map in pixels
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);

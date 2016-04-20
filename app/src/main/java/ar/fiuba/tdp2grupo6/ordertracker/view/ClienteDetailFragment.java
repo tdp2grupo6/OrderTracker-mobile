@@ -36,11 +36,14 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
      * represents.
      */
     public static final String ARG_CLIENTE_ID = "cliente_id";
+    public static final String ARG_CLIENTE_NOMBRE_COMPLETO = "cliente_nombreCompleto";
+
+    private long mClienteId;
+    private String mClienteNombreCompleto;
 
     private CollapsingToolbarLayout mAppBarLayout;
     private View mRootView;
 
-    private long mClienteId;
     private Cliente mCliente;
     private ClienteObtenerTask mClienteObtenerTask;
     private MapView mMapView;
@@ -53,10 +56,11 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
         void onClienteAgregarPedido();
     }
 
-    public static ClienteDetailFragment newInstance(long clienteId) {
+    public static ClienteDetailFragment newInstance(long clienteId, String clienteNombreCompleto) {
         ClienteDetailFragment fragment = new ClienteDetailFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CLIENTE_ID, clienteId);
+        args.putString(ARG_CLIENTE_NOMBRE_COMPLETO, clienteNombreCompleto);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +73,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
         mAppBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (getArguments().containsKey(ARG_CLIENTE_ID)) {
             this.mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
+            this.mClienteNombreCompleto = getArguments().getString(ARG_CLIENTE_NOMBRE_COMPLETO);
         }
     }
 
@@ -155,7 +160,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     */
 
     private void refrescar() {
-        mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mClienteId);
+        mClienteObtenerTask = new ClienteObtenerTask(getContext(), this.mClienteId, this.mClienteNombreCompleto);
         mClienteObtenerTask.execute((Void) null);
     }
 
@@ -194,10 +199,12 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     public class ClienteObtenerTask extends AsyncTask<Void, String, Cliente> {
         private Context mContext;
         private long mId;
+        private String mNombreCompleto;
 
-        public ClienteObtenerTask(Context context, long id) {
+        public ClienteObtenerTask(Context context, long id, String nombreCompleto) {
             this.mContext = context;
             this.mId = id;
+            this.mNombreCompleto = nombreCompleto;
         }
 
         @Override
@@ -212,7 +219,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
                 //Si puede sincroniza los clientes primero
                 //y luego busca el listado
                 ClienteBZ clienteBz = new ClienteBZ(this.mContext);
-                resultado = clienteBz.obtener(this.mId);
+                resultado = clienteBz.obtener(mId, mNombreCompleto);
             } catch (Exception e) {
             }
 
