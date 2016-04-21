@@ -60,7 +60,7 @@ public class ClienteBZTest {
         ArrayList<Cliente> clientesTest = this.mClienteBZ.sincronizar();
 
         //busca
-        ArrayList<Cliente> clientesVal = mSqlDA.clienteBuscar(0);
+        ArrayList<Cliente> clientesVal = mSqlDA.clienteBuscar(0, "");
 
         assertThat(clientesTest, is(not(nullValue())));
         assertThat(clientesTest.size(), is(clientesVal.size()));

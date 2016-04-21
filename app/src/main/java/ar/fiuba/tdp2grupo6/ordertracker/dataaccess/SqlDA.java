@@ -105,13 +105,11 @@ public class SqlDA {
 			}
 
 			if (nombreCompleto.trim().length() > 0) {
-				String condition = DbHelper.tblCliente_colNombreCompleto + "=" + nombreCompleto;
+				String condition = "lower(" + DbHelper.tblCliente_colNombreCompleto + ")='" + nombreCompleto.toLowerCase() + "'";
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
-			String collate = " COLLATE NOCASE";
-
-			Cursor c = db.rawQuery(select + where + collate, null);
+			Cursor c = db.rawQuery(select + where, null);
 			if (c.moveToFirst()) {
 				do {
 					Cliente cliente = new Cliente();

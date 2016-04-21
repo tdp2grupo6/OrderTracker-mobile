@@ -3,6 +3,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,7 +11,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -82,28 +87,26 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         */
+
         // Gets the MapView from the XML layout and creates it
         mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
-        mMapView.onCreate(savedInstanceState);
+        //mMapView.onCreate(savedInstanceState);
 
         // Gets to GoogleMap from the MapView and does initialization stuff
-        mMap = mMapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        //mMap = mMapView.getMap();
+        //mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
             MapsInitializer.initialize(this.getActivity());
-            /*
-            MapsInitializer.initialize(getActivity());
-            switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
+            switch (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())) {
                 case ConnectionResult.SUCCESS:
-                    Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show();
-                    mapView = (MapView) view.findViewById(R.id.map);
-                    mapView.onCreate(savedInstanceState);
-                    if (mapView != null) {
-                        map = mapView.getMap();
-                        map.getUiSettings().setMyLocationButtonEnabled(false);
-                        map.setMyLocationEnabled(true);
+                    //Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show();
+                    //mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
+                    mMapView.onCreate(savedInstanceState);
+                    if (mMapView != null) {
+                        mMap = mMapView.getMap();
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     }
                     break;
                 case ConnectionResult.SERVICE_MISSING:
@@ -113,9 +116,10 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
                     Toast.makeText(getActivity(), "UPDATE REQUIRED", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Toast.makeText(getActivity(), GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
             }
-            */
+        } catch (SecurityException se) {
+            se.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,7 +188,7 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
 
     private void actualizar(ArrayList<Cliente> clientes) {
 
-        if (clientes != null) {
+        if (mMap != null && clientes != null && clientes.size() > 0) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             for (Cliente cliente: clientes) {
@@ -224,8 +228,39 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
             //Hace el zoom en el mapa
             mMap.animateCamera(cu);
             //mMap.moveCamera(cu);
+
+            // Intenta de centrar en la posicion actual del user
+            setCurrentPositon();
         }
 
+    }
+
+    private void setCurrentPositon() {
+        try {
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+                    LatLng current = new LatLng(location.getLatitude(),location.getLongitude());
+
+                    //Agrega el marcador
+                    MarkerOptions marker = new MarkerOptions()
+                            .position(current)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    mMap.addMarker(marker);
+
+                    //Hace el zoom en el mapa
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(current,14);
+                    mMap.animateCamera(cu);
+
+                    try {
+                        mMap.setMyLocationEnabled(false);
+                    } catch (SecurityException se) {
+                    }
+                }
+            });
+        } catch (SecurityException se) {
+        }
     }
 
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {

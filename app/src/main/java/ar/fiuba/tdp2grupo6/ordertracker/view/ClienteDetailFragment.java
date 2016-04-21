@@ -2,11 +2,13 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +22,13 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 
 /**
  * A fragment representing a single Cliente detail screen.
@@ -45,7 +51,9 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     private View mRootView;
 
     private Cliente mCliente;
+    private Pedido mPedidoPendiente;
     private ClienteObtenerTask mClienteObtenerTask;
+    private PedidoPendienteObtenerTask mPedidoPendienteObtenerTask;
     private MapView mMapView;
     private GoogleMap mMap;
 
@@ -183,9 +191,8 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent c = new Intent(getContext(), PedidoActivity.class);
-                    c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
-                    startActivity(c);
+                    mPedidoPendienteObtenerTask = new PedidoPendienteObtenerTask(getContext());
+                    mPedidoPendienteObtenerTask.execute((Void) null);
                 }
             });
 
@@ -229,6 +236,81 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
         @Override
         protected void onPostExecute(Cliente cliente) {
             actualizar(cliente);
+        }
+
+    }
+
+    private void setupNuevoPedido(ArrayList<Pedido> pedidoPendientes) {
+        if (pedidoPendientes != null && pedidoPendientes.size() > 0) {
+
+            mPedidoPendiente = pedidoPendientes.get(0);
+
+            AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext());
+            dataDialogBuilder.setTitle(getContext().getResources().getString(R.string.title_popup_ingrese_cantidad));
+            dataDialogBuilder.setMessage("Existe un pedido pendiente del cliente " + String.valueOf(mPedidoPendiente.clienteId) + ". Antes de continuar tiene que CONFIRMARLO, DESCARTARLO O CANCELAR?" );
+            dataDialogBuilder.setCancelable(false);
+            dataDialogBuilder.setPositiveButton("Confirmarlo", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    abrirNuevoPedido(true, false);
+                    dialog.cancel();
+                }
+            }).setNeutralButton("Descartarlo", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    abrirNuevoPedido(false, true);
+                    dialog.cancel();
+                }
+            }).setNegativeButton(getContext().getResources().getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+        } else {
+            abrirNuevoPedido(false, false);
+        }
+    }
+
+    private void abrirNuevoPedido(boolean confirmarPendiente, boolean descartarPendientem) {
+        if (confirmarPendiente) {
+            //TODO: Confirmar Pedido pendiente mPedidoPendiente
+        } else if (descartarPendientem) {
+            //TODO: Descartar Pedido pendiente mPedidoPendiente
+        }
+
+        Intent c = new Intent(getContext(), PedidoActivity.class);
+        c.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
+        startActivity(c);
+    }
+
+    public class PedidoPendienteObtenerTask extends AsyncTask<Void, String, ArrayList<Pedido>> {
+        private Context mContext;
+
+
+        public PedidoPendienteObtenerTask(Context context) {
+            this.mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected ArrayList<Pedido> doInBackground(Void... params) {
+            ArrayList<Pedido> resultado = null;
+
+            try {
+                //Si puede sincroniza los clientes primero
+                //y luego busca el listado
+                PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
+                resultado = pedidoBZ.buscar(0, Pedido.ESTADO_PENDIENTE);
+            } catch (Exception e) {
+            }
+
+            return resultado;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Pedido> pedidoPendientes) {
+            setupNuevoPedido(pedidoPendientes);
         }
 
     }

@@ -62,7 +62,7 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
             this.mClienteNombreCompleto = getIntent().getStringExtra(ClienteDetailActivity.ARG_CLIENTE_NOMBRE_COMPLETO);
 
             // Create the detail fragment and add it to the activity using a fragment transaction.
-            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId);
+            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId, mClienteNombreCompleto);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.cliente_detail_container, fragment)
                     .commit();

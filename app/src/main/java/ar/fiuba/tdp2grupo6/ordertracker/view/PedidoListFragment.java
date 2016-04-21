@@ -297,7 +297,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
                 //Si puede sincroniza los clientes primero
                 //y luego busca el listado
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                resultado = pedidoBZ.obtener(mClienteId);
+                resultado = pedidoBZ.obtenerParaCliente(mClienteId);
             } catch (Exception e) {
                 String err = e.getLocalizedMessage();
             }
@@ -342,7 +342,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
                 //Procesa el cambio
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                resultado = pedidoBZ.actualizar(mPedido, mHolder.mPedidoItem);
+                resultado = pedidoBZ.actualizarPendiente(mPedido, mHolder.mPedidoItem);
             } catch (Exception e) {
             }
 

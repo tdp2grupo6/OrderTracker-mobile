@@ -178,7 +178,7 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
             Cliente cliente = (Cliente)parent.getItemAtPosition(position);
             if (cliente != null ) {
                 if (mTwoPane) {
-                    ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(cliente.id);
+                    ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(cliente.id, "");
                     this.getFragmentManager().beginTransaction()
                             .replace(R.id.cliente_detail_container, fragment)
                             .commit();
