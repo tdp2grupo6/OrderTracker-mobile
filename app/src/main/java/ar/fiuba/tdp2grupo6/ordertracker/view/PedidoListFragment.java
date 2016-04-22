@@ -1,12 +1,14 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
@@ -40,7 +42,14 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
     private long mCategoriaId;
     private long mClienteId;
+    private boolean mShowStockMensaje = true;
+    private boolean mAgregaItemSinStock = false;
 
+    //Propiedades para actualizar Item
+    private PedidoProductoViewHolder mHolder;
+    private int mPosition;
+    private int mViejaCantidad;
+    private int mNuevaCantidad;
 
     private boolean mTwoPane;
     private RecyclerView mReciclerView;
@@ -206,50 +215,94 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         }
     }
 
+    public void actualizarCantidadItem() {
+        mHolder.getQuantityText().setText(String.valueOf(mNuevaCantidad));
+        Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
+
+        mPedidoActualizarTask = new PedidoActualizarTask(getContext(), pedido, mHolder, mNuevaCantidad);
+        mPedidoActualizarTask.execute((Void) null);
+    }
+
     @Override
     public void onItemPlusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
+        mHolder = holder;
+        mPosition = position;
+        mViejaCantidad = viejaCantidad;
+        mNuevaCantidad = nuevaCantidad;
 
-        if (nuevaCantidad <= holder.mPedidoItem.producto.stock) {
+        if (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mAgregaItemSinStock) {
+            actualizarCantidadItem();
+            /*
             holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
             Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
 
             mPedidoActualizarTask = new PedidoActualizarTask(getContext(), pedido, holder, nuevaCantidad);
             mPedidoActualizarTask.execute((Void) null);
+            */
         } else {
-            holder.getQuantityText().setText(String.valueOf(viejaCantidad));
-            Toast.makeText(getContext(), "No se puede agregar mas items, alcanzo la disponibilidad maxima", Toast.LENGTH_SHORT).show();
+            if (mShowStockMensaje) {
+
+                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+                dataDialogBuilder.setTitle(getContext().getResources().getString(R.string.title_popup_agregar_sin_stock));
+                dataDialogBuilder.setMessage(getContext().getResources().getString(R.string.error_agregar_sin_stock));
+                dataDialogBuilder.setCancelable(false);
+                dataDialogBuilder.setPositiveButton(getContext().getResources().getString(R.string.btn_si), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mShowStockMensaje = false;
+                        mAgregaItemSinStock = true;
+
+                        actualizarCantidadItem();
+                        dialog.cancel();
+                    }
+                }).setNegativeButton(getContext().getResources().getString(R.string.btn_no), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mShowStockMensaje = false;
+                        mAgregaItemSinStock = false;
+
+                        dialog.cancel();
+                    }
+                }).setNeutralButton(getContext().getResources().getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                // create an alert dialog
+                dataDialogBuilder.create().show();
+            } else {
+                mHolder.getQuantityText().setText(String.valueOf(mViejaCantidad));
+                //Toast.makeText(getContext(), "No se puede agregar mas items, alcanzo la disponibilidad maxima", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
 
     @Override
     public void onItemMinusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
+        mHolder = holder;
+        mPosition = position;
+        mViejaCantidad = viejaCantidad;
+        mNuevaCantidad = nuevaCantidad;
 
         if (nuevaCantidad >= 0 ) {
-            holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
-            Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
-
-            mPedidoActualizarTask = new PedidoActualizarTask(getContext(), pedido, holder, nuevaCantidad);
-            mPedidoActualizarTask.execute((Void) null);
+            actualizarCantidadItem();
         } else {
-            holder.getQuantityText().setText(String.valueOf(viejaCantidad));
-            Toast.makeText(getContext(), "No se puede quitar mas items", Toast.LENGTH_SHORT).show();
+            mHolder.getQuantityText().setText(String.valueOf(mViejaCantidad));
+            //Toast.makeText(getContext(), "No se puede quitar mas items", Toast.LENGTH_SHORT).show();
         }
 
     }
 
     @Override
     public void onItemQuantityClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
-
-        if (nuevaCantidad > 0 && nuevaCantidad <= holder.mPedidoItem.producto.stock ) {
-            holder.getQuantityText().setText(String.valueOf(nuevaCantidad));
-            Pedido pedido = ((PedidoActivity)getActivity()).mPedido;
-
-            mPedidoActualizarTask = new PedidoActualizarTask(getContext(), pedido, holder, nuevaCantidad);
-            mPedidoActualizarTask.execute((Void) null);
+        mHolder = holder;
+        mPosition = position;
+        mViejaCantidad = viejaCantidad;
+        mNuevaCantidad = nuevaCantidad;
+        if (nuevaCantidad > 0 && (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mAgregaItemSinStock)) {
+            actualizarCantidadItem();
         } else {
-            holder.getQuantityText().setText(String.valueOf(viejaCantidad));
-            Toast.makeText(getContext(), "No se puede procesar esa cantidad de items", Toast.LENGTH_SHORT).show();
+            mHolder.getQuantityText().setText(String.valueOf(mViejaCantidad));
+            //Toast.makeText(getContext(), "No se puede procesar esa cantidad de items", Toast.LENGTH_SHORT).show();
         }
 
     }
