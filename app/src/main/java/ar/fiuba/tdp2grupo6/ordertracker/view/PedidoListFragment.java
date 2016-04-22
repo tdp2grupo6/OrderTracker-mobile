@@ -71,6 +71,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCategoriaId = getArguments().getLong(ARG_CATEGORIA_ID);
+            mClienteId = getArguments().getLong(ARG_CLIENTE_ID);
         }
     }
 

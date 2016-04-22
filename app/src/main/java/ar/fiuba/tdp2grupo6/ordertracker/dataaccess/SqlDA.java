@@ -104,7 +104,7 @@ public class SqlDA {
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
-			if (nombreCompleto.trim().length() > 0) {
+			if (nombreCompleto != null && nombreCompleto.trim().length() > 0) {
 				String condition = "lower(" + DbHelper.tblCliente_colNombreCompleto + ")='" + nombreCompleto.toLowerCase() + "'";
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
@@ -518,7 +518,7 @@ public class SqlDA {
 
 			if (pedidoId > 0) {
 				String condition = DbHelper.tblPedidoItem_colPedidoId + "=" + String.valueOf(pedidoId);
-				where = UtilsDA.AddWhereCondition(where, condition, "and");
+				where = UtilsDA.AddCondition(where, condition, "and");
 			}
 
             cant = db.delete(DbHelper.tblPedidoItem, where, null);
