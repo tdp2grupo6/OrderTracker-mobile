@@ -164,6 +164,7 @@ public class PedidoBZ {
 
                 //Crea uno nuevo
                 response = new Pedido();
+                response.clienteId = clienteId;
                 response.importe = 0;
 
                 //Arma el catalogo
@@ -184,11 +185,28 @@ public class PedidoBZ {
         return response;
     }
 
-    public void borrar(Pedido pedido) throws BusinessException {
+    public void confirmar(long pedidoId) throws BusinessException {
         try {
 
-            mSql.pedidoItemEliminar(0, pedido.id);
-            mSql.pedidoEliminar(pedido.id);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, -1);
+
+            if (pedidos != null && pedidos.size() > 0) {
+                Pedido pedido = pedidos.get(0);
+                pedido.estado =  Pedido.ESTADO_CONFIRMADO;
+
+                mSql.pedidoActualizar(pedido);
+            }
+
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
+
+    public void borrar(long pedidoId) throws BusinessException {
+        try {
+
+            mSql.pedidoItemEliminar(0, pedidoId);
+            mSql.pedidoEliminar(pedidoId);
 
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));

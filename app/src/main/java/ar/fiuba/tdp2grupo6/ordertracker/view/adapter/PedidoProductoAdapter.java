@@ -126,16 +126,16 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                 dataDialogBuilder.setView(input);
                 dataDialogBuilder.setCancelable(false).setPositiveButton(context.getResources().getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (!input.getText().toString().isEmpty()) {        // dgacitua: Solucion a BUG-422
+                        if (input.getText().toString().trim().length() > 0) {
                             int nuevaCantidad = Integer.parseInt(input.getText().toString());
 
                             if (mItemClickListener != null && nuevaCantidad > 0) {
                                 int viejaCantidad = Integer.parseInt(holder.getQuantityText().getText().toString());
                                 mItemClickListener.onItemQuantityClick(holder, position, viejaCantidad, nuevaCantidad);
                             }
+                            }
+                            dialog.cancel();
                         }
-
-                        dialog.cancel();
                     }
                 }).setNegativeButton(context.getResources().getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
