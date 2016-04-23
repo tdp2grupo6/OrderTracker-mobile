@@ -23,10 +23,12 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 public class ClienteDetailActivity extends AppCompatActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
 
     public static final String ARG_CLIENTE_ID = "cliente_id";
+    public static final String ARG_CLIENTE_NOMBRE_COMPLETO = "cliente_nombreCompleto";
 
     private static final int ACTIVITY_PEDIDO = 1000;
 
     private long mClienteId;
+    private String mClienteNombreCompleto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +63,10 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
         //
         if (savedInstanceState == null) {
             this.mClienteId = getIntent().getLongExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
+            this.mClienteNombreCompleto = getIntent().getStringExtra(ClienteDetailActivity.ARG_CLIENTE_NOMBRE_COMPLETO);
 
             // Create the detail fragment and add it to the activity using a fragment transaction.
-            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId);
+            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId, mClienteNombreCompleto);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.cliente_detail_container, fragment)
                     .commit();

@@ -2,6 +2,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +24,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -82,45 +87,44 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         */
+
         // Gets the MapView from the XML layout and creates it
         mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
-        mMapView.onCreate(savedInstanceState);
+        //mMapView.onCreate(savedInstanceState);
 
         // Gets to GoogleMap from the MapView and does initialization stuff
-        mMap = mMapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        try {
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(Location myLocation) {
-                    LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
-
-                    //desactiva el localizador
-                    mMap.setOnMyLocationChangeListener(null);
-                    mCenterOnPosition = true;
-                }
-            });
-
-        } catch (SecurityException se) {
-            mCenterOnPosition = false;
-        }
+        //mMap = mMapView.getMap();
+        //mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
             MapsInitializer.initialize(this.getActivity());
+            switch (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())) {
+                case ConnectionResult.SUCCESS:
+                    //Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show();
+                    //mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
+                    mMapView.onCreate(savedInstanceState);
+                    if (mMapView != null) {
+                        mMap = mMapView.getMap();
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                    break;
+                case ConnectionResult.SERVICE_MISSING:
+                    Toast.makeText(getActivity(), "SERVICE MISSING", Toast.LENGTH_SHORT).show();
+                    break;
+                case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                    Toast.makeText(getActivity(), "UPDATE REQUIRED", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
+            }
+        } catch (SecurityException se) {
+            se.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return mRootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
     }
 
     @Override
@@ -147,17 +151,6 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
             mMapView.onLowMemory();
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            if (mCenterOnPosition)
-                Toast.makeText(getContext(), "Se centrara el mapa en la posicion actual, la aplicacion esta intentando de obtener su ubicacion!", Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getContext(), "No se podra centrar el mapa en la posicion actual, la aplicacion tiene permisos para obtener su ubicacion!", Toast.LENGTH_LONG).show();
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -195,9 +188,9 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
 
     private void actualizar(ArrayList<Cliente> clientes) {
 
-        if (clientes != null) {
-
+        if (mMap != null && clientes != null && clientes.size() > 0) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
             for (Cliente cliente: clientes) {
                 // Add a marker in client location
                 LatLng position = new LatLng(cliente.lat, cliente.lng);
@@ -216,20 +209,58 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
                 builder.include(marker.getPosition());
             }
 
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    String nombreCompleto = marker.getTitle();
+                    Intent intent = new Intent(getContext(), ClienteDetailActivity.class);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_NOMBRE_COMPLETO, nombreCompleto);
+                    getContext().startActivity(intent);
+                }
+            });
 
-            // Centra el mapa en la posicion actual
-            if (!mCenterOnPosition) {
-                //Calcula los limites para hacer zoom
-                LatLngBounds bounds = builder.build();
-                int padding = 8; // offset from edges of the map in pixels
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                    //Calcula los limites para hacer zoom
+            LatLngBounds bounds = builder.build();
+            int padding = 8; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-                //Hace el zoom en el mapa
-                //mMap.animateCamera(cu);
-                mMap.moveCamera(cu);
-            }
+            //Hace el zoom en el mapa
+            mMap.animateCamera(cu);
+            //mMap.moveCamera(cu);
+
+            // Intenta de centrar en la posicion actual del user
+            setCurrentPositon();
         }
 
+    }
+
+    private void setCurrentPositon() {
+        try {
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+                    LatLng current = new LatLng(location.getLatitude(),location.getLongitude());
+
+                    //Agrega el marcador
+                    MarkerOptions marker = new MarkerOptions()
+                            .position(current)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    mMap.addMarker(marker);
+
+                    //Hace el zoom en el mapa
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(current,14);
+                    mMap.animateCamera(cu);
+
+                    try {
+                        mMap.setMyLocationEnabled(false);
+                    } catch (SecurityException se) {
+                    }
+                }
+            });
+        } catch (SecurityException se) {
+        }
     }
 
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
