@@ -2,11 +2,10 @@ package ar.fiuba.tdp2grupo6.ordertracker.business;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.WebDA;
 
@@ -40,14 +39,30 @@ public class ComentarioBZ {
 		this.mSql = dataBase;
 	}
 
-	public ArrayList<Comentario> buscar(long clienteId) throws BusinessException {
-		ArrayList<Comentario> comentarios = null;
+	public void enviarComentario(long comentarioId) throws BusinessException {
+		Comentario comentario = null;
 		try {
-			comentarios = mSql.comentarioBuscar(0, clienteId);
+			comentario = mSql.comentarioBuscar(comentarioId);
+			mWeb.sendComentario(comentario);
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
+	}
 
-		return comentarios;
+	public void enviarComentario(Comentario comm) throws BusinessException {
+		try {
+			mWeb.sendComentario(comm);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public Comentario guardarComentario(Comentario comentario) throws BusinessException {
+		try {
+			return mSql.comentarioGuardar(comentario);
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
 	}
 }

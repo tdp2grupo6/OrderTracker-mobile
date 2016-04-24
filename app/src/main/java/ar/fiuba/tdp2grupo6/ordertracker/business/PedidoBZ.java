@@ -50,7 +50,7 @@ public class PedidoBZ {
     }
 
     public Pedido actualizarPendiente(Pedido pedido, PedidoItem pedidoItem) throws ServiceException, BusinessException {
-        pedido.estado = Pedido.ESTADO_PENDIENTE;
+        pedido.estado = Pedido.ESTADO_NUEVO;
         return  actualizar(pedido, pedidoItem);
     }
 
@@ -154,7 +154,7 @@ public class PedidoBZ {
     public Pedido obtenerParaCliente(long clienteId) throws BusinessException {
         Pedido response = null;
         try {
-            ArrayList<Pedido> pedidos = this.buscar(clienteId, Pedido.ESTADO_PENDIENTE);
+            ArrayList<Pedido> pedidos = this.buscar(clienteId, Pedido.ESTADO_NUEVO);
             if (pedidos != null && pedidos.size() > 0) {
                 //Obtiene los datos grabados para ese Pedido
                 response = pedidos.get(0);
@@ -216,7 +216,7 @@ public class PedidoBZ {
     public void borrarPendientes() throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_PENDIENTE);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_NUEVO);
             for (Pedido pedido: pedidos) {
                 mSql.pedidoItemEliminar(0, pedido.id);
                 mSql.pedidoEliminar(pedido.id);

@@ -1,16 +1,24 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 
 /**
  * An activity representing a single Cliente detail screen. This
@@ -25,10 +33,15 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
 
     private long mClienteId;
     private String mClienteNombreCompleto;
+    private EnviarComentarioTask mEnviarComentarioTask;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = (Context)this;
+
         setContentView(R.layout.activity_cliente_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
@@ -37,7 +50,10 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                mEnviarComentarioTask = new EnviarComentarioTask(mContext);
+                mEnviarComentarioTask.execute((Void) null);
+
+                Snackbar.make(view, "Enviando consulta POST", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -91,5 +107,37 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
         intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, this.mClienteId);
 
         this.startActivity(intent);
+    }
+
+    // dgacitua: Async Task para manejar la subida de comentarios
+    public class EnviarComentarioTask extends AsyncTask<Void, String, Comentario> {
+        private Context mContext;
+
+        public EnviarComentarioTask(Context context) {
+            this.mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Comentario doInBackground(Void... params) {
+            ComentarioBZ cbz = new ComentarioBZ(this.mContext);
+            Comentario comm = new Comentario();
+            comm.clienteId = mClienteId;
+            comm.fechaComentario = new Date();
+            comm.razonComun = "Otro";
+            comm.comentario = "Buen cliente";
+
+            try {
+                //cbz.guardarComentario(comm);
+                cbz.enviarComentario(comm);
+            } catch (BusinessException e) {
+                e.printStackTrace();
+            }
+
+            return comm;
+        }
     }
 }

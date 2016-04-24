@@ -133,7 +133,6 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                                 int viejaCantidad = Integer.parseInt(holder.getQuantityText().getText().toString());
                                 mItemClickListener.onItemQuantityClick(holder, position, viejaCantidad, nuevaCantidad);
                             }
-                            }
                             dialog.cancel();
                         }
                     }

@@ -1,20 +1,26 @@
 package ar.fiuba.tdp2grupo6.ordertracker.dataaccess;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.ProductoImagen;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.db.DbHelper;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+
+import static ar.fiuba.tdp2grupo6.ordertracker.dataaccess.UtilsDA.DateToLong;
+import static ar.fiuba.tdp2grupo6.ordertracker.dataaccess.UtilsDA.LongToDate;
 
 
 public class SqlDA {
@@ -658,4 +664,123 @@ public class SqlDA {
 		}
 	}
     */
+
+	/******************************************************************************************************/
+	// Comentario
+
+	public Comentario comentarioGuardar(Comentario comentario) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			//cv.put(DbHelper.tblComentario_colId, comentario.id);
+			cv.put(DbHelper.tblComentario_colClienteId, comentario.clienteId);
+			cv.put(DbHelper.tblComentario_colFechaComentario, Comentario.date2string(comentario.fechaComentario));
+			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
+			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
+			cv.put(DbHelper.tblComentario_colEnviado, comentario.enviado);
+
+			comentario.id = db.insert(DbHelper.tblComentario, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return comentario;
+	}
+
+	public Comentario comentarioBuscar(long comentarioId) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		Comentario listComentario = new Comentario();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblComentario;
+
+			String where = "";
+			if (comentarioId > 0) {
+				String condition = DbHelper.tblComentario_colId + "=" + String.valueOf(comentarioId);
+				//where = UtilsDA.AddWhereCondition(where, condition, "and");
+				where = condition;
+			}
+
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					Comentario comentario = new Comentario();
+					comentario.id = c.getLong(c.getColumnIndex(DbHelper.tblComentario_colId));
+					comentario.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblComentario_colClienteId));
+					comentario.fechaComentario = Comentario.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
+					comentario.razonComun = c.getString(c.getColumnIndex(DbHelper.tblComentario_colRazonComun));
+					comentario.comentario = c.getString(c.getColumnIndex(DbHelper.tblComentario_colComentario));
+					comentario.enviado = Comentario.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
+
+					listComentario = comentario;
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listComentario;
+	}
+
+	public ArrayList<Comentario> comentarioObtenerNoEnviado() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<Comentario> listComentario = new ArrayList<Comentario>();
+		try {
+			String select = "SELECT * FROM " + DbHelper.tblComentario;
+
+			String where = "";
+
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					Comentario comentario = new Comentario();
+					comentario.id = c.getLong(c.getColumnIndex(DbHelper.tblComentario_colId));
+					comentario.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblComentario_colClienteId));
+					comentario.fechaComentario = Comentario.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
+					comentario.razonComun = c.getString(c.getColumnIndex(DbHelper.tblComentario_colRazonComun));
+					comentario.comentario = c.getString(c.getColumnIndex(DbHelper.tblComentario_colComentario));
+					comentario.enviado = Comentario.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
+
+					if (comentario.enviado == false) {
+						listComentario.add(comentario);
+					}
+				} while (c.moveToNext());
+			}
+
+			if (c != null && !c.isClosed()) {
+				c.close();
+			}
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listComentario;
+	}
+
+	public void comentarioCambiarEstadoEnviado(long comentarioId, boolean enviado) throws LocalException {
+		try {
+			Comentario comm = comentarioBuscar(comentarioId);
+			comm.enviado = enviado;
+			comentarioGuardar(comm);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+
+
+	public void comentarioVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblComentario, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
 }

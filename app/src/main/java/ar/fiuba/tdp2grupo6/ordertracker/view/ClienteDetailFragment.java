@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
@@ -269,7 +272,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             try {
                 //Obtiene el listado de pendientes
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, Pedido.ESTADO_PENDIENTE);
+                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, Pedido.ESTADO_NUEVO);
 
                 if (pendientes != null && pendientes.size() > 0){
                     resultado2 = pendientes.get(0);
