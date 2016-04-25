@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Categoria;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
