@@ -12,13 +12,22 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.ScrollingTabContainerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +50,7 @@ public class PedidoActivity extends AppBaseActivity
     public static final String ARG_CLIENTE_ID = "cliente_id";
 
     public Pedido mPedido;
+    //public String mMarcaFiltro;
 
     private long mClienteId;
 
@@ -48,6 +58,7 @@ public class PedidoActivity extends AppBaseActivity
     private TabLayout mTabLayout;
     private TextView mClienteView;
     private TextView mTotalView;
+    private Spinner mSpinnerBrand;
 
     private CategoryPagerAdapter mCategoryPagerAdapter;
     private PedidoProductosBuscarTask mPedidoProductosBuscarTask;
@@ -81,15 +92,24 @@ public class PedidoActivity extends AppBaseActivity
             // Setea el viewpager
             mViewPager = (ViewPager) findViewById(R.id.container);
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
-            cargarPedido();
 
-            /*
-            PedidoListFragment fragment = PedidoListFragment.newInstance(0, mClienteId);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.pedido_container, fragment)
-                    .commit();
-            */
+            cargarPedido();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_menu_pedido, menu);
+        MenuItem item = menu.findItem(R.id.spinner_brand);
+
+        mSpinnerBrand = (Spinner) MenuItemCompat.getActionView(item);
+        //actualizarHeader();
+        return true;
     }
 
     @Override
@@ -123,19 +143,6 @@ public class PedidoActivity extends AppBaseActivity
                 mCategoryPagerAdapter.setCategoryDirty(pedidoItem.producto.categoria.id, true);
             mCategoryPagerAdapter.notifyDataSetChanged();
 
-
-            /*
-            // Actualiza las vistas
-            int size = getSupportFragmentManager().getFragments().size();
-            for (int i=0; i<size; i++) {
-                PedidoListFragment pedidoListFragment = (PedidoListFragment)getSupportFragmentManager().getFragments().get(i);
-                if ((pedidoListFragment.mCategoriaId == pedidoItem.producto.categoria.id ||
-                    pedidoListFragment.mCategoriaId == 0) && fragment.mCategoriaId != pedidoListFragment.mCategoriaId) {
-                    pedidoListFragment.invalidateRecicler();
-                }
-            }
-            */
-
         }
     }
 
@@ -149,39 +156,39 @@ public class PedidoActivity extends AppBaseActivity
         mViewPager.setAdapter(mCategoryPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        /*
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                ((CategoryPagerAdapter)mViewPager.getAdapter()).get
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        */
-
+        //actualizarHeader();
         actualizarFooter();
     }
 
-    private void cargarPedido() {
-        mPedidoProductosBuscarTask = new PedidoProductosBuscarTask(this, mClienteId);
-        mPedidoProductosBuscarTask.execute((Void) null);
+
+    /*
+    private void actualizarHeader() {
+
+        if (mPedido != null && mSpinnerBrand != null) {
+            ArrayList<String> marcas = new ArrayList<String>();
+            marcas.addAll(mPedido.marcas);
+            marcas.add(0, "Todas");
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, marcas);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            //Setea el Spinner
+            mSpinnerBrand.setAdapter(dataAdapter);
+        }
+
     }
+    */
 
     private void actualizarFooter() {
         if (mPedido != null) {
             mClienteView.setText(mPedido.cliente.nombreCompleto);
             mTotalView.setText(String.format("%.2f", mPedido.getImporte(false)));
         }
+    }
+
+    private void cargarPedido() {
+        mPedidoProductosBuscarTask = new PedidoProductosBuscarTask(this, mClienteId);
+        mPedidoProductosBuscarTask.execute((Void) null);
     }
 
     public class PedidoConfirmaTask extends AsyncTask<Void, String, Boolean> {
@@ -368,6 +375,12 @@ public class PedidoActivity extends AppBaseActivity
             if (i > 0)
                 categoriaId = mPedido.categorias.get(i-1).id;
             return categoriaId;
+        }
+
+        public void setAllCategoryDirty(boolean isDirty) {
+            for (Map.Entry<Long, Boolean> entry : mCategoryDirtyMap.entrySet()) {
+                entry.setValue(isDirty);
+            }
         }
 
         public void setCategoryDirty(long categoriaId, boolean isDirty) {

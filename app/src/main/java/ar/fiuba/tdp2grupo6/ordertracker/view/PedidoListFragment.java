@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
@@ -19,8 +20,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
     public long mCategoriaId;
     private long mClienteId;
+    private String mMarcaFilter = "";
 
     //Propiedades para actualizar Item
     private boolean mShowStockMensaje = true;
@@ -56,6 +61,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     private TextView mEmptyView;
     private LinearLayout mListFooter;
     private PedidoProductoAdapter mReciclerAdapter;
+    private Spinner mSpinnerBrand;
 
     private PedidoActivity mPedidoActivity;
     private OnPedidoListFragmentListener mListener;
@@ -121,9 +127,8 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         super.onAttach(context);
         if (context instanceof OnPedidoListFragmentListener) {
             mListener = (OnPedidoListFragmentListener) context;
-            //if (context instanceof PedidoActivity)
-            //    mPedidoActivity = (PedidoActivity) context;
-
+            if (context instanceof PedidoActivity)
+                mPedidoActivity = (PedidoActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -139,6 +144,10 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_menu_list_pedido, menu);
+
+        MenuItem filter = menu.findItem(R.id.spinner_brand);
+        mSpinnerBrand = (Spinner) MenuItemCompat.getActionView(filter);
+        actualizarHeader();
 
         MenuItem search = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
@@ -173,6 +182,52 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
                 return true;
         }
         return false;
+    }
+
+    private void actualizarHeader() {
+        //mPedidoActivity = (PedidoActivity) getActivity();
+        //Pedido pedido = mPedidoActivity.mPedido;
+
+        if (mPedidoActivity.mPedido != null && mSpinnerBrand != null && mSpinnerBrand.getAdapter() == null) {
+            ArrayList<String> marcas = new ArrayList<String>();
+            marcas.addAll(mPedidoActivity.mPedido.marcas);
+            marcas.add(0, "Todas");
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, marcas);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            //Setea el Spinner
+            mSpinnerBrand.setAdapter(dataAdapter);
+            //mSpinnerBrand.setSelection(marcas.indexOf(mPedidoActivity.mMarcaFiltro));
+            if (mSpinnerBrand.getOnItemSelectedListener() == null) {
+                mSpinnerBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position > 0) {
+                            mMarcaFilter = ((AppCompatTextView) view).getText().toString();
+                            actualizarLista();
+                        } else {
+                            if (mMarcaFilter.trim().length() > 0) {
+                                mMarcaFilter = "";
+                                actualizarLista();
+                            }
+                        }
+
+                        //TODO: Hay que pasar la variable con el filtro a la actividad, y siempre que se
+                        //cambia hay que actualizar ese valor. Cuando se cambia de fragment, hay que tomar ese valor
+                        //para filtrar. Despues cuando se recarga hay que inicializar en ese valor.
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+
+                });
+            }
+
+        }
+
     }
 
     public void actualizarCantidadItem() {
@@ -268,14 +323,17 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
     private void actualizarLista() {
         if (mReciclerView != null) {
-            mPedidoActivity = (PedidoActivity) getActivity();
+            //mPedidoActivity = (PedidoActivity) getActivity();
 
+            /*
             ArrayList<PedidoItem> list = null;
             if (mCategoriaId == 0)
                 list = new ArrayList<PedidoItem>(mPedidoActivity.mPedido.items.values());
             else
                 list = (ArrayList<PedidoItem>) mPedidoActivity.mPedido.itemsByCategory.get(String.valueOf(mCategoriaId));
+            */
 
+            ArrayList<PedidoItem> list =  mPedidoActivity.mPedido.getItems(mCategoriaId, mMarcaFilter);
             mReciclerAdapter = new PedidoProductoAdapter(this, list, mTwoPane);
             mReciclerView.setAdapter(mReciclerAdapter);
         }

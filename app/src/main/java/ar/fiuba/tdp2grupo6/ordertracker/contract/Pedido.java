@@ -36,34 +36,67 @@ public class Pedido {
 
     public Map<String, PedidoItem> items = new HashMap<String, PedidoItem>(); //por ID
     public Map<String, ArrayList<PedidoItem>> itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
-    public Map<String, ArrayList<PedidoItem>> itemsByBrand = new HashMap<String, ArrayList<PedidoItem>>(); //por Marca
+    //public Map<String, ArrayList<PedidoItem>> itemsByBrand = new HashMap<String, ArrayList<PedidoItem>>(); //por Marca
+    public Map<String, HashMap<String, ArrayList<PedidoItem>>> itemsByCategoryBrand = new HashMap<String, HashMap<String, ArrayList<PedidoItem>>>(); //por Marca
     public ArrayList<Categoria> categorias = new ArrayList<Categoria>();
     public ArrayList<String> marcas = new ArrayList<String>();
 
     public void generateMaps() {
         itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
-        itemsByBrand = new HashMap<String, ArrayList<PedidoItem>>(); //por Marca
+        itemsByCategoryBrand = new HashMap<String, HashMap<String, ArrayList<PedidoItem>>>(); //por CategoriaId
 
+        itemsByCategory.put(String.valueOf(0), new ArrayList<PedidoItem>());
         for (PedidoItem pedidoItem: items.values()) {
 
-            //organiza por catedoria
-            ArrayList<PedidoItem> categoryList = itemsByCategory.get(String.valueOf(pedidoItem.producto.categoria.id));
-            if (categoryList == null) {
-                categoryList = new ArrayList<PedidoItem>();
-                itemsByCategory.put(String.valueOf(pedidoItem.producto.categoria.id), categoryList);
+            //Organiza por categoria
+            addToCategoryList(0, pedidoItem);
+            if (addToCategoryList(pedidoItem.producto.categoria.id, pedidoItem))
                 categorias.add(pedidoItem.producto.categoria);
-            }
-            categoryList.add(pedidoItem);
 
-            //organiza por marca
-            ArrayList<PedidoItem> brandList = itemsByBrand.get(String.valueOf(pedidoItem.producto.marca));
-            if (brandList == null) {
-                brandList = new ArrayList<PedidoItem>();
-                itemsByBrand.put(String.valueOf(pedidoItem.producto.marca), brandList);
+            //Organiza por categoria y marca
+            if (addToCategoryBrandList(0, pedidoItem.producto.marca, pedidoItem))
                 marcas.add(pedidoItem.producto.marca);
-            }
-            brandList.add(pedidoItem);
+            addToCategoryBrandList(pedidoItem.producto.categoria.id, pedidoItem.producto.marca, pedidoItem);
+
         }
+    }
+
+
+    private boolean addToCategoryList(long categoriaId, PedidoItem pedidoItem) {
+        boolean nueva = false;
+
+        //organiza por categoria
+        ArrayList<PedidoItem> list = itemsByCategory.get(String.valueOf(categoriaId));
+        if (list == null) {
+            nueva = true;
+
+            list = new ArrayList<PedidoItem>();
+            itemsByCategory.put(String.valueOf(categoriaId), list);
+        }
+        list.add(pedidoItem);
+
+        return nueva;
+    }
+
+    private boolean addToCategoryBrandList(long categoriaId, String marca, PedidoItem pedidoItem) {
+        boolean nueva = false;
+
+        //organiza por categoria y marca
+        HashMap<String, ArrayList<PedidoItem>> categoryBrandMap = itemsByCategoryBrand.get(String.valueOf(categoriaId));
+        if (categoryBrandMap == null) {
+            categoryBrandMap = new HashMap<String, ArrayList<PedidoItem>>();
+            itemsByCategoryBrand.put(String.valueOf(categoriaId), categoryBrandMap);
+        }
+
+        ArrayList<PedidoItem> list = categoryBrandMap.get(marca);
+        if (list == null) {
+            nueva = true;
+            list = new ArrayList<PedidoItem>();
+            categoryBrandMap.put(marca, list);
+        }
+        list.add(pedidoItem);
+
+        return nueva;
     }
 
     public void updateItem(long productoId, int cantidad) {
@@ -83,6 +116,20 @@ public class Pedido {
             this.dirtyImporte = false;
         }
         return this.importe;
+    }
+
+    public ArrayList<PedidoItem> getItems(long categoriaId, String marca) {
+        ArrayList<PedidoItem> lista = new ArrayList<PedidoItem>();
+
+        if (marca == null || marca.trim().length() == 0) {
+            lista = this.itemsByCategory.get(String.valueOf(categoriaId));
+        } else {
+            HashMap<String, ArrayList<PedidoItem>> map = this.itemsByCategoryBrand.get(String.valueOf(categoriaId));
+            if (map != null && map.containsKey(marca))
+                lista = map.get(marca);
+        }
+
+        return lista;
     }
 
 }

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.PedidoActivity">
+
+    <item android:id="@+id/spinner_brand"
+          android:title="@string/action_filtro_marca"
+          app:showAsAction="ifRoom"
+          app:actionViewClass="android.widget.Spinner" />
+
+</menu>
