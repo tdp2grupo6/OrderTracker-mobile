@@ -1,6 +1,7 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,6 +240,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
 
     public class ClienteObtenerTask extends AsyncTask<Void, String, ArrayList<Object>> {
         private Context mContext;
+        private ProgressDialog mPd;
         private long mId;
         private String mNombreCompleto;
 
@@ -249,6 +252,11 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
 
         @Override
         protected void onPreExecute() {
+            mPd = new ProgressDialog(getActivity());
+            mPd.setMessage(getContext().getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
         }
 
         @Override
@@ -269,7 +277,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             try {
                 //Obtiene el listado de pendientes
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, Pedido.ESTADO_PENDIENTE);
+                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, Pedido.ESTADO_NUEVO);
 
                 if (pendientes != null && pendientes.size() > 0){
                     resultado2 = pendientes.get(0);
@@ -294,6 +302,8 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
                 mClientePedidoPendiente = (Cliente) resultados.get(2);
             }
             actualizarVista();
+
+            mPd.dismiss();
         }
 
     }

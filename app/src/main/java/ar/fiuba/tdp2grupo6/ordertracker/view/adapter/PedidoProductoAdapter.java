@@ -63,6 +63,14 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
         Bitmap imagenMiniatura = imagenBZ.leer(holder.mPedidoItem.producto.getNombreImagenMiniatura());
         if (imagenMiniatura != null)
             holder.getImagenView().setImageBitmap(imagenMiniatura);
+        holder.getImagenView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(holder, position);
+                }
+            }
+        });
 
         holder.getMinusView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,34 +94,6 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
             }
         });
 
-        /*
-        holder.getQuantityText().addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (mItemClickListener != null) {
-                    try {
-                        if (holder.getQuantityText().hasFocus()) {
-                            int viejaCantidad = Integer.parseInt(holder.getQuantityText().getText().toString());
-                            int nuevaCantidad = Integer.parseInt(s.toString());
-                            holder.getQuantityText().clearFocus();
-                            mItemClickListener.onItemQuantityClick(holder, position, viejaCantidad, nuevaCantidad);
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-        */
-
         holder.getQuantityText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +101,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                 final EditText input = new EditText(context);
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(context);
+                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog);
                 dataDialogBuilder.setTitle(context.getResources().getString(R.string.title_popup_ingrese_cantidad));
                 dataDialogBuilder.setView(input);
                 dataDialogBuilder.setCancelable(false).setPositiveButton(context.getResources().getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
@@ -146,6 +126,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
             }
         });
 
+        /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +135,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                 }
             }
         });
+        */
     }
 
     @Override

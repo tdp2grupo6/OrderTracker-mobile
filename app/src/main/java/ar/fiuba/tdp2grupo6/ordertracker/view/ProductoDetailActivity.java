@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Categoria;
 
 public class ProductoDetailActivity extends AppCompatActivity {
     Context mContext;
     Bundle mExtras;
     Long id;
-    String categoria, nombre, marca, precio, descripcion, codigo, stock, estado, campo, rutaImagen;
+    Categoria categoria;
+    String nombre, marca, precio, descripcion, codigo, stock, estado, campo, rutaImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +65,10 @@ public class ProductoDetailActivity extends AppCompatActivity {
             stock = mExtras.getString("productoStock");
             codigo = mExtras.getString("productoCodigo");
             rutaImagen = mExtras.getString("productoRutaImagen");
-            categoria = mExtras.getString("productoCategoria");
+            categoria = new Categoria(mExtras.getString("productoCategoria"));
             estado = mExtras.getString("productoEstado");
 
-            collapsingToolbar.setTitle(categoria);
+            collapsingToolbar.setTitle(categoria.nombre);
 
 			poblarVista(nombre, marca, precio, descripcion, stock, codigo, rutaImagen, estado);
         }

@@ -34,7 +34,9 @@
     <string name="title_popup_ingrese_cantidad">Ingrese la Cantidad</string>
     <string name="title_popup_pedido_pendiente">Existe un Pedido Pendiente</string>
     <string name="title_popup_agregar_sin_stock">Agregar Items sin Stock</string>
+    <string name="title_activity_maps">Map</string>
 
+    <string name="msg_procesando">Procesando</string>
 
     <string name="imagen_descripcion">Imagen</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -52,7 +54,6 @@
     <string name="detalle_producto_stock_titulo">Disponibles</string>
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
-    <string name="title_activity_maps">Map</string>
 
 </resources>
 

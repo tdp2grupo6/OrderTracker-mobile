@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -265,12 +266,21 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
 
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
         private Context mContext;
+        //private ProgressDialog mPd;
+
         public ClientesBuscarTask(Context context) {
             this.mContext = context;
         }
 
         @Override
         protected void onPreExecute() {
+            /*
+            mPd = new ProgressDialog(mContext);
+            mPd.setMessage(mContext.getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
+            */
         }
 
         @Override
@@ -296,6 +306,7 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
         @Override
         protected void onPostExecute(ArrayList<Cliente> clientes) {
             actualizar(clientes);
+            //mPd.dismiss();
         }
 
     }

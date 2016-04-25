@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -157,8 +158,6 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
 
             }
         });
-
-
     }
 
     @Override
@@ -224,12 +223,21 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
 
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
         private Context mContext;
+        //private ProgressDialog mPd;
+
         public ClientesBuscarTask(Context context) {
             this.mContext = context;
         }
 
         @Override
         protected void onPreExecute() {
+            /*
+            mPd = new ProgressDialog(getActivity());
+            mPd.setMessage(mContext.getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
+            */
         }
 
         @Override
@@ -254,6 +262,8 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
 
         @Override
         protected void onPostExecute(ArrayList<Cliente> clientes) {
+
+            //mPd.dismiss();
             if (mListView != null && clientes!=null)
             {
                 mSwipeLayout.setRefreshing(false);

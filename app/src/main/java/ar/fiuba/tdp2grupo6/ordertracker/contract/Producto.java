@@ -18,7 +18,7 @@ public class Producto {
     public String nombre;
     public String marca;
     public String caracteristicas;
-    public String categoria;
+    public Categoria categoria;
     public Double precio;
     public int stock;
     public String estado;
@@ -43,7 +43,7 @@ public class Producto {
         this.nombre = json.getString("nombre");
         this.marca = json.getString("marca");
         this.caracteristicas = json.getString("caracteristicas");
-        this.categoria = json.getJSONArray("categorias").getJSONObject(0).getString("nombre");
+        this.categoria = new Categoria(json.getJSONArray("categorias").getJSONObject(0));
         this.precio = json.getDouble("precio");
         this.stock = json.getInt("stock");
         this.estado = json.getJSONObject("estado").getString("tipo");
@@ -59,7 +59,7 @@ public class Producto {
         this.nombre = json.getString("nombre");
         this.marca = json.getString("marca");
         this.caracteristicas = json.getString("caracteristicas");
-        this.categoria = json.getJSONArray("categorias").getJSONObject(0).getString("nombre");
+        this.categoria = new Categoria(json.getJSONArray("categorias").getJSONObject(0));
         this.precio = json.getDouble("precio");
         this.stock = json.getInt("stock");
         this.estado = json.getJSONObject("estado").getString("tipo");

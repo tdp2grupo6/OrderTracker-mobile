@@ -72,7 +72,7 @@ public class ClienteActivity extends AppBaseActivity implements
         });
         */
 
-        //Set the item selected
+        //Set the item selected in the lateral menu
         mDrawerMenu.getItem(MENU_INDEX).setChecked(true);
 
         //Set the context

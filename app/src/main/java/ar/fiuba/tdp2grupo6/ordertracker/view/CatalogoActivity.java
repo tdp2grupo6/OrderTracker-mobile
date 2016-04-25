@@ -1,11 +1,13 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -80,7 +82,7 @@ public class CatalogoActivity extends AppBaseActivity {
                 intent.putExtra("productoCodigo", prod.mostrarCodigo());
                 intent.putExtra("productoStock", prod.mostrarStock());
                 intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
-                intent.putExtra("productoCategoria", prod.categoria);
+                intent.putExtra("productoCategoria", prod.categoria.toString());
                 intent.putExtra("productoEstado", prod.mostrarEstado());
                 startActivity(intent);
             }
@@ -111,12 +113,19 @@ public class CatalogoActivity extends AppBaseActivity {
 
     public class ProductosBuscarTask extends AsyncTask<Void, String, ArrayList<Producto>> {
         private Context mContext;
+        private ProgressDialog mPd;
+
         public ProductosBuscarTask(Context context) {
             this.mContext = context;
         }
 
         @Override
         protected void onPreExecute() {
+            mPd = new ProgressDialog(mContext);
+            mPd.setMessage(mContext.getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
         }
 
         @Override
@@ -147,6 +156,8 @@ public class CatalogoActivity extends AppBaseActivity {
                 mSwipeLayout.setRefreshing(false);
                 actualizarLista(productos);
             }
+
+            mPd.dismiss();
         }
     }
 }

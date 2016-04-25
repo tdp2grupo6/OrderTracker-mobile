@@ -1,5 +1,8 @@
 package ar.fiuba.tdp2grupo6.ordertracker.contract;
 
+import android.widget.ListView;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +30,59 @@ public class Pedido {
     public long id;
     public long clienteId;
     public Cliente cliente;
-
-    //public ArrayList<Producto> catalogo = new ArrayList<Producto>();
-    public Map<String, PedidoItem> items = new HashMap<String, PedidoItem>();
-    public double importe;
     public short estado;
+    private double importe;
+    private boolean dirtyImporte = false;
+
+    public Map<String, PedidoItem> items = new HashMap<String, PedidoItem>(); //por ID
+    public Map<String, ArrayList<PedidoItem>> itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
+    public Map<String, ArrayList<PedidoItem>> itemsByBrand = new HashMap<String, ArrayList<PedidoItem>>(); //por Marca
+    public ArrayList<Categoria> categorias = new ArrayList<Categoria>();
+    public ArrayList<String> marcas = new ArrayList<String>();
+
+    public void generateMaps() {
+        itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
+        itemsByBrand = new HashMap<String, ArrayList<PedidoItem>>(); //por Marca
+
+        for (PedidoItem pedidoItem: items.values()) {
+
+            //organiza por catedoria
+            ArrayList<PedidoItem> categoryList = itemsByCategory.get(String.valueOf(pedidoItem.producto.categoria.id));
+            if (categoryList == null) {
+                categoryList = new ArrayList<PedidoItem>();
+                itemsByCategory.put(String.valueOf(pedidoItem.producto.categoria.id), categoryList);
+                categorias.add(pedidoItem.producto.categoria);
+            }
+            categoryList.add(pedidoItem);
+
+            //organiza por marca
+            ArrayList<PedidoItem> brandList = itemsByBrand.get(String.valueOf(pedidoItem.producto.marca));
+            if (brandList == null) {
+                brandList = new ArrayList<PedidoItem>();
+                itemsByBrand.put(String.valueOf(pedidoItem.producto.marca), brandList);
+                marcas.add(pedidoItem.producto.marca);
+            }
+            brandList.add(pedidoItem);
+        }
+    }
+
+    public void updateItem(long productoId, int cantidad) {
+        PedidoItem pedidoItem = this.items.get(String.valueOf(productoId));
+        pedidoItem.cantidad = cantidad;
+
+        this.dirtyImporte = true;
+    }
+
+    public double getImporte(boolean actualizar) {
+        if (dirtyImporte || actualizar) {
+            double nuevoImporte = 0;
+            for (PedidoItem pedidoItem : items.values()) {
+                nuevoImporte += pedidoItem.cantidad * pedidoItem.producto.precio;
+            }
+            this.importe = nuevoImporte;
+            this.dirtyImporte = false;
+        }
+        return this.importe;
+    }
 
 }

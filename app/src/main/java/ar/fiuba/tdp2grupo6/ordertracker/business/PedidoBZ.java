@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
@@ -44,22 +45,18 @@ public class PedidoBZ {
         this.mSql = dataBase;
     }
 
-    public Pedido actualizarConfirmado(Pedido pedido, PedidoItem pedidoItem) throws ServiceException, BusinessException {
+    public Pedido actualizarConfirmado(Pedido pedido) throws ServiceException, BusinessException {
         pedido.estado = Pedido.ESTADO_CONFIRMADO;
-        return  actualizar(pedido, pedidoItem);
+        return  actualizar(pedido);
     }
 
-    public Pedido actualizarPendiente(Pedido pedido, PedidoItem pedidoItem) throws ServiceException, BusinessException {
-        pedido.estado = Pedido.ESTADO_PENDIENTE;
-        return  actualizar(pedido, pedidoItem);
+    public Pedido actualizarNuevo(Pedido pedido) throws ServiceException, BusinessException {
+        pedido.estado = Pedido.ESTADO_NUEVO;
+        return  actualizar(pedido);
     }
 
-    private Pedido actualizar(Pedido pedido, PedidoItem pedidoItem) throws ServiceException, BusinessException {
+    private Pedido actualizar(Pedido pedido) throws ServiceException, BusinessException {
         try {
-
-            //Actualiza el pedido
-            pedido.items.put(String.valueOf(pedidoItem.productoId), pedidoItem);
-
             //Actualiza el pedido en la bd
             if (pedido.id == 0) {
                 pedido = mSql.pedidoGuardar(pedido);
@@ -68,7 +65,6 @@ public class PedidoBZ {
             }
 
             //Actualiza el pedido item en la bd
-            pedido.importe = 0;
             for(Map.Entry<String, PedidoItem> entry : pedido.items.entrySet()) {
                 String key = entry.getKey();
                 PedidoItem item = entry.getValue();
@@ -84,11 +80,10 @@ public class PedidoBZ {
                 } else {
                     // no hace nada
                 }
-
-                //Actualiza el importe global del pedido
-                pedido.importe += item.producto.precio * item.cantidad;
             }
 
+            //actualiza
+            pedido.getImporte(true);
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
@@ -103,7 +98,19 @@ public class PedidoBZ {
             pedidos = mSql.pedidoBuscar(0, clienteId, estado);
 
             if (pedidos != null && pedidos.size() > 0) {
+                long clienteIdAux = 0;
+                Cliente cliente = null;
+
                 for (Pedido pedido: pedidos) {
+
+                    //Obtiene el cliente
+                    if (clienteIdAux != pedido.clienteId) {
+                        ClienteBZ clienteBZ = new ClienteBZ(this.mContext);
+                        cliente = clienteBZ.obtener(pedido.clienteId, "");
+                        clienteIdAux = pedido.clienteId;
+                    }
+                    pedido.cliente = cliente;
+
                     //Obtiene los datos grabados para ese Pedido
                     pedidoitems = mSql.pedidoItemBuscar(0, pedido.id, false);
 
@@ -119,7 +126,6 @@ public class PedidoBZ {
                     }
 
                     //Actualiza el catalogo si ya tenia parte del pedido cargado
-                    pedido.importe = 0;
                     for (PedidoItem pedidoItem: pedidoitems) {
                         boolean borrarItem = true;
 
@@ -132,9 +138,6 @@ public class PedidoBZ {
                                 //Actualiza los datos
                                 pedidoItemExistente.id = pedidoItem.id;
                                 pedidoItemExistente.cantidad = pedidoItem.cantidad;
-
-                                //Actualiza el importe global del pedido
-                                pedido.importe += pedidoItemExistente.producto.precio * pedidoItemExistente.cantidad;
                             }
                         }
 
@@ -142,6 +145,10 @@ public class PedidoBZ {
                         if (borrarItem)
                             mSql.pedidoItemEliminar(pedidoItem.id, 0);
                     }
+
+                    //regenera los maps del pedido
+                    pedido.generateMaps();
+                    pedido.getImporte(true);
                 }
             }
         } catch (Exception e) {
@@ -154,18 +161,24 @@ public class PedidoBZ {
     public Pedido obtenerParaCliente(long clienteId) throws BusinessException {
         Pedido response = null;
         try {
-            ArrayList<Pedido> pedidos = this.buscar(clienteId, Pedido.ESTADO_PENDIENTE);
+
+            ArrayList<Pedido> pedidos = this.buscar(clienteId, Pedido.ESTADO_NUEVO);
             if (pedidos != null && pedidos.size() > 0) {
                 //Obtiene los datos grabados para ese Pedido
                 response = pedidos.get(0);
+
             } else {
                 //Borra todos los pendientes (solo puede existier un pedido pendiente)
                 borrarPendientes();
 
-                //Crea uno nuevo
+                //busca el cliente
+                ClienteBZ clienteBZ = new ClienteBZ(this.mContext);
+                Cliente cliente = clienteBZ.obtener(clienteId, "");
+
+                //Crea un pedido nuevo
                 response = new Pedido();
                 response.clienteId = clienteId;
-                response.importe = 0;
+                response.cliente = cliente;
 
                 //Arma el catalogo
                 ArrayList<Producto> catalogo = mSql.productoBuscar(0);
@@ -177,6 +190,10 @@ public class PedidoBZ {
 
                     response.items.put(String.valueOf(producto.id), item);
                 }
+
+                //regenera los maps del pedido
+                response.generateMaps();
+                response.getImporte(true);
             }
 
         } catch (Exception e) {
@@ -216,7 +233,7 @@ public class PedidoBZ {
     public void borrarPendientes() throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_PENDIENTE);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_NUEVO);
             for (Pedido pedido: pedidos) {
                 mSql.pedidoItemEliminar(0, pedido.id);
                 mSql.pedidoEliminar(pedido.id);
