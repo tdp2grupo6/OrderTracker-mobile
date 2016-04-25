@@ -108,6 +108,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                     public void onClick(DialogInterface dialog, int id) {
                         if (input.getText().toString().trim().length() > 0) {
                             int nuevaCantidad = Integer.parseInt(input.getText().toString());
+
                             if (mItemClickListener != null && nuevaCantidad > 0) {
                                 int viejaCantidad = Integer.parseInt(holder.getQuantityText().getText().toString());
                                 mItemClickListener.onItemQuantityClick(holder, position, viejaCantidad, nuevaCantidad);

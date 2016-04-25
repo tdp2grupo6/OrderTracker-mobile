@@ -1,0 +1,68 @@
+package ar.fiuba.tdp2grupo6.ordertracker.business;
+
+import android.content.Context;
+
+import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
+import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
+import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.WebDA;
+
+/**
+ * Created by dgacitua on 23-04-16.
+ */
+public class ComentarioBZ {
+	private Context mContext;
+	private WebDA mWeb;
+	private SqlDA mSql;
+
+	public ComentarioBZ(Context context) {
+		this.mContext = context;
+		this.mWeb = new WebDA(context);
+		this.mSql = new SqlDA(context);
+	}
+
+	public ComentarioBZ(Context context, WebDA service) {
+		this.mContext = context;
+		this.mWeb = service;
+	}
+
+	public ComentarioBZ(Context context, SqlDA dataBase) {
+		this.mContext = context;
+		this.mSql = dataBase;
+	}
+
+	public ComentarioBZ(Context context, WebDA service, SqlDA dataBase) {
+		this.mContext = context;
+		this.mWeb = service;
+		this.mSql = dataBase;
+	}
+
+	public void enviarComentario(long comentarioId) throws BusinessException {
+		Comentario comentario = null;
+		try {
+			comentario = mSql.comentarioBuscar(comentarioId);
+			mWeb.sendComentario(comentario);
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+
+	public void enviarComentario(Comentario comm) throws BusinessException {
+		try {
+			mWeb.sendComentario(comm);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public Comentario guardarComentario(Comentario comentario) throws BusinessException {
+		try {
+			return mSql.comentarioGuardar(comentario);
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+}

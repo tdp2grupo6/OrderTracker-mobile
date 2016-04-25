@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 8;
+	static final int dbVersion = 9;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -61,6 +61,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblPedidoItem_colPedidoId = "pedidoid";
 	public static final String tblPedidoItem_colProductoId = "productoid";
 	public static final String tblPedidoItem_colCantidad = "cantidad";
+
+	// dgacitua: Tabla Comentario
+	public static final String tblComentario = "Comentario";
+	public static final String tblComentario_colId = "id"; // Autoincremental
+	public static final String tblComentario_colClienteId = "clienteid";
+	public static final String tblComentario_colFechaComentario = "fechacomentario";
+	public static final String tblComentario_colRazonComun = "razoncomun";
+	public static final String tblComentario_colComentario = "comentario";
+	public static final String tblComentario_colEnviado = "enviado";
 
 	public static synchronized DbHelper getInstance(Context context) {
 		if (helper == null) {
@@ -156,6 +165,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
+		// dgacitua: Comentario
+		createTable = "CREATE TABLE " + tblComentario + " (";
+		createTable += tblComentario_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblComentario_colClienteId + " INTEGER";
+		createTable += ", " + tblComentario_colFechaComentario + " TEXT";
+		createTable += ", " + tblComentario_colRazonComun + " TEXT";
+		createTable += ", " + tblComentario_colComentario + " TEXT";
+		createTable += ", " + tblComentario_colEnviado + " TEXT";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
 	}
 
 	@Override
@@ -175,6 +198,9 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(dropTable);
 
 			dropTable = "DROP TABLE IF EXISTS " + tblPedidoItem;
+			db.execSQL(dropTable);
+
+			dropTable = "DROP TABLE IF EXISTS " + tblComentario;
 			db.execSQL(dropTable);
 
 			onCreate(db);

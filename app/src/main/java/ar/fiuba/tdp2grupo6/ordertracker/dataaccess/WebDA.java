@@ -13,12 +13,19 @@ import java.net.SocketTimeoutException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
@@ -43,7 +50,12 @@ public class WebDA {
 	private static final String BITMAP_RESPONSE_METHOD = "BITMAP";
 
 	private Context mContext;
-	private String mUrlEndpoint = "http://ordertracker-tdp2grupo6.rhcloud.com/";
+
+	private String mUrlLocalEndpoint = "http://192.168.1.250:8080/OrderTracker/";	//"http://localhost:8080/OrderTracker/";
+	private String mUrlRemoteEndpoint = "http://ordertracker-tdp2grupo6.rhcloud.com/";
+
+	private String mUrlEndpoint = mUrlRemoteEndpoint;
+
 	private int ConnectionTimeout = 30000;
 	private int SocketTimeout = 120000;
 
@@ -141,7 +153,7 @@ public class WebDA {
 			urlConnection.connect();
 
 			// get stream
-			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK || urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED || urlConnection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
 				if (responseType == STRING_RESPONSE_METHOD) {
 					String responseString = readResponseString(urlConnection.getInputStream());
 					response.setData(responseString);
@@ -237,5 +249,23 @@ public class WebDA {
 		} catch (Exception e) {
 			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+	}
+
+	// dgacitua: Envía un comentario al backend
+	public ResponseObject sendComentario(Comentario comentario) throws ServiceException {
+		ResponseObject response = null;
+		String webMethod = "comentario";
+		String targetURL = mUrlEndpoint + webMethod;
+
+		HashMap<String, String> headers = new HashMap<>();
+		headers.put("content-type", "application/json");
+
+		String body = comentario.empaquetar();
+		Log.d("OT-LOG", "POSTeando Comentario: " + body);
+
+		// realiza la llamada al servicio
+		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+
+		return response; //validar_response(response);
 	}
 }
