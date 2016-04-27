@@ -280,7 +280,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             try {
                 //Obtiene el listado de pendientes
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, Pedido.ESTADO_NUEVO);
+                ArrayList<Pedido> pendientes = pedidoBZ.buscar(0, 0, Pedido.ESTADO_NUEVO, false);
 
                 if (pendientes != null && pendientes.size() > 0){
                     resultado2 = pendientes.get(0);

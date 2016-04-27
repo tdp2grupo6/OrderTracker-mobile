@@ -32,7 +32,7 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     public static final String ARG_CLIENTE_ID = "cliente_id";
     public static final String ARG_CLIENTE_NOMBRE_COMPLETO = "cliente_nombreCompleto";
 
-    private static final int ACTIVITY_PEDIDO = 1000;
+
 
     private long mClienteId;
     private String mClienteNombreCompleto;
@@ -108,7 +108,7 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case (ACTIVITY_PEDIDO) : {
+            case (PedidoActivity.ACTIVITY_PEDIDO) : {
                 if (resultCode == Activity.RESULT_OK) {
                     Toast.makeText(this, "Se ha confirmado el Pedido!", Toast.LENGTH_LONG).show();
                 }
@@ -121,7 +121,7 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     public void onClienteAgregarPedido() {
         Intent intent = new Intent(this, PedidoActivity.class);
         intent.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
-        startActivityForResult(intent, ACTIVITY_PEDIDO);
+        startActivityForResult(intent, PedidoActivity.ACTIVITY_PEDIDO);
         //this.startActivity(intent);
     }
 

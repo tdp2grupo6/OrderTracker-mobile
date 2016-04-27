@@ -54,6 +54,12 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".view.PedidoConfirmaActivity"
+            android:label="@string/title_activity_catalogo"
+            android:parentActivityName=".view.PedidoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".view.ProductoDetailActivity"
             android:label="@string/title_activity_producto_detail"
             android:parentActivityName=".view.CatalogoActivity"

@@ -91,11 +91,11 @@ public class PedidoBZ {
         return pedido;
     }
 
-    public ArrayList<Pedido> buscar(long clienteId, int estado) throws BusinessException {
+    public ArrayList<Pedido> buscar(long clienteId, long pedidoId, int estado, boolean fullCatalogo) throws BusinessException {
         ArrayList<Pedido> pedidos = null;
         try {
             ArrayList<PedidoItem> pedidoitems = null;
-            pedidos = mSql.pedidoBuscar(0, clienteId, estado);
+            pedidos = mSql.pedidoBuscar(pedidoId, clienteId, estado);
 
             if (pedidos != null && pedidos.size() > 0) {
                 long clienteIdAux = 0;
@@ -111,39 +111,62 @@ public class PedidoBZ {
                     }
                     pedido.cliente = cliente;
 
-                    //Obtiene los datos grabados para ese Pedido
-                    pedidoitems = mSql.pedidoItemBuscar(0, pedido.id, false);
+                    if (fullCatalogo) {
+                        //Obtiene los datos grabados para ese Pedido
+                        pedidoitems = mSql.pedidoItemBuscar(0, pedido.id, false);
 
-                    //Arma el catalogo
-                    ArrayList<Producto> catalogo = mSql.productoBuscar(0);
-                    for (Producto producto: catalogo) {
-                        PedidoItem item = new PedidoItem();
-                        item.productoId = producto.id;
-                        item.producto = producto;
-                        item.cantidad = 0;
+                        //Carga el catalogo
+                        ArrayList<Producto> catalogo = mSql.productoBuscar(0);
+                        for (Producto producto : catalogo) {
+                            PedidoItem item = new PedidoItem();
+                            item.productoId = producto.id;
+                            item.producto = producto;
+                            item.cantidad = 0;
 
-                        pedido.items.put(String.valueOf(producto.id), item);
-                    }
-
-                    //Actualiza el catalogo si ya tenia parte del pedido cargado
-                    for (PedidoItem pedidoItem: pedidoitems) {
-                        boolean borrarItem = true;
-
-                        //Busca si el producto esta en el catalogo, sino lo borra
-                        if (pedidoItem.cantidad > 0) {
-                            PedidoItem pedidoItemExistente = pedido.items.get(String.valueOf(pedidoItem.productoId));
-                            if (pedidoItemExistente != null) {
-                                borrarItem = false;
-
-                                //Actualiza los datos
-                                pedidoItemExistente.id = pedidoItem.id;
-                                pedidoItemExistente.cantidad = pedidoItem.cantidad;
-                            }
+                            pedido.items.put(String.valueOf(producto.id), item);
                         }
 
-                        //Si no esta el item del pedido en el catalogo actual, lo borra
-                        if (borrarItem)
-                            mSql.pedidoItemEliminar(pedidoItem.id, 0);
+                        //Actualiza el catalogo si ya tenia parte del pedido cargado
+                        for (PedidoItem pedidoItem : pedidoitems) {
+                            boolean borrarItem = true;
+
+                            //Busca si el producto esta en el catalogo, sino lo borra
+                            if (pedidoItem.cantidad > 0) {
+                                PedidoItem pedidoItemExistente = pedido.items.get(String.valueOf(pedidoItem.productoId));
+                                if (pedidoItemExistente != null) {
+                                    borrarItem = false;
+
+                                    //Actualiza los datos
+                                    pedidoItemExistente.id = pedidoItem.id;
+                                    pedidoItemExistente.cantidad = pedidoItem.cantidad;
+                                }
+                            }
+
+                            //Si no esta el item del pedido en el catalogo actual, lo borra
+                            if (borrarItem)
+                                mSql.pedidoItemEliminar(pedidoItem.id, 0);
+                        }
+
+                    } else {
+                        //Obtiene los datos grabados para ese Pedido
+                        pedidoitems = mSql.pedidoItemBuscar(0, pedido.id, true);
+
+                        //Actualiza el catalogo si ya tenia parte del pedido cargado
+                        for (PedidoItem pedidoItem : pedidoitems) {
+                            boolean borrarItem = true;
+
+                            //Busca si el producto esta en el catalogo, sino lo borra
+                            if (pedidoItem.cantidad > 0) {
+                                borrarItem = false;
+
+                                pedido.items.put(String.valueOf(pedidoItem.productoId), pedidoItem);
+                            }
+
+                            //Si no esta el item del pedido en el catalogo actual, lo borra
+                            if (borrarItem)
+                                mSql.pedidoItemEliminar(pedidoItem.id, 0);
+                        }
+
                     }
 
                     //regenera los maps del pedido
@@ -162,7 +185,7 @@ public class PedidoBZ {
         Pedido response = null;
         try {
 
-            ArrayList<Pedido> pedidos = this.buscar(clienteId, Pedido.ESTADO_NUEVO);
+            ArrayList<Pedido> pedidos = this.buscar(clienteId, 0, Pedido.ESTADO_NUEVO, true);
             if (pedidos != null && pedidos.size() > 0) {
                 //Obtiene los datos grabados para ese Pedido
                 response = pedidos.get(0);
@@ -202,6 +225,21 @@ public class PedidoBZ {
         return response;
     }
 
+    public Pedido obtenerParaConfirmar(long pedidoId) throws BusinessException {
+        Pedido response = null;
+        try {
+
+            ArrayList<Pedido> pedidos = this.buscar(0, pedidoId, Pedido.ESTADO_NUEVO, false);
+            if (pedidos != null && pedidos.size() > 0) {
+                //Obtiene los datos grabados para ese Pedido
+                response = pedidos.get(0);
+            }
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+        return response;
+    }
+
     public void confirmar(long pedidoId) throws BusinessException {
         try {
 
@@ -211,6 +249,27 @@ public class PedidoBZ {
                 Pedido pedido = pedidos.get(0);
                 pedido.estado =  Pedido.ESTADO_CONFIRMADO;
 
+                mSql.pedidoActualizar(pedido);
+            }
+
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
+
+    public void confirmar(Pedido pedido) throws BusinessException {
+        try {
+
+            if (pedido != null && pedido.items.values().size() > 0) {
+
+                // Se fija si algun item se borro
+                ArrayList<PedidoItem> pedidosOld = mSql.pedidoItemBuscar(0, pedido.id, false);
+                for (PedidoItem pedidoItem : pedidosOld) {
+                    if (!pedido.items.containsKey(String.valueOf(pedidoItem.productoId)))
+                        mSql.pedidoItemEliminar(pedidoItem.id, 0);
+                }
+
+                pedido.estado = Pedido.ESTADO_CONFIRMADO;
                 mSql.pedidoActualizar(pedido);
             }
 

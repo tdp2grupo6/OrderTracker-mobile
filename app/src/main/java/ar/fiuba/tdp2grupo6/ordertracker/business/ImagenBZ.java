@@ -37,7 +37,7 @@ public class ImagenBZ {
 		Bitmap bitmap = null;
 		if (isExternalStorageReadable()) {
 			try {
-				File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);;
+				File file = new File(getFolder(), fileName);
 				if (file.exists())
 					bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
 			} catch (Exception e) {
@@ -51,7 +51,7 @@ public class ImagenBZ {
 		boolean existe = false;
 		if (isExternalStorageReadable()) {
 			try {
-				File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+				File file = new File(getFolder(), fileName);
 				existe = file.exists();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -85,7 +85,7 @@ public class ImagenBZ {
 
 		// This location works best if you want the created images to be shared
 		// between applications and persist after your app has been uninstalled.
-		File mediaFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+		File mediaFile = new File(getFolder(), fileName);
 
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
@@ -101,6 +101,11 @@ public class ImagenBZ {
 		}
 
 		return mediaFile;
+	}
+
+	private File getFolder() {
+		File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/ordertracker/images/");
+		return folder;
 	}
 
 }

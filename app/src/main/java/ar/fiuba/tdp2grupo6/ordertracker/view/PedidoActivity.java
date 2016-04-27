@@ -48,6 +48,7 @@ public class PedidoActivity extends AppBaseActivity
         implements PedidoListFragment.OnPedidoListFragmentListener {
 
     public static final String ARG_CLIENTE_ID = "cliente_id";
+    public static final int ACTIVITY_PEDIDO = 1000;
 
     public Pedido mPedido;
     //public String mMarcaFiltro;
@@ -80,7 +81,7 @@ public class PedidoActivity extends AppBaseActivity
             }
         });
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             this.mClienteId = getIntent().getLongExtra(PedidoActivity.ARG_CLIENTE_ID, 0);
@@ -110,6 +111,22 @@ public class PedidoActivity extends AppBaseActivity
         mSpinnerBrand = (Spinner) MenuItemCompat.getActionView(item);
         //actualizarHeader();
         return true;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (PedidoConfirmaActivity.ACTIVITY_PEDIDO_CONFIRMA) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                    //Toast.makeText(this, "Se ha confirmado el Pedido!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -147,8 +164,12 @@ public class PedidoActivity extends AppBaseActivity
     }
 
     public void onPedidoConfirma() {
-        PedidoConfirmaTask mPedidoConfirmarTask = new PedidoConfirmaTask(this, this.mPedido);
-        mPedidoConfirmarTask.execute((Void) null);
+        Intent intent = new Intent(this, PedidoConfirmaActivity.class);
+        intent.putExtra(PedidoConfirmaActivity.ARG_PEDIDO_ID, mPedido.id);
+        startActivityForResult(intent, PedidoConfirmaActivity.ACTIVITY_PEDIDO_CONFIRMA);
+
+        //PedidoConfirmaTask mPedidoConfirmarTask = new PedidoConfirmaTask(this, this.mPedido);
+        //mPedidoConfirmarTask.execute((Void) null);
     }
 
     private void actualizarVista() {
@@ -191,6 +212,7 @@ public class PedidoActivity extends AppBaseActivity
         mPedidoProductosBuscarTask.execute((Void) null);
     }
 
+    /*
     public class PedidoConfirmaTask extends AsyncTask<Void, String, Boolean> {
         private Context mContext;
         private ProgressDialog mPd;
@@ -234,6 +256,7 @@ public class PedidoActivity extends AppBaseActivity
         }
 
     }
+    */
 
     public class PedidoProductosBuscarTask extends AsyncTask<Void, String, Pedido> {
         private Context mContext;

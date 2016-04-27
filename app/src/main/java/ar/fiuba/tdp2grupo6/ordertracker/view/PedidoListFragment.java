@@ -139,6 +139,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mPedidoActivity = null;
     }
 
     @Override
