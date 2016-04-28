@@ -57,7 +57,7 @@ public class Comentario {
 	public Date obtenerFecha(JSONObject json, String data) {
 		try {
 			String dateStr = json.getString(data);
-			return Comentario.string2date(dateStr);
+			return Utils.string2date(dateStr);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -68,34 +68,10 @@ public class Comentario {
 	// dgacitua: Se parsea manualmente el JSON para peticiones POST
 	public String empaquetar() {
 		String ret = "{'cliente':{'id':" + this.clienteId + "},"
-				+ "'fechaComentario':'" + Comentario.date2string(this.fechaComentario) + "',"
+				+ "'fechaComentario':'" + Utils.date2string(this.fechaComentario) + "',"
 				+ "'razonComun':'" + this.razonComun + "',"
 				+ "'comentario':'" + this.comentario + "'}";
 		return ret;
 	}
 
-	// dgacitua: Métodos para parsear la fecha, compatibles con el Backend en Grails
-	static public String date2string(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		return sdf.format(date);
-	}
-
-	static public Date string2date(String str) {
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-			return sdf.parse(str);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	static public boolean string2boolean(String str) {
-		if (str!=null && str.toLowerCase().equals("true")) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 }

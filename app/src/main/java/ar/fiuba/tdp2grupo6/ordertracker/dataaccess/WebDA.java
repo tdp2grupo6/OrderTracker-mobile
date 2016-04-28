@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
@@ -217,6 +218,23 @@ public class WebDA {
 		}
 	}
 
+	// Obtiene la agenda semanal
+	public ResponseObject getAgenda() throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "agenda/semana";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+
+			return response; //validar_response(response);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+	}
+
 	// Obtiene las imagenes para un producto
 	public ResponseObject getProductosImagen(String rutaImagen) throws ServiceException {
 
@@ -261,6 +279,23 @@ public class WebDA {
 		headers.put("content-type", "application/json");
 
 		String body = comentario.empaquetar();
+		Log.d("OT-LOG", "POSTeando Comentario: " + body);
+
+		// realiza la llamada al servicio
+		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+
+		return response; //validar_response(response);
+	}
+
+	public ResponseObject sendPedido(Pedido pedido) throws ServiceException {
+		ResponseObject response = null;
+		String webMethod = "pedido";
+		String targetURL = mUrlEndpoint + webMethod;
+
+		HashMap<String, String> headers = new HashMap<>();
+		headers.put("content-type", "application/json");
+
+		String body = pedido.empaquetar();
 		Log.d("OT-LOG", "POSTeando Comentario: " + body);
 
 		// realiza la llamada al servicio

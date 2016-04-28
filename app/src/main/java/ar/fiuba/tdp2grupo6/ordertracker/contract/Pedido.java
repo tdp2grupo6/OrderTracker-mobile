@@ -2,7 +2,11 @@ package ar.fiuba.tdp2grupo6.ordertracker.contract;
 
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +14,7 @@ import java.util.Map;
  * Created by dgacitua on 30-03-16.
  */
 public class Pedido {
+
     // dgacitua: Nuevos estados del pedido (validados con el cliente)
     public static final int ESTADO_NUEVO = 1; // Se crea un nuevo pedido en el app movil
     public static final int ESTADO_CONFIRMADO = 2; // Se confirma/acepta el pedido en el app movil, aún no se envía al servidor
@@ -20,6 +25,7 @@ public class Pedido {
 
     public long id;
     public long clienteId;
+    public Date fechaRealizado;
     public Cliente cliente;
     public short estado = Pedido.ESTADO_NUEVO;
     private double importe;
@@ -50,7 +56,6 @@ public class Pedido {
 
         }
     }
-
 
     private boolean addToCategoryList(long categoriaId, PedidoItem pedidoItem) {
         boolean nueva = false;
@@ -126,6 +131,34 @@ public class Pedido {
         }
 
         return lista;
+    }
+
+    public String empaquetar() {
+        String ret = "";
+        try {
+            /*
+            “{'cliente':{'id':2},'elementos':[{'producto':{'id':2},'cantidad':6},
+            {'producto':{'id':3},'cantidad':1},{'producto':{'id':5},'cantidad':3}]}”
+            */
+            JSONObject obj = new JSONObject();
+            obj.put("cliente", new JSONObject().put("id", this.clienteId));
+            obj.put("fechaRealizado", Utils.date2string(this.fechaRealizado));
+
+            JSONArray elementos = new JSONArray();
+            for (PedidoItem pedidoItem: this.items.values()) {
+                if (pedidoItem.cantidad > 0) {
+                    JSONObject item = new JSONObject();
+                    item.put("producto", new JSONObject().put("id", pedidoItem.productoId));
+                    item.put("cantidad", pedidoItem.cantidad);
+                    elementos.put(item);
+                }
+            }
+            obj.put("elementos", elementos);
+            ret = obj.toString();
+        } catch (Exception e) {
+            ret = "";
+        }
+        return ret;
     }
 
 }

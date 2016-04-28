@@ -152,7 +152,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
             try {
                 //Procesa el cambio
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                pedidoBZ.confirmar(mPedido);
+                pedidoBZ.confirmar(mPedido, true);
             } catch (Exception e) {
                 resultado = false;
             }

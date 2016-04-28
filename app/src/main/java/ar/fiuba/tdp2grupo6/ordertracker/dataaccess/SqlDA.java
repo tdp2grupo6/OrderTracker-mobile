@@ -17,6 +17,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Utils;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.db.DbHelper;
 
@@ -314,6 +315,7 @@ public class SqlDA {
 			//cv.put(DbHelper.tblPedido_colId, pedido.id);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
+			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado));
             pedido.id = db.insert(DbHelper.tblPedido, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
@@ -330,6 +332,7 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
+			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado));
 
 			String where = "";
 			if (pedido != null) {
@@ -376,6 +379,7 @@ public class SqlDA {
 					pedido.id = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colId));
 					pedido.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colClienteId));
 					pedido.estado = c.getShort(c.getColumnIndex(DbHelper.tblPedido_colEstado));
+					pedido.fechaRealizado = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblPedido_colFecha)));
 					listPedido.add(pedido);
 				} while (c.moveToNext());
 			}
@@ -676,7 +680,7 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			//cv.put(DbHelper.tblComentario_colId, comentario.id);
 			cv.put(DbHelper.tblComentario_colClienteId, comentario.clienteId);
-			cv.put(DbHelper.tblComentario_colFechaComentario, Comentario.date2string(comentario.fechaComentario));
+			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario));
 			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
 			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
 			cv.put(DbHelper.tblComentario_colEnviado, comentario.enviado);
@@ -710,10 +714,10 @@ public class SqlDA {
 					Comentario comentario = new Comentario();
 					comentario.id = c.getLong(c.getColumnIndex(DbHelper.tblComentario_colId));
 					comentario.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblComentario_colClienteId));
-					comentario.fechaComentario = Comentario.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
+					comentario.fechaComentario = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
 					comentario.razonComun = c.getString(c.getColumnIndex(DbHelper.tblComentario_colRazonComun));
 					comentario.comentario = c.getString(c.getColumnIndex(DbHelper.tblComentario_colComentario));
-					comentario.enviado = Comentario.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
+					comentario.enviado = Utils.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
 
 					listComentario = comentario;
 				} while (c.moveToNext());
@@ -743,10 +747,10 @@ public class SqlDA {
 					Comentario comentario = new Comentario();
 					comentario.id = c.getLong(c.getColumnIndex(DbHelper.tblComentario_colId));
 					comentario.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblComentario_colClienteId));
-					comentario.fechaComentario = Comentario.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
+					comentario.fechaComentario = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblComentario_colFechaComentario)));
 					comentario.razonComun = c.getString(c.getColumnIndex(DbHelper.tblComentario_colRazonComun));
 					comentario.comentario = c.getString(c.getColumnIndex(DbHelper.tblComentario_colComentario));
-					comentario.enviado = Comentario.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
+					comentario.enviado = Utils.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
 
 					if (comentario.enviado == false) {
 						listComentario.add(comentario);

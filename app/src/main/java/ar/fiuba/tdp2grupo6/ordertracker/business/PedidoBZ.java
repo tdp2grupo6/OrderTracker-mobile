@@ -2,14 +2,21 @@ package ar.fiuba.tdp2grupo6.ordertracker.business;
 
 import android.content.Context;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
@@ -257,7 +264,7 @@ public class PedidoBZ {
         }
     }
 
-    public void confirmar(Pedido pedido) throws BusinessException {
+    public void confirmar(Pedido pedido, boolean trySend) throws BusinessException {
         try {
 
             if (pedido != null && pedido.items.values().size() > 0) {
@@ -269,8 +276,13 @@ public class PedidoBZ {
                         mSql.pedidoItemEliminar(pedidoItem.id, 0);
                 }
 
+                pedido.fechaRealizado = new Date();
                 pedido.estado = Pedido.ESTADO_CONFIRMADO;
                 mSql.pedidoActualizar(pedido);
+
+                if (trySend) {
+                    this.enviarPedido(pedido);
+                }
             }
 
         } catch (Exception e) {
@@ -298,6 +310,49 @@ public class PedidoBZ {
                 mSql.pedidoEliminar(pedido.id);
             }
 
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
+
+    public void enviarPedido(long pedidoId) throws BusinessException {
+        Comentario comentario = null;
+        try {
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, -1);
+            if (pedidos != null & pedidos.size() > 0) {
+                enviarPedido(pedidos.get(0));
+            }
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
+
+    public void enviarPedido(Pedido pedido) throws BusinessException {
+
+        try {
+            ResponseObject response = mWeb.sendPedido(pedido);
+            if (response.getData() != null) {
+                //Actualiza el estado del pedido
+                pedido.estado = Pedido.ESTADO_ACEPTADO;
+                mSql.pedidoActualizar(pedido);
+
+                //Graba cada cliente en la BD
+                try {
+                    JSONObject data = new JSONObject(response.getData());
+                    /*
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject itemjson = data.getJSONObject(i);
+
+                        Cliente cliente = new Cliente(itemjson);
+                        mSql.clienteGuardar(cliente);
+
+                        response.add(cliente);
+                    }
+                    */
+                } catch (JSONException jex) {
+                    throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
+                }
+            }
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
