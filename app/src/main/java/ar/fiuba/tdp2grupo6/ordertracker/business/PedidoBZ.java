@@ -333,7 +333,7 @@ public class PedidoBZ {
             ResponseObject response = mWeb.sendPedido(pedido);
             if (response.getData() != null) {
                 //Actualiza el estado del pedido
-                pedido.estado = Pedido.ESTADO_ACEPTADO;
+                pedido.estado = Pedido.ESTADO_ENVIADO;
                 mSql.pedidoActualizar(pedido);
 
                 //Graba cada cliente en la BD

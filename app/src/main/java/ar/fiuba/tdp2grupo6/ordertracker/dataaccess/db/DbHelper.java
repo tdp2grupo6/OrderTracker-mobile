@@ -9,11 +9,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 10;
+	static final int dbVersion = 11;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
 	private static DbHelper helper;
+
+	// Tabla AgendaItem
+	public static final String tblAgendaItem = "AgendaItem";
+	public static final String tblAgendaItem_colId = "id";
+	public static final String tblAgendaItem_colDiaId = "diaid";
+	public static final String tblAgendaItem_colClienteId = "clienteid";
 
 	// Tabla Cliente
 	public static final String tblCliente = "Cliente";
@@ -88,6 +94,18 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 
 		String createTable;
+
+		// Agenda
+		createTable = "CREATE TABLE " + tblAgendaItem + " (";
+		createTable += tblAgendaItem_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblAgendaItem_colDiaId + " INTEGER";
+		createTable += ", " + tblAgendaItem_colClienteId + " INTEGER";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
 
 		// Cliente
 		createTable = "CREATE TABLE " + tblCliente + " (";

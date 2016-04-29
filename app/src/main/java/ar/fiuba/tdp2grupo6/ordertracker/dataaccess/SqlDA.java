@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Agenda;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.AgendaItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Categoria;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
@@ -39,6 +41,124 @@ public class SqlDA {
 		this.mContext = mContext;
 		this.mDb = db;
 	}
+
+
+	/******************************************************************************************************/
+	// Agenda
+
+	public AgendaItem agendaItemGuardar(AgendaItem agendaItem) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblAgendaItem_colDiaId, agendaItem.diaId);
+			cv.put(DbHelper.tblAgendaItem_colClienteId, agendaItem.clienteId);
+
+			agendaItem.id = db.insert(DbHelper.tblAgendaItem, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return agendaItem;
+	}
+
+	public long agendaItemActualizar(AgendaItem agendaItem) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblAgendaItem_colDiaId, agendaItem.diaId);
+			cv.put(DbHelper.tblAgendaItem_colClienteId, agendaItem.clienteId);
+
+			String where = "";
+			if (agendaItem != null) {
+				String condition = DbHelper.tblAgendaItem_colId + "=" + String.valueOf(agendaItem.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblAgendaItem, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public ArrayList<AgendaItem> agendaItemBuscar(long id, boolean loadCliente) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<AgendaItem> listAgendaItem = new ArrayList<AgendaItem>();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblAgendaItem;
+
+			String where = "";
+			if (id > 0) {
+				String condition = DbHelper.tblAgendaItem_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+            String order = " order by diaId asc, id asc";
+
+			Cursor c = db.rawQuery(select + where + order, null);
+			if (c.moveToFirst()) {
+				do {
+					AgendaItem agendaItem = new AgendaItem();
+					agendaItem.id = c.getLong(c.getColumnIndex(DbHelper.tblAgendaItem_colId));
+					agendaItem.diaId = c.getInt(c.getColumnIndex(DbHelper.tblAgendaItem_colDiaId));
+					agendaItem.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblAgendaItem_colClienteId));
+
+                    if (loadCliente) {
+                        ArrayList<Cliente> clientes = this.clienteBuscar(agendaItem.clienteId, "");
+                        if (clientes != null && clientes.size() > 0)
+                            agendaItem.cliente = clientes.get(0);
+                    }
+
+					listAgendaItem.add(agendaItem);
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listAgendaItem;
+	}
+
+	public long agendaItemEliminar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblAgendaItem_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblAgendaItem, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public void agendaItemVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblAgendaItem, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+	
 	/******************************************************************************************************/
 	// Cliente
 

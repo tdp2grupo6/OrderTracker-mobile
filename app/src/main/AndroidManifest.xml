@@ -42,6 +42,12 @@
                 android:value="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteActivity"/>
         </activity>
         <activity
+            android:name=".view.AgendaActivity"
+            android:label="@string/title_activity_catalogo"
+            android:parentActivityName=".view.ClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".view.CatalogoActivity"
             android:label="@string/title_activity_catalogo"
             android:parentActivityName=".view.ClienteActivity"

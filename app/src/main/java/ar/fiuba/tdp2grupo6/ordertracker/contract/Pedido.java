@@ -27,15 +27,34 @@ public class Pedido {
     public long clienteId;
     public Date fechaRealizado;
     public Cliente cliente;
-    public short estado = Pedido.ESTADO_NUEVO;
+    public short estado;
     private double importe;
-    private boolean dirtyImporte = false;
+    private boolean dirtyImporte;
 
-    public Map<String, PedidoItem> items = new HashMap<String, PedidoItem>(); //por ID
-    public Map<String, ArrayList<PedidoItem>> itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
-    public Map<String, HashMap<String, ArrayList<PedidoItem>>> itemsByCategoryBrand = new HashMap<String, HashMap<String, ArrayList<PedidoItem>>>(); //por Marca
-    public ArrayList<Categoria> categorias = new ArrayList<Categoria>();
-    public ArrayList<String> marcas = new ArrayList<String>();
+    public Map<String, PedidoItem> items;
+    public Map<String, ArrayList<PedidoItem>> itemsByCategory; //por CategoriaId
+    public Map<String, HashMap<String, ArrayList<PedidoItem>>> itemsByCategoryBrand; //por Marca
+    public ArrayList<Categoria> categorias;
+    public ArrayList<String> marcas;
+
+
+    public Pedido() {
+        super();
+
+        this.id = 0;
+        this.clienteId = 0;
+        this.fechaRealizado = new Date();
+        this.cliente = null;
+        this.estado = Pedido.ESTADO_NUEVO;
+        this.importe = 0;
+        this.dirtyImporte = false;
+
+        this.items = new HashMap<String, PedidoItem>(); //por ID
+        this.itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId
+        this.itemsByCategoryBrand = new HashMap<String, HashMap<String, ArrayList<PedidoItem>>>(); //por Marca
+        this.categorias = new ArrayList<Categoria>();
+        this.marcas = new ArrayList<String>();
+    }
 
     public void generateMaps() {
         itemsByCategory = new HashMap<String, ArrayList<PedidoItem>>(); //por CategoriaId

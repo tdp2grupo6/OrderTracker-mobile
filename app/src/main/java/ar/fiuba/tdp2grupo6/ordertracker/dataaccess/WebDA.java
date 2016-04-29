@@ -183,6 +183,24 @@ public class WebDA {
 		return response;
 	}
 
+	// Obtiene la agenda para el usuario
+	public ResponseObject getAgenda() throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "agenda/semana";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+
+			return response;
+		} catch (Exception e) {
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+	}
+
 	// Obtiene los filtros disponibles para el usuario
 	public ResponseObject getClientes() throws ServiceException {
 
@@ -207,23 +225,6 @@ public class WebDA {
 		ResponseObject response = null;
 		try {
 			String webMethod = "producto";
-			String targetURL = mUrlEndpoint + webMethod;
-
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
-
-			return response; //validar_response(response);
-		} catch (Exception e) {
-			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
-		}
-	}
-
-	// Obtiene la agenda semanal
-	public ResponseObject getAgenda() throws ServiceException {
-
-		ResponseObject response = null;
-		try {
-			String webMethod = "agenda/semana";
 			String targetURL = mUrlEndpoint + webMethod;
 
 			// realiza la llamada al servicio
