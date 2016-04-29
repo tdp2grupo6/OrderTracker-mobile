@@ -56,7 +56,7 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
                 mEnviarComentarioTask = new EnviarComentarioTask(mContext);
                 mEnviarComentarioTask.execute((Void) null);
 
-                Snackbar.make(view, "Enviando consulta POST", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Enviando Comentario", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -140,14 +140,16 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
         @Override
         protected Comentario doInBackground(Void... params) {
             ComentarioBZ cbz = new ComentarioBZ(this.mContext);
+
             Comentario comm = new Comentario();
             comm.clienteId = mClienteId;
             comm.fechaComentario = new Date();
             comm.razonComun = "Otro";
             comm.comentario = "Buen cliente";
+            comm.enviado = false;
 
             try {
-                //cbz.guardarComentario(comm);
+                comm = cbz.guardarComentario(comm);
                 cbz.enviarComentario(comm);
             } catch (BusinessException e) {
                 e.printStackTrace();

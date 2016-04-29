@@ -88,11 +88,13 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
+        // FIXME dgacitua
         View view = inflater.inflate(R.layout.fragment_list_agenda, container, false);
 
         //Set the list of items
+        // FIXME dgacitua
         //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
-        mReciclerView = (RecyclerView) view.findViewById(R.id.agenda_list);
+        //mReciclerView = (RecyclerView) view.findViewById(R.id.agenda_list);
 
         /*
         if (view.findViewById(R.id.agenda_detail_container) != null) {

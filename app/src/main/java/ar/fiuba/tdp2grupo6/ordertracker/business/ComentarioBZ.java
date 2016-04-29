@@ -2,9 +2,14 @@ package ar.fiuba.tdp2grupo6.ordertracker.business;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.WebDA;
@@ -39,30 +44,50 @@ public class ComentarioBZ {
 		this.mSql = dataBase;
 	}
 
-	public void enviarComentario(long comentarioId) throws BusinessException {
-		Comentario comentario = null;
+	public void sincronizar() throws BusinessException {
 		try {
-			comentario = mSql.comentarioBuscar(comentarioId);
-			mWeb.sendComentario(comentario);
+			ArrayList<Comentario> listaPendientes = mSql.comentarioObtenerNoEnviado();
+
+			for (Comentario c: listaPendientes) {
+				enviarComentario(c);
+			}
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
 	}
 
-	public void enviarComentario(Comentario comm) throws BusinessException {
+	public void enviarComentario(Comentario comm) {		// OK
 		try {
-			mWeb.sendComentario(comm);
-		} catch (ServiceException e) {
+			if (comm.enviado == false) {
+				ResponseObject response = mWeb.sendComentario(comm);
+				if (response.getData() != null) {
+					//Actualiza el estado del comentario
+					mSql.comentarioCambiarEstadoEnviado(comm, true);
+				}
+			}
+		} catch (ServiceException | LocalException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	public Comentario guardarComentario(Comentario comentario) throws BusinessException {
+	public Comentario guardarComentario(Comentario comentario) throws BusinessException {		// OK
 		try {
 			return mSql.comentarioGuardar(comentario);
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
+	}
+
+	public void actualizarComentario(Comentario comm) {
+		try {
+			if (comm.id == 0) {
+				comm = mSql.comentarioGuardar(comm);
+			} else {
+				mSql.comentarioActualizar(comm);
+			}
+		} catch (LocalException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

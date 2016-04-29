@@ -154,7 +154,7 @@ public class WebDA {
 			urlConnection.connect();
 
 			// get stream
-			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK || urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED || urlConnection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
+			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {		// || urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED || urlConnection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
 				if (responseType == STRING_RESPONSE_METHOD) {
 					String responseString = readResponseString(urlConnection.getInputStream());
 					response.setData(responseString);
@@ -280,7 +280,7 @@ public class WebDA {
 		headers.put("content-type", "application/json");
 
 		String body = comentario.empaquetar();
-		Log.d("OT-LOG", "POSTeando Comentario: " + body);
+		Log.d("OT-LOG", "POSTeando Comentario " + comentario.id + ": " + body);
 
 		// realiza la llamada al servicio
 		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
@@ -297,7 +297,7 @@ public class WebDA {
 		headers.put("content-type", "application/json");
 
 		String body = pedido.empaquetar();
-		Log.d("OT-LOG", "POSTeando Comentario: " + body);
+		Log.d("OT-LOG", "POSTeando Pedido " + pedido.id + ": " + body);
 
 		// realiza la llamada al servicio
 		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);

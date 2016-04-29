@@ -4,6 +4,8 @@ package ar.fiuba.tdp2grupo6.ordertracker.service.datain;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,14 @@ public class DataInService extends IntentService {
 			// Restore interrupt status.
 			Thread.currentThread().interrupt();
 		}
+	}
+
+	// dgacitua
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d("OT-LOG", "Sincronizando servicios de entrada!");
+		Toast.makeText(this, "Sincronizando servicios de entrada", Toast.LENGTH_SHORT).show();
+		return super.onStartCommand(intent,flags,startId);
 	}
 
 	public void sync(Context context) {
