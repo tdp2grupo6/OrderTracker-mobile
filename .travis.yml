@@ -18,7 +18,10 @@ android:
     - android-$ANDROID_API_LEVEL
     - android-$EMULATOR_API_LEVEL
     - extra-android-m2repository
+    - extra-google-m2repository
     - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+  licenses:
+    - '.+'
 
 before_script:
   - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi $ANDROID_ABI
