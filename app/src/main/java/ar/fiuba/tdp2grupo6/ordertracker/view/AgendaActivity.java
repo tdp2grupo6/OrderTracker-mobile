@@ -57,7 +57,8 @@ public class AgendaActivity extends AppBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_agenda);
+        setContentView(R.layout.activity_agenda);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,23 +94,22 @@ public class AgendaActivity extends AppBaseActivity
 
     @Override
     public void onClienteClick(Cliente cliente) {
-    /*
-    @Override
-    public void onPedidoItemClick(Producto producto) {
-        Intent intent = new Intent(this, ProductoDetailActivity.class);
-        intent.putExtra("productoId", producto.id);
-        intent.putExtra("productoNombre", producto.nombre);
-        intent.putExtra("productoMarca", producto.marca);
-        intent.putExtra("productoPrecio", producto.mostrarPrecio());
-        intent.putExtra("productoDescripcion", producto.caracteristicas);
-        intent.putExtra("productoCodigo", producto.mostrarCodigo());
-        intent.putExtra("productoStock", producto.mostrarStock());
-        intent.putExtra("productoRutaImagen", producto.getNombreImagenMiniatura());
-        intent.putExtra("productoCategoria", producto.categoria.toString());
-        intent.putExtra("productoEstado", producto.mostrarEstado());
-        startActivity(intent);
-    }
-    */
+        try {
+            if (cliente != null ) {
+                if (false) {//mTwoPane) {
+                    //ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(cliente.id, "");
+                    //this.getFragmentManager().beginTransaction()
+                    //        .replace(R.id.cliente_detail_container, fragment)
+                    //        .commit();
+                } else {
+                    Intent intent = new Intent(this, ClienteDetailActivity.class);
+                    intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, cliente.id);
+
+                    this.startActivity(intent);
+                }
+            }
+        } catch (Exception e) {
+        };
     }
 
 
@@ -239,8 +239,9 @@ public class AgendaActivity extends AppBaseActivity
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch(position){
+        public CharSequence getPageTitle(int i) {
+            int dayWeekId = getDayWeek(i);
+            switch(dayWeekId){
                 case 0:
                     return "DOMINGO";
                 case 1:
@@ -261,8 +262,8 @@ public class AgendaActivity extends AppBaseActivity
 
         public int getDayWeek(int i) {
             Calendar calendar = Calendar.getInstance();
-            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
-            int day = currentDay + i > 6? currentDay + i - 6 : currentDay + i;
+            int currentDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+            int day = currentDay + i > 6? currentDay + i - 7 : currentDay + i;
             return day;
         }
 

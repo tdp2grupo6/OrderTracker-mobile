@@ -37,4 +37,14 @@ public class Agenda {
         list.add(agendaItem);
     }
 
+
+    public ArrayList<AgendaItem> getAgendaItem(int dayWeekId) {
+        //organiza por dia
+        ArrayList<AgendaItem> list = clienteByDay.get(dayWeekId);
+        if (list == null) {
+            list = new ArrayList<AgendaItem>();
+        }
+        return list;
+    }
+
 }

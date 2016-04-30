@@ -101,7 +101,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
                 final EditText input = new EditText(context);
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog);
+                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(context, R.style.AlertDialogCustom);
                 dataDialogBuilder.setTitle(context.getResources().getString(R.string.title_popup_ingrese_cantidad));
                 dataDialogBuilder.setView(input);
                 dataDialogBuilder.setCancelable(false).setPositiveButton(context.getResources().getString(R.string.btn_ok), new DialogInterface.OnClickListener() {

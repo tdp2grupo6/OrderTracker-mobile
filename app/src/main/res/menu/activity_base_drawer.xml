@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_contacts_24dp"
             android:title="@string/nav_clientes" />
         <item
+            android:id="@+id/nav_agenda"
+            android:icon="@drawable/ic_insert_invitation_black_24dp"
+            android:title="@string/nav_agenda" />
+        <item
             android:id="@+id/nav_catalogo"
             android:icon="@drawable/ic_add_shopping_cart_24dp"
             android:title="@string/nav_catalogo" />

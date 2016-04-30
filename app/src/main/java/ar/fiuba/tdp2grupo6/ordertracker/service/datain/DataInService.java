@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ar.fiuba.tdp2grupo6.ordertracker.business.AgendaBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
@@ -79,9 +80,10 @@ public class DataInService extends IntentService {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}
 
-			// Sincroniza transacciones comunes
+			// Sincroniza la agenda
 			try {
-				//TransaccionBZ.TransaccionComunSync(context, url, login.session, esNuevaSession, this);
+				AgendaBZ agendaBZ =  new AgendaBZ(context);
+				agendaBZ.sincronizar(false);
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txcomun) + ": " + e.getMessage();
 			}

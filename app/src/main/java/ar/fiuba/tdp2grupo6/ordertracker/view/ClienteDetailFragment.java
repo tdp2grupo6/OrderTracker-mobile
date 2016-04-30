@@ -203,7 +203,7 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
     private void setupNuevoPedido() {
         if (mPedidoPendiente != null && mCliente.id != mPedidoPendiente.clienteId) {
 
-            AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+            AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
             dataDialogBuilder.setTitle(getContext().getResources().getString(R.string.title_popup_pedido_pendiente));
             dataDialogBuilder.setMessage(String.format(getContext().getResources().getString(R.string.error_pedido_pendiente), mClientePedidoPendiente.nombreCompleto));
             dataDialogBuilder.setCancelable(false);

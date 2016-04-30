@@ -117,6 +117,10 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
                 Intent a = new Intent(this, ClienteActivity.class);
                 startActivity(a);
                 break;
+            case R.id.nav_agenda:
+                Intent c = new Intent(this, AgendaActivity.class);
+                startActivity(c);
+                break;
             case R.id.nav_catalogo:
                 Intent b = new Intent(this, CatalogoActivity.class);
                 startActivity(b);

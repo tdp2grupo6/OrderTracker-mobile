@@ -257,7 +257,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         } else {
             if (mShowStockMensaje) {
 
-                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+                AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
                 dataDialogBuilder.setTitle(getContext().getResources().getString(R.string.title_popup_agregar_sin_stock));
                 dataDialogBuilder.setMessage(getContext().getResources().getString(R.string.error_agregar_sin_stock));
                 dataDialogBuilder.setCancelable(false);

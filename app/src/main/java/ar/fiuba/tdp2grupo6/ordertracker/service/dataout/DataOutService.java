@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.service.datain.DataInService;
 
@@ -51,9 +52,10 @@ public class DataOutService extends IntentService {
             String progressMensaje = null;
 
             try {
-                // Sincroniza tx pendientes
+                // Sincroniza los pedidos pendientes
                 try {
-                    //SincronizacionBZ.sincronizarTodo(context);
+					PedidoBZ pedidoBZ = new PedidoBZ(context);
+					pedidoBZ.sincronizar();
                 } catch (Exception e) {
                     //progressMensaje = context.getResources().getString(R.string.text_dataout_tx) + ": " + e.getMessage();
                 }

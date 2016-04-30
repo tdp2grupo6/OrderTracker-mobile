@@ -60,7 +60,7 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
     public static AgendaListFragment newInstance(int diaId) {
         AgendaListFragment fragment = new AgendaListFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_DIA_ID, diaId);
+        args.putInt(ARG_DIA_ID, diaId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,13 +88,11 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
-        // FIXME dgacitua
         View view = inflater.inflate(R.layout.fragment_list_agenda, container, false);
 
         //Set the list of items
-        // FIXME dgacitua
         //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
-        //mReciclerView = (RecyclerView) view.findViewById(R.id.agenda_list);
+        mReciclerView = (RecyclerView) view.findViewById(R.id.agenda_list);
 
         /*
         if (view.findViewById(R.id.agenda_detail_container) != null) {
@@ -136,7 +134,7 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
 
     private void actualizarLista() {
         if (mReciclerView != null) {
-            ArrayList<AgendaItem> list =  mAgendaActivity.mAgenda.clienteByDay.get(mDiaId);
+            ArrayList<AgendaItem> list =  mAgendaActivity.mAgenda.getAgendaItem(mDiaId);
             mReciclerAdapter = new AgendaAdapter(this, list);
             mReciclerView.setAdapter(mReciclerAdapter);
         }

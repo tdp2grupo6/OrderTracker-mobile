@@ -28,6 +28,7 @@
 
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
+    <string name="nav_agenda">Agenda</string>
 
     <string name="title_activity_catalogo">Catálogo</string>
     <string name="title_activity_cliente">Cliente</string>
@@ -35,14 +36,16 @@
     <string name="title_cliente_detail">Cliente Detail</string>
     <string name="title_activity_producto_detail">Detalle Producto</string>
     <string name="title_popup_ingrese_cantidad">Ingrese la Cantidad</string>
-    <string name="title_popup_pedido_pendiente">Existe un Pedido Pendiente</string>
-    <string name="title_popup_agregar_sin_stock">Agregar Items sin Stock</string>
+    <string name="title_popup_pedido_pendiente">Pedido Pendiente</string>
+    <string name="title_popup_agregar_sin_stock">Items sin Stock</string>
     <string name="title_popup_comentario">Agregar Comentario</string>
     <string name="title_popup_comentario_razon">Especificar razón</string>
     <string name="title_popup_comentario_texto">Introducir comentario</string>
     <string name="title_activity_maps">Mapa</string>
 
     <string name="msg_procesando">Procesando</string>
+    <string name="msg_popup_comentario">Elija un motivo del comentario, adicionalmente complete un texto</string>
+
 
     <string name="imagen_descripcion">Imagen</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -61,12 +64,6 @@
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
 
-    <string-array name="comentarioRazonesComunes">
-        <item>Cliente no se encuentra</item>
-        <item>Cliente ya no opera en el lugar</item>
-        <item>No se puede llegar al lugar</item>
-        <item>Otro</item>
-    </string-array>
 
 </resources>
 

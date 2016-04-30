@@ -2,6 +2,7 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -18,15 +20,19 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 
 /**
@@ -134,100 +140,56 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
     }
 
     public void onClienteEnviarComentario() {
-        /*
-        AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog);
 
-        dataDialogBuilder.setTitle(mContext.getResources().getString(R.string.title_popup_agregar_sin_stock));
-        dataDialogBuilder.setMessage(mContext.getResources().getString(R.string.error_agregar_sin_stock));
-        dataDialogBuilder.setSingleChoiceItems(razonesComunes, )
-        dataDialogBuilder.setCancelable(false);
-        dataDialogBuilder.setPositiveButton(mContext.getResources().getString(R.string.btn_enviarComentario), new DialogInterface.OnClickListener() {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_comentario, null);
+        //final Spinner sp = (Spinner) view.findViewById(R.id.comentarioRazonesComunes);
+        //sp.setVisibility(View.INVISIBLE);
+        final TextView tv = (TextView) view.findViewById(R.id.comentarioTexto);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AlertDialogCustom);
+        builder.setTitle(mContext.getResources().getString(R.string.title_popup_comentario));
+        //builder.setMessage(mContext.getResources().getString(R.string.msg_popup_comentario));
+        builder.setSingleChoiceItems(R.array.comentarioRazonesComunes, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setView(view);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.btn_enviarComentario, new DialogInterface.OnClickListener() {
+            @Override
             public void onClick(DialogInterface dialog, int id) {
-                mEnviarComentarioTask = new EnviarComentarioTask(mContext);
+                ListView lw = ((AlertDialog)dialog).getListView();
+                Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+
+                Comentario comm = new Comentario();
+                comm.clienteId = mClienteId;
+                comm.fechaComentario = new Date();
+                comm.razonComun = checkedItem.toString();//(sp != null)? sp.getSelectedItem().toString() : "Otro";
+                comm.comentario = (tv != null)? tv.getText().toString() : "";
+
+                mEnviarComentarioTask = new EnviarComentarioTask(mContext, comm);
                 mEnviarComentarioTask.execute((Void) null);
                 mensajeEnviado = true;
                 dialog.cancel();
             }
-        }).setNegativeButton(mContext.getResources().getString(R.string.btn_cancelarComentario), new DialogInterface.OnClickListener() {
+        });
+        builder.setNegativeButton(R.string.btn_cancelarComentario, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
 
-        // create an alert dialog
-        dataDialogBuilder.create().show();
-        */
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        // Get the layout inflater
-        // FIXME dgacitua: No sé si es el método correcto
-        //LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_comentario, null);
-        final Spinner sp = (Spinner) view.findViewById(R.id.comentarioRazonesComunes);
-        final TextView tv = (TextView) view.findViewById(R.id.comentarioTexto);
-
-        builder.setView(view)
-                .setPositiveButton(R.string.btn_enviarComentario, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Comentario comm = new Comentario();
-                        comm.clienteId = mClienteId;
-                        comm.fechaComentario = new Date();
-                        comm.razonComun = (sp != null)? sp.getSelectedItem().toString() : "Otro";
-                        comm.comentario = (tv != null)? tv.getText().toString() : "";
-
-                        mEnviarComentarioTask = new EnviarComentarioTask(mContext, comm);
-                        mEnviarComentarioTask.execute((Void) null);
-                        mensajeEnviado = true;
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton(R.string.btn_cancelarComentario, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
         builder.create();
         builder.show();
-
-        /*
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.layout_comentario, null))
-                .setView(R.id.comentarioTitulo)
-                .setView(R.id.comentarioRazonesComunes)
-                .setView(R.id.comentarioTexto)
-                // Add action buttons
-                .setPositiveButton(R.string.btn_enviarComentario, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Comentario comm = new Comentario();
-                        comm.clienteId = mClienteId;
-                        comm.fechaComentario = new Date();
-                        comm.razonComun = ((Spinner) findViewById(R.id.comentarioRazonesComunes)) != null ? ((Spinner) findViewById(R.id.comentarioRazonesComunes)).getSelectedItem().toString() : "Otro";
-                        comm.comentario = ((TextView) findViewById(R.id.comentarioTexto)) != null ? ((TextView) findViewById(R.id.comentarioTexto)).getText().toString() : "";
-
-                        mEnviarComentarioTask = new EnviarComentarioTask(mContext, comm);
-                        mEnviarComentarioTask.execute((Void) null);
-                        mensajeEnviado = true;
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton(R.string.btn_cancelarComentario, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
-        */
     }
 
     // dgacitua: Async Task para manejar la subida de comentarios
     public class EnviarComentarioTask extends AsyncTask<Void, String, Comentario> {
         private Context mContext;
         private Comentario mComentario;
+        private ProgressDialog mPd;
 
         public EnviarComentarioTask(Context context, Comentario comentario) {
             this.mContext = context;
@@ -236,6 +198,11 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
 
         @Override
         protected void onPreExecute() {
+            mPd = new ProgressDialog(mContext);
+            mPd.setMessage(mContext.getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
         }
 
         @Override
@@ -253,6 +220,11 @@ public class ClienteDetailActivity extends AppCompatActivity implements ClienteD
             }
 
             return comm;
+        }
+
+        @Override
+        protected void onPostExecute(Comentario comentario) {
+            mPd.dismiss();
         }
     }
 }

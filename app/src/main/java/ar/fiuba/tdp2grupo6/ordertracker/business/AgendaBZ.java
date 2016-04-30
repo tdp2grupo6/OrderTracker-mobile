@@ -79,7 +79,7 @@ public class AgendaBZ {
                         JSONArray listaClientes = itemjson.getJSONArray("listaClientes");
 
                         for (int j = 0; j < listaClientes.length(); j++) {
-                            AgendaItem agendaItem = new AgendaItem(codigoDia, data.getLong(i));
+                            AgendaItem agendaItem = new AgendaItem(codigoDia, listaClientes.getLong(j));
                             if (loadCliente) {
                                 ArrayList<Cliente> clientes = mSql.clienteBuscar(agendaItem.clienteId, "");
                                 if (clientes != null && clientes.size() > 0)

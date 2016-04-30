@@ -281,7 +281,11 @@ public class PedidoBZ {
                 mSql.pedidoActualizar(pedido);
 
                 if (trySend) {
-                    this.enviarPedido(pedido);
+                    try {
+                        this.enviarPedido(pedido);
+                    } catch (Exception e) {
+
+                    }
                 }
             }
 
@@ -315,10 +319,9 @@ public class PedidoBZ {
         }
     }
 
-    public void enviarPedido(long pedidoId) throws BusinessException {
-        Comentario comentario = null;
+    public void sincronizar() throws BusinessException {
         try {
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, -1);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_CONFIRMADO);
             if (pedidos != null & pedidos.size() > 0) {
                 enviarPedido(pedidos.get(0));
             }

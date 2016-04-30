@@ -35,7 +35,6 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaViewHolder> { //} 
         public void onItemClick(AgendaViewHolder holder, int position);
     }
 
-
     public AgendaAdapter(OnItemClickListener listener, ArrayList<AgendaItem> agendaItems) {
         this.mItemClickListener = listener;
         this.mFilteredData = agendaItems;
