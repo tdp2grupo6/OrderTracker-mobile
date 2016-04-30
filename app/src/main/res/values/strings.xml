@@ -7,6 +7,8 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_descartarlo">Descartarlo</string>
     <string name="btn_confirmarlo">Confirmarlo</string>
+    <string name="btn_enviarComentario">Enviar</string>
+    <string name="btn_cancelarComentario">Cancelar</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -35,7 +37,10 @@
     <string name="title_popup_ingrese_cantidad">Ingrese la Cantidad</string>
     <string name="title_popup_pedido_pendiente">Existe un Pedido Pendiente</string>
     <string name="title_popup_agregar_sin_stock">Agregar Items sin Stock</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_popup_comentario">Agregar Comentario</string>
+    <string name="title_popup_comentario_razon">Especificar razón</string>
+    <string name="title_popup_comentario_texto">Introducir comentario</string>
+    <string name="title_activity_maps">Mapa</string>
 
     <string name="msg_procesando">Procesando</string>
 
@@ -55,6 +60,13 @@
     <string name="detalle_producto_stock_titulo">Disponibles</string>
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
+
+    <string-array name="comentarioRazonesComunes">
+        <item>Cliente no se encuentra</item>
+        <item>Cliente ya no opera en el lugar</item>
+        <item>No se puede llegar al lugar</item>
+        <item>Otro</item>
+    </string-array>
 
 </resources>
 

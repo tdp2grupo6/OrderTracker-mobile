@@ -10,8 +10,11 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
+import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.service.datain.DataInService;
 
 
@@ -33,9 +36,11 @@ public class DataOutService extends IntentService {
 		}
 	}
 
+	// dgacitua
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+		Log.d("OT-LOG", "Sincronizando servicios de salida!");
+		Toast.makeText(this, "Sincronizando servicios de salida", Toast.LENGTH_SHORT).show();
 		return super.onStartCommand(intent,flags,startId);
 	}
 
@@ -52,6 +57,14 @@ public class DataOutService extends IntentService {
                 } catch (Exception e) {
                     //progressMensaje = context.getResources().getString(R.string.text_dataout_tx) + ": " + e.getMessage();
                 }
+
+				// dgacitua: Sincronizar comentarios enviados
+				try {
+					ComentarioBZ cbz = new ComentarioBZ(context);
+					cbz.sincronizar();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
                 // Sincroniza geo
                 try {

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -803,7 +804,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario));
 			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
 			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
-			cv.put(DbHelper.tblComentario_colEnviado, comentario.enviado);
+			cv.put(DbHelper.tblComentario_colEnviado, String.valueOf(comentario.enviado));
 
 			comentario.id = db.insert(DbHelper.tblComentario, null, cv);
 		} catch (Exception e) {
@@ -811,6 +812,33 @@ public class SqlDA {
 		}
 
 		return comentario;
+	}
+
+	public long comentarioActualizar(Comentario comentario) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			//cv.put(DbHelper.tblComentario_colId, comentario.id);
+			cv.put(DbHelper.tblComentario_colClienteId, comentario.clienteId);
+			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario));
+			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
+			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
+			cv.put(DbHelper.tblComentario_colEnviado, String.valueOf(comentario.enviado));
+
+			String where = "";
+			if (comentario != null) {
+				String condition = DbHelper.tblComentario_colId + "=" + String.valueOf(comentario.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblComentario, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
 	}
 
 	public Comentario comentarioBuscar(long comentarioId) throws LocalException {
@@ -824,8 +852,7 @@ public class SqlDA {
 			String where = "";
 			if (comentarioId > 0) {
 				String condition = DbHelper.tblComentario_colId + "=" + String.valueOf(comentarioId);
-				//where = UtilsDA.AddWhereCondition(where, condition, "and");
-				where = condition;
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
 			Cursor c = db.rawQuery(select + where, null);
@@ -860,6 +887,8 @@ public class SqlDA {
 			String select = "SELECT * FROM " + DbHelper.tblComentario;
 
 			String where = "";
+			String condition = DbHelper.tblComentario_colEnviado + "='false'";
+			where = UtilsDA.AddWhereCondition(where, condition, "and");
 
 			Cursor c = db.rawQuery(select + where, null);
 			if (c.moveToFirst()) {
@@ -872,9 +901,8 @@ public class SqlDA {
 					comentario.comentario = c.getString(c.getColumnIndex(DbHelper.tblComentario_colComentario));
 					comentario.enviado = Utils.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblComentario_colEnviado)));
 
-					if (comentario.enviado == false) {
-						listComentario.add(comentario);
-					}
+					listComentario.add(comentario);
+					Log.d("OT-LOG", "Cargando comentario ID:" + comentario.id + " para enviar!");
 				} while (c.moveToNext());
 			}
 
@@ -888,14 +916,34 @@ public class SqlDA {
 		return listComentario;
 	}
 
-	public void comentarioCambiarEstadoEnviado(long comentarioId, boolean enviado) throws LocalException {
+	public void comentarioCambiarEstadoEnviado(Comentario comm, boolean enviado) throws LocalException {
 		try {
-			Comentario comm = comentarioBuscar(comentarioId);
 			comm.enviado = enviado;
-			comentarioGuardar(comm);
+			comentarioActualizar(comm);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
+	}
+
+	public long comentarioEliminar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblComentario_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblComentario, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
 	}
 
 

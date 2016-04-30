@@ -18,6 +18,7 @@ public class BootReceiver extends BroadcastReceiver {
 			DataOutAlarmReceiver.startAlarm(context);
 
 		} catch (Exception e) {
+
 		}
 	}
 
