@@ -44,6 +44,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 public class AgendaActivity extends AppBaseActivity
         implements AgendaListFragment.OnAgendaListFragmentListener {
 
+    private final int MENU_INDEX = 1;
     public static final int AGENDA_PEDIDO = 1000;
 
     public Agenda mAgenda;
@@ -71,9 +72,10 @@ public class AgendaActivity extends AppBaseActivity
             }
         });
         */
+        //Set the item selected
+        mDrawerMenu.getItem(MENU_INDEX).setChecked(true);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         if (savedInstanceState == null) {
 
             // Setea el viewpager

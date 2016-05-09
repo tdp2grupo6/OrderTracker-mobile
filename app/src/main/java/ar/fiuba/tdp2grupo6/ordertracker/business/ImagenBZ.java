@@ -105,6 +105,8 @@ public class ImagenBZ {
 
 	private File getFolder() {
 		File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/ordertracker/images/");
+		if (!folder.exists())
+			folder.mkdirs();
 		return folder;
 	}
 

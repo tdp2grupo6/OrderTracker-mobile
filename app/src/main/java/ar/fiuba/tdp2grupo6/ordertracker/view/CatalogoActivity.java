@@ -22,7 +22,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class CatalogoActivity extends AppBaseActivity {
 
-    private final int MENU_INDEX = 1;
+    private final int MENU_INDEX = 2;
 
     private Context mContext;
     private ListView mListView;
