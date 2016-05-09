@@ -13,6 +13,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
+import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SharedPrefDA;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.WebDA;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
 
@@ -37,7 +38,8 @@ public class ClienteBZ {
 		ArrayList<Cliente> response = new ArrayList<Cliente>();
 		try {
 
-			ResponseObject responseDA = mWeb.getClientes();
+			AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+			ResponseObject responseDA = mWeb.getClientes(autenticacionBZ.getAutenticacion());
 
 			if (responseDA.getData() != null) {
                 //Elimina todos los clientes

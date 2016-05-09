@@ -13,22 +13,20 @@ import java.net.SocketTimeoutException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionRequest;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException.ServiceExceptionType;
 
@@ -138,170 +136,243 @@ public class WebDA {
 	}
 
 
-	private ResponseObject makeRequest(String targetURL, String requestType, String responseType, HashMap<String, String> headerMap, String entityString) throws ServiceException {
+	private ResponseObject makeRequest(String targetURL, String requestType, String responseType, HashMap<String, String> headerMap, String entityString)
+			throws ServiceException {
 
 		ResponseObject response = new ResponseObject();
 		try {
 
 			URL url = new URL(targetURL);
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-			urlConnection.setRequestMethod(requestType);
-			urlConnection.setConnectTimeout(ConnectionTimeout);
-			urlConnection.setReadTimeout(SocketTimeout);
-			urlConnection.setDoOutput(false);
-			urlConnection = setHeaderData(urlConnection, headerMap);
-			urlConnection = setEntity(urlConnection, entityString);
-			urlConnection.connect();
+			try {
 
-			// get stream
-			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {		// || urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED || urlConnection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
-				if (responseType == STRING_RESPONSE_METHOD) {
-					String responseString = readResponseString(urlConnection.getInputStream());
-					response.setData(responseString);
-				} else if (responseType == BITMAP_RESPONSE_METHOD){
-					Bitmap responseBitmap = readResponseBitmap(urlConnection.getInputStream());
-					response.setBitmap(responseBitmap);
+				//connection.setRequestProperty("Authorization", "Bearer " + token);
+				urlConnection.setRequestMethod(requestType);
+				urlConnection.setConnectTimeout(ConnectionTimeout);
+				urlConnection.setReadTimeout(SocketTimeout);
+				urlConnection.setDoOutput(false);
+				urlConnection = setHeaderData(urlConnection, headerMap);
+				urlConnection = setEntity(urlConnection, entityString);
+				urlConnection.connect();
+
+				// get stream
+				if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {        // || urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED || urlConnection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
+					if (responseType == STRING_RESPONSE_METHOD) {
+						String responseString = readResponseString(urlConnection.getInputStream());
+						response.setData(responseString);
+					} else if (responseType == BITMAP_RESPONSE_METHOD) {
+						Bitmap responseBitmap = readResponseBitmap(urlConnection.getInputStream());
+						response.setBitmap(responseBitmap);
+					}
+				} else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+					throw new ServiceException(urlConnection.getResponseMessage(), response, ServiceExceptionType.AUTORIZATION);
+				} else {
+					String errorString = readResponseString(urlConnection.getErrorStream());
+					response.setError(errorString);
+					throw new ServiceException(errorString, response, ServiceExceptionType.INTERNAL);
 				}
-			} else {
-				String errorString = readResponseString(urlConnection.getErrorStream());
-				response.setError(errorString);
-				throw new ServiceException(errorString, response, ServiceExceptionType.INTERNAL);
+			} catch (ProtocolException e) {
+				throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.CONEXION);
+			} catch (SocketTimeoutException e) {
+				throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.TIMEOUT);
+			} catch (IOException e) {
+				throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.APPLICATION);
+			} catch (IllegalStateException e) {
+				throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.APPLICATION);
+			} finally {
+				urlConnection.disconnect();
 			}
-
-			urlConnection.disconnect();
-
-		} catch (ProtocolException e) {
-			throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.CONEXION);
-		} catch (SocketTimeoutException e) {
-			throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.TIMEOUT);
-		} catch (IOException e) {
-			throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.APPLICATION);
-		} catch (IllegalStateException e) {
+		} catch (ServiceException se) {
+			throw se;
+		} catch (Exception e) {
 			throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.APPLICATION);
 		}
-
 		return response;
 	}
 
+	private void validateAutentication(AutenticacionResponse autenticacionResponse) throws ServiceException {
+		if (!(autenticacionResponse != null && autenticacionResponse.accessToken != null))
+			throw new ServiceException(mContext.getString(R.string.error_no_logued_in), null, ServiceExceptionType.AUTORIZATION);
+	}
+
+	// login a la aplicacion
+	public ResponseObject sendAutenticar(AutenticacionRequest autenticacion) throws ServiceException {
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "login";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			String body = autenticacion.empaquetar();
+			//Log.d("OT-LOG", "POSTeando Comentario " + autenticacion.username + ": " + body);
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, null, body);
+		} catch (Exception e) {
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
+	}
+
+
 	// Obtiene la agenda para el usuario
-	public ResponseObject getAgenda() throws ServiceException {
+	public ResponseObject getAgenda(AutenticacionResponse autenticacionResponse) throws ServiceException {
+		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
 		try {
 			String webMethod = "agenda/semana";
 			String targetURL = mUrlEndpoint + webMethod;
 
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-			return response;
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
 		} catch (Exception e) {
 			if (e instanceof ServiceException) throw e;
 			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+		return response;
 	}
 
 	// Obtiene los filtros disponibles para el usuario
-	public ResponseObject getClientes() throws ServiceException {
+	public ResponseObject getClientes(AutenticacionResponse autenticacionResponse) throws ServiceException {
+		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
 		try {
+
 			String webMethod = "cliente";
 			String targetURL = mUrlEndpoint + webMethod;
 
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-			return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
 		} catch (Exception e) {
 			if (e instanceof ServiceException) throw e;
 			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+		return response;
 	}
 
 	// Obtiene los filtros disponibles para el usuario
-	public ResponseObject getProductos() throws ServiceException {
+	public ResponseObject getProductos(AutenticacionResponse autenticacionResponse) throws ServiceException {
+		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
 		try {
 			String webMethod = "producto";
 			String targetURL = mUrlEndpoint + webMethod;
 
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, null, null);
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-			return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+		return response;
 	}
 
 	// Obtiene las imagenes para un producto
-	public ResponseObject getProductosImagen(String rutaImagen) throws ServiceException {
+	public ResponseObject getProductosImagen(AutenticacionResponse autenticacionResponse, String rutaImagen) throws ServiceException {
+		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
 		try {
-			String webMethod = rutaImagen; //"imagen/ver/" + productoId;
+			String webMethod = rutaImagen;
 			String targetURL = mUrlEndpoint + webMethod;
 
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, null, null);
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-			return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, headers, null);
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+		return response;
 	}
 
 	// Obtiene las imagenes miniatura para un producto
-	public ResponseObject getProductosImagenMiniatura(String rutaMiniatura) throws ServiceException {
+	public ResponseObject getProductosImagenMiniatura(AutenticacionResponse autenticacionResponse, String rutaMiniatura) throws ServiceException {
+		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
 		try {
-			String webMethod = rutaMiniatura; //"imagen/miniatura/" + productoId;
+			String webMethod = rutaMiniatura;
 			String targetURL = mUrlEndpoint + webMethod;
 
-			// realiza la llamada al servicio
-			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, null, null);
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-			return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, headers, null);
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
+		return response;
 	}
 
 	// dgacitua: Envía un comentario al backend
-	public ResponseObject sendComentario(Comentario comentario) throws ServiceException {
+	public ResponseObject sendComentario(AutenticacionResponse autenticacionResponse, Comentario comentario) throws ServiceException {
+		validateAutentication(autenticacionResponse);
+
 		ResponseObject response = null;
-		String webMethod = "comentario";
-		String targetURL = mUrlEndpoint + webMethod;
+		try {
+			String webMethod = "comentario";
+			String targetURL = mUrlEndpoint + webMethod;
 
-		HashMap<String, String> headers = new HashMap<>();
-		headers.put("content-type", "application/json");
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-		String body = comentario.empaquetar();
-		Log.d("OT-LOG", "POSTeando Comentario " + comentario.id + ": " + body);
+			String body = comentario.empaquetar();
+			//Log.d("OT-LOG", "POSTeando Comentario " + comentario.id + ": " + body);
 
-		// realiza la llamada al servicio
-		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
-
-		return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (Exception e) {
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
 	}
 
-	public ResponseObject sendPedido(Pedido pedido) throws ServiceException {
+	public ResponseObject sendPedido(AutenticacionResponse autenticacionResponse, Pedido pedido) throws ServiceException {
+		validateAutentication(autenticacionResponse);
+
 		ResponseObject response = null;
-		String webMethod = "pedido";
-		String targetURL = mUrlEndpoint + webMethod;
+		try {
+			String webMethod = "pedido";
+			String targetURL = mUrlEndpoint + webMethod;
 
-		HashMap<String, String> headers = new HashMap<>();
-		headers.put("content-type", "application/json");
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
-		String body = pedido.empaquetar();
-		Log.d("OT-LOG", "POSTeando Pedido " + pedido.id + ": " + body);
+			String body = pedido.empaquetar();
+			//Log.d("OT-LOG", "POSTeando Pedido " + pedido.id + ": " + body);
 
-		// realiza la llamada al servicio
-		response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
-
-		return response; //validar_response(response);
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (Exception e) {
+			if (e instanceof ServiceException) throw e;
+			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
 	}
 }

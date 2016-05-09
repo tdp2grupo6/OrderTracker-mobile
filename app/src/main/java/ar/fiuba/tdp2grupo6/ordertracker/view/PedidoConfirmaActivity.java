@@ -39,6 +39,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
     private PedidoConfirmaListFragment mFragment;
     private PedidoConfirmaTask mPedidoConfirmarTask;
     private PedidoProductosBuscarTask mPedidoProductosBuscarTask;
+    private PedidoActualizarTask mPedidoActualizarTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +50,19 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fbEnviar = (FloatingActionButton) findViewById(R.id.fb_enviar);
+        fbEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onPedidoConfirma();
+            }
+        });
+
+        FloatingActionButton fbBack = (FloatingActionButton) findViewById(R.id.fb_back);
+        fbBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
 
@@ -98,15 +107,18 @@ public class PedidoConfirmaActivity extends AppBaseActivity
     @Override
     public void onPedidoItemActualizar(PedidoItem pedidoItem) {
         if (pedidoItem != null) {
-            mPedido.deleteItem(pedidoItem.productoId);
+            mPedido.updateItem(pedidoItem.productoId, 0);
 
-            actualizarFooter();
+            mPedidoActualizarTask = new PedidoActualizarTask(this, this.mPedido, pedidoItem);
+            mPedidoActualizarTask.execute((Void) null);
         }
     }
 
     public void onPedidoConfirma() {
-        mPedidoConfirmarTask = new PedidoConfirmaTask(this, this.mPedido);
-        mPedidoConfirmarTask.execute((Void) null);
+        if (mPedido.items.size() > 0) {
+            mPedidoConfirmarTask = new PedidoConfirmaTask(this, this.mPedido);
+            mPedidoConfirmarTask.execute((Void) null);
+        }
     }
 
     private void actualizarVista() {
@@ -218,5 +230,55 @@ public class PedidoConfirmaActivity extends AppBaseActivity
         }
 
     }
+
+    public class PedidoActualizarTask extends AsyncTask<Void, String, Pedido> {
+        private Context mContext;
+        private Pedido mPedido;
+        private PedidoItem mPedidoItem;
+        private ProgressDialog mPd;
+        //private int mCantidad;
+
+        public PedidoActualizarTask(Context context, Pedido pedido, PedidoItem pedidoItem) {
+            this.mPedidoItem = pedidoItem;
+            this.mPedido = pedido;
+            this.mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mPd = new ProgressDialog(mContext);
+            mPd.setMessage(mContext.getResources().getString(R.string.msg_procesando));
+            mPd.setCancelable(false);
+            mPd.getWindow().setGravity(Gravity.CENTER);
+            mPd.show();
+        }
+
+        @Override
+        protected Pedido doInBackground(Void... params) {
+            Pedido resultado = null;
+
+            try {
+                //Actualiza la cantida en el item
+                //mHolder.mPedidoItem.cantidad = mCantidad;
+
+                //Procesa el cambio
+                PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
+                resultado = pedidoBZ.actualizarNuevo(mPedido);
+            } catch (Exception e) {
+            }
+
+            return resultado;
+        }
+
+        @Override
+        protected void onPostExecute(Pedido pedido) {
+            mPedido.deleteItem(this.mPedidoItem.productoId);
+            actualizarFooter();
+
+            mPd.dismiss();
+        }
+
+    }
+
 
 }

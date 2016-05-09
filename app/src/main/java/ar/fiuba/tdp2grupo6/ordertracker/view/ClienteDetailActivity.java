@@ -1,7 +1,6 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,33 +14,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 
-/**
- * An activity representing a single Cliente detail screen. This
- * activity is only used narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link ClienteFueraRutaListFragment}.
- */
-public class ClienteDetailActivity extends AppCompatActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
+public class ClienteDetailActivity extends AppBaseAuthActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
 
     public static final String ARG_CLIENTE_ID = "cliente_id";
     public static final String ARG_CLIENTE_NOMBRE_COMPLETO = "cliente_nombreCompleto";

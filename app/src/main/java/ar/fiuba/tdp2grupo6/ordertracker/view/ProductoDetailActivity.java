@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Categoria;
 
-public class ProductoDetailActivity extends AppCompatActivity {
+public class ProductoDetailActivity extends AppBaseAuthActivity {
     Context mContext;
     Bundle mExtras;
     Long id;

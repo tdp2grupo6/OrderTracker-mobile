@@ -45,7 +45,7 @@ public class WebDATest {
     @Test
     public void testGetClientes() throws Exception {
         mServer.enqueue(new MockResponse().setResponseCode(200).setBody("myString"));
-        ResponseObject response = mServiceDA.getClientes();
+        ResponseObject response = mServiceDA.getClientes(null);
 
         RecordedRequest req = mServer.takeRequest();
         assertThat(req.getPath(), is("/cliente"));
@@ -60,7 +60,7 @@ public class WebDATest {
     public void testGetClientesError() throws Exception {
         mServer.enqueue(new MockResponse().setResponseCode(500).setBody(""));
         try {
-            ResponseObject response = mServiceDA.getClientes();
+            ResponseObject response = mServiceDA.getClientes(null);
             fail("Expected an ServiceException to be thrown");
         } catch (ServiceException se) {
             assertThat(se.getMessage(), is(""));

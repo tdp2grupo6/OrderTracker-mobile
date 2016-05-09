@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ import android.widget.FrameLayout;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 
-public abstract class AppBaseActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
+public abstract class AppBaseActivity extends AppBaseAuthActivity implements MenuItem.OnMenuItemClickListener {
     private FrameLayout view_stub; //This is the framelayout to keep your content view
     private NavigationView navigation_view; // The new navigation view from Android Design Library. Can inflate menu resources. Easy
     private DrawerLayout mDrawerLayout;
@@ -124,6 +123,9 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
             case R.id.nav_catalogo:
                 Intent b = new Intent(this, CatalogoActivity.class);
                 startActivity(b);
+                break;
+            case R.id.nav_logout:
+                super.logoutActivity();
                 break;
             /*
             case R.id.nav_pedido:

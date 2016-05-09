@@ -4,16 +4,13 @@
     <string name="btn_si">SI</string>
     <string name="btn_no">NO</string>
     <string name="btn_ok">OK</string>
-    <string name="btn_cancel">Cancel</string>
+    <string name="btn_cancel">Cancelar</string>
     <string name="btn_descartarlo">Descartarlo</string>
     <string name="btn_confirmarlo">Confirmarlo</string>
     <string name="btn_enviarComentario">Enviar</string>
     <string name="btn_cancelarComentario">Cancelar</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configuracion</string>
     <string name="action_filtro_marca">Filtro Marca</string>
 
     <string name="error_accediendo_bd">Error accediendo a la BD: %1$s</string>
@@ -29,11 +26,12 @@
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
     <string name="nav_agenda">Agenda</string>
+    <string name="nav_logout">Logout</string>
 
     <string name="title_activity_catalogo">Catálogo</string>
     <string name="title_activity_cliente">Cliente</string>
     <string name="title_cliente_list">Clientes</string>
-    <string name="title_cliente_detail">Cliente Detail</string>
+    <string name="title_cliente_detail">Cliente Detalle</string>
     <string name="title_activity_producto_detail">Detalle Producto</string>
     <string name="title_popup_ingrese_cantidad">Ingrese la Cantidad</string>
     <string name="title_popup_pedido_pendiente">Pedido Pendiente</string>
@@ -46,9 +44,7 @@
     <string name="msg_procesando">Procesando</string>
     <string name="msg_popup_comentario">Elija un motivo del comentario, adicionalmente complete un texto</string>
 
-
     <string name="imagen_descripcion">Imagen</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="detalle_producto_categoria">Categoria</string>
     <string name="detalle_producto_nombre">Nombre del Producto</string>
@@ -63,6 +59,21 @@
     <string name="detalle_producto_stock_titulo">Disponibles</string>
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_no_logued_in">No esta logueado a la aplicacion</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 
 
 </resources>

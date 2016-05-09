@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_clientes"
             android:icon="@drawable/ic_contacts_24dp"
@@ -14,6 +16,7 @@
             android:id="@+id/nav_catalogo"
             android:icon="@drawable/ic_add_shopping_cart_24dp"
             android:title="@string/nav_catalogo" />
+
         <!--
         <item
             android:id="@+id/nav_pedido"
@@ -21,5 +24,15 @@
             android:title="@string/nav_catalogo" />
             -->
     </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_vpn_key_black_24dp"
+            android:title="@string/nav_logout" />
+    </group>
+
 
 </menu>

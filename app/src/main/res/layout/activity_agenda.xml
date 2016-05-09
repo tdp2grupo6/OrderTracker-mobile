@@ -33,55 +33,6 @@
                     android:layout_width="fill_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Footer -->
-        <LinearLayout
-            android:id="@+id/producto_pedido_list_footer"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/footer_pedido_list"
-            android:gravity="center_vertical|center_horizontal"
-            >
-
-            <TextView
-                android:id="@+id/productos_pedido_list_cliente"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
-                android:layout_marginRight="5px"
-                style="@style/ItemStock"
-                android:text=""/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
-                android:layout_marginRight="3px"
-                style="@style/ItemStock"
-                android:text=" - Total $"/>
-
-            <TextView
-                android:id="@+id/productos_pedido_list_money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
-                android:layout_marginRight="5px"
-                style="@style/ItemStock"
-                android:text=""/>
-
-        </LinearLayout>
-        <!-- Footer -->
-
         <android.support.v4.view.ViewPager
             android:id="@+id/container"
             android:layout_width="match_parent"

@@ -83,7 +83,7 @@ public class PedidoBZ {
                 } else if (item.id == 0 && item.cantidad == 0) {
                     // no hace nada
                 } else if (item.id > 0 && item.cantidad == 0) {
-                    mSql.pedidoItemEliminar(pedido.id, 0);
+                    mSql.pedidoItemEliminar(pedido.id, item.id);
                 } else {
                     // no hace nada
                 }
@@ -333,7 +333,10 @@ public class PedidoBZ {
     public void enviarPedido(Pedido pedido) throws BusinessException {
 
         try {
-            ResponseObject response = mWeb.sendPedido(pedido);
+
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject response = mWeb.sendPedido(autenticacionBZ.getAutenticacion(), pedido);
+
             if (response.getData() != null) {
                 //Actualiza el estado del pedido
                 pedido.estado = Pedido.ESTADO_ENVIADO;

@@ -635,7 +635,7 @@ public class SqlDA {
         return listPedidoItem;
     }
 
-    public long pedidoItemEliminar(long id, long pedidoId) throws LocalException {
+    public long pedidoItemEliminar(long pedidoId, long id) throws LocalException {
         SQLiteDatabase db = this.mDb.getWritableDatabase();
 
         long cant = 0;

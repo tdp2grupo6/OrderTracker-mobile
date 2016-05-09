@@ -52,6 +52,8 @@ public class PedidoActivity extends AppBaseActivity
 
     public Pedido mPedido;
     //public String mMarcaFiltro;
+    public boolean mShowStockMensaje = true;
+    public boolean mAgregaItemSinStock = false;
 
     private long mClienteId;
 
@@ -123,6 +125,11 @@ public class PedidoActivity extends AppBaseActivity
                     setResult(Activity.RESULT_OK);
                     finish();
                     //Toast.makeText(this, "Se ha confirmado el Pedido!", Toast.LENGTH_LONG).show();
+                } else {
+                    mCategoryPagerAdapter.setAllCategoryDirty(true);
+                    mCategoryPagerAdapter.notifyDataSetChanged();
+
+                    cargarPedido();
                 }
                 break;
             }
@@ -167,6 +174,7 @@ public class PedidoActivity extends AppBaseActivity
         Intent intent = new Intent(this, PedidoConfirmaActivity.class);
         intent.putExtra(PedidoConfirmaActivity.ARG_PEDIDO_ID, mPedido.id);
         startActivityForResult(intent, PedidoConfirmaActivity.ACTIVITY_PEDIDO_CONFIRMA);
+        //startActivity(intent);
 
         //PedidoConfirmaTask mPedidoConfirmarTask = new PedidoConfirmaTask(this, this.mPedido);
         //mPedidoConfirmarTask.execute((Void) null);
@@ -177,7 +185,6 @@ public class PedidoActivity extends AppBaseActivity
         mViewPager.setAdapter(mCategoryPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        //actualizarHeader();
         actualizarFooter();
     }
 

@@ -56,13 +56,15 @@ public class ComentarioBZ {
 		}
 	}
 
-	public void enviarComentario(Comentario comm) {		// OK
+	public void enviarComentario(Comentario comentario) {		// OK
 		try {
-			if (comm.enviado == false) {
-				ResponseObject response = mWeb.sendComentario(comm);
+			if (comentario.enviado == false) {
+
+				AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+				ResponseObject response = mWeb.sendComentario(autenticacionBZ.getAutenticacion(), comentario);
 				if (response.getData() != null) {
 					//Actualiza el estado del comentario
-					mSql.comentarioCambiarEstadoEnviado(comm, true);
+					mSql.comentarioCambiarEstadoEnviado(comentario, true);
 				}
 			}
 		} catch (ServiceException | LocalException e) {

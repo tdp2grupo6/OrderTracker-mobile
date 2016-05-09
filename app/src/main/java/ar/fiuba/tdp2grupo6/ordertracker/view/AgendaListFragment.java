@@ -91,7 +91,7 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
         View view = inflater.inflate(R.layout.fragment_list_agenda, container, false);
 
         //Set the list of items
-        //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
+        mEmptyView = (TextView) view.findViewById(R.id.agenda_list_empty);
         mReciclerView = (RecyclerView) view.findViewById(R.id.agenda_list);
 
         /*
@@ -135,8 +135,14 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
     private void actualizarLista() {
         if (mReciclerView != null) {
             ArrayList<AgendaItem> list =  mAgendaActivity.mAgenda.getAgendaItem(mDiaId);
-            mReciclerAdapter = new AgendaAdapter(this, list);
-            mReciclerView.setAdapter(mReciclerAdapter);
+            if (list != null && list.size() != 0) {
+                mReciclerAdapter = new AgendaAdapter(this, list);
+                mReciclerView.setAdapter(mReciclerAdapter);
+                mEmptyView.setVisibility(View.GONE);
+            } else {
+                mReciclerView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

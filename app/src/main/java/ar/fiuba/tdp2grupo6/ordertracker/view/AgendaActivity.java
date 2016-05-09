@@ -76,9 +76,6 @@ public class AgendaActivity extends AppBaseActivity
 
         if (savedInstanceState == null) {
 
-            //mTotalView = (TextView) findViewById(R.id.productos_pedido_list_money);
-            //mClienteView = (TextView) findViewById(R.id.productos_pedido_list_cliente);
-
             // Setea el viewpager
             mViewPager = (ViewPager) findViewById(R.id.container);
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -122,25 +119,6 @@ public class AgendaActivity extends AppBaseActivity
         //actualizarHeader();
         actualizarFooter();
     }
-
-
-    /*
-    private void actualizarHeader() {
-
-        if (mPedido != null && mSpinnerBrand != null) {
-            ArrayList<String> marcas = new ArrayList<String>();
-            marcas.addAll(mPedido.marcas);
-            marcas.add(0, "Todas");
-
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, marcas);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            //Setea el Spinner
-            mSpinnerBrand.setAdapter(dataAdapter);
-        }
-
-    }
-    */
 
     private void actualizarFooter() {
         if (mAgenda != null) {
@@ -266,28 +244,6 @@ public class AgendaActivity extends AppBaseActivity
             int day = currentDay + i > 6? currentDay + i - 7 : currentDay + i;
             return day;
         }
-
-        /*
-        public void setAllCategoryDirty(boolean isDirty) {
-            for (Map.Entry<Long, Boolean> entry : mCategoryDirtyMap.entrySet()) {
-                entry.setValue(isDirty);
-            }
-        }
-
-        public void setCategoryDirty(long categoriaId, boolean isDirty) {
-            mCategoryDirtyMap.put(categoriaId, isDirty);
-        }
-
-        public boolean getCategoryDirty(long categoriaId) {
-            boolean response = true;
-            if (mCategoryDirtyMap.containsKey(categoriaId)) {
-                response = mCategoryDirtyMap.get(categoriaId);
-            } else {
-                mCategoryDirtyMap.put(categoriaId, response);
-            }
-            return response;
-        }
-        */
 
     }
 

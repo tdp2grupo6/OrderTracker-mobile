@@ -58,7 +58,8 @@ public class AgendaBZ {
         Agenda response = new Agenda();
         try {
 
-            ResponseObject responseDA = mWeb.getAgenda();
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject responseDA = mWeb.getAgenda(autenticacionBZ.getAutenticacion());
 
             if (responseDA.getData() != null) {
                 //Elimina toda la agenda

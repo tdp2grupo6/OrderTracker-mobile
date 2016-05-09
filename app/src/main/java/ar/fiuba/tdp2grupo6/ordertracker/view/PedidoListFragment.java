@@ -49,8 +49,6 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     private String mMarcaFilter = "";
 
     //Propiedades para actualizar Item
-    private boolean mShowStockMensaje = true;
-    private boolean mAgregaItemSinStock = false;
     private PedidoProductoViewHolder mHolder;
     private int mPosition;
     private int mViejaCantidad;
@@ -252,10 +250,10 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         mViejaCantidad = viejaCantidad;
         mNuevaCantidad = nuevaCantidad;
 
-        if (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mAgregaItemSinStock) {
+        if (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mPedidoActivity.mAgregaItemSinStock) {
             actualizarCantidadItem();
         } else {
-            if (mShowStockMensaje) {
+            if (mPedidoActivity.mShowStockMensaje) {
 
                 AlertDialog.Builder dataDialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
                 dataDialogBuilder.setTitle(getContext().getResources().getString(R.string.title_popup_agregar_sin_stock));
@@ -263,16 +261,16 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
                 dataDialogBuilder.setCancelable(false);
                 dataDialogBuilder.setPositiveButton(getContext().getResources().getString(R.string.btn_si), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mShowStockMensaje = false;
-                        mAgregaItemSinStock = true;
+                        mPedidoActivity.mShowStockMensaje = false;
+                        mPedidoActivity.mAgregaItemSinStock = true;
 
                         actualizarCantidadItem();
                         dialog.cancel();
                     }
                 }).setNegativeButton(getContext().getResources().getString(R.string.btn_no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mShowStockMensaje = false;
-                        mAgregaItemSinStock = false;
+                        mPedidoActivity.mShowStockMensaje = false;
+                        mPedidoActivity.mAgregaItemSinStock = false;
 
                         dialog.cancel();
                     }
@@ -313,7 +311,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
         mPosition = position;
         mViejaCantidad = viejaCantidad;
         mNuevaCantidad = nuevaCantidad;
-        if (nuevaCantidad > 0 && (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mAgregaItemSinStock)) {
+        if (nuevaCantidad > 0 && (nuevaCantidad <= mHolder.mPedidoItem.producto.stock || mPedidoActivity.mAgregaItemSinStock)) {
             actualizarCantidadItem();
         } else {
             mHolder.getQuantityText().setText(String.valueOf(mViejaCantidad));

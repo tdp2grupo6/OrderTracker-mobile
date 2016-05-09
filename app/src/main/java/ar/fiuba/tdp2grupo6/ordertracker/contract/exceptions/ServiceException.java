@@ -10,6 +10,7 @@ public class ServiceException extends Exception {
 	private Boolean internalError;
 	private Boolean conexionError;
 	private Boolean applicationError;
+	private Boolean autorizationError;
 
 	private ResponseObject response;
 
@@ -22,7 +23,7 @@ public class ServiceException extends Exception {
 	*/
 
 	public enum ServiceExceptionType {
-		CONEXION(1), INTERNAL(2), APPLICATION(3), TIMEOUT(4);
+		CONEXION(1), INTERNAL(2), APPLICATION(3), TIMEOUT(4), AUTORIZATION(5);
 
 		private final int value;
 		private ServiceExceptionType(int value) {
@@ -44,21 +45,31 @@ public class ServiceException extends Exception {
 			this.timeOutError = false;
 			this.internalError = false;
 			this.applicationError = false;
+			this.autorizationError = false;
 		} else if (tipo == ServiceExceptionType.INTERNAL) {
 			this.conexionError = false;
 			this.timeOutError = false;
 			this.internalError = true;
 			this.applicationError = false;
+			this.autorizationError = false;
 		} else if (tipo == ServiceExceptionType.APPLICATION) {
 			this.conexionError = false;
 			this.timeOutError = false;
 			this.internalError = false;
 			this.applicationError = true;
+			this.autorizationError = false;
 		} else if (tipo == ServiceExceptionType.TIMEOUT) {
 			this.conexionError = true;
 			this.timeOutError = true;
 			this.internalError = false;
 			this.applicationError = false;
+			this.autorizationError = false;
+		} else if (tipo == ServiceExceptionType.AUTORIZATION) {
+			this.conexionError = false;
+			this.timeOutError = false;
+			this.internalError = false;
+			this.applicationError = false;
+			this.autorizationError = true;
 		}
 	}
 
@@ -76,6 +87,10 @@ public class ServiceException extends Exception {
 
 	public Boolean isTimeOutError() {
 		return this.timeOutError;
+	}
+
+	public Boolean isAutorizationError() {
+		return this.autorizationError;
 	}
 
 	public ServiceExceptionType getType() {

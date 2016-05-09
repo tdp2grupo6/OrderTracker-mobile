@@ -50,7 +50,8 @@ public class ProductoBZ {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {
 
-            ResponseObject responseDA = mWeb.getProductos();
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject responseDA = mWeb.getProductos(autenticacionBZ.getAutenticacion());
 
             if (responseDA.getData() != null) {
                 //Elimina todos los Productos
@@ -83,7 +84,8 @@ public class ProductoBZ {
 
         try {
 
-            ResponseObject responseDA = mWeb.getProductosImagenMiniatura(producto.rutaMiniatura);
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject responseDA = mWeb.getProductosImagenMiniatura(autenticacionBZ.getAutenticacion(), producto.rutaMiniatura);
 
             if (responseDA.getBitmap() != null) {
                 //Graba en la SD
@@ -101,7 +103,8 @@ public class ProductoBZ {
 
         try {
 
-            ResponseObject responseDA = mWeb.getProductosImagen(producto.rutaImagen);
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject responseDA = mWeb.getProductosImagen(autenticacionBZ.getAutenticacion(), producto.rutaImagen);
 
             if (responseDA.getBitmap() != null) {
                 //Graba en la SD
