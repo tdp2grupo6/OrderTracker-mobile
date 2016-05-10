@@ -137,7 +137,7 @@ public class WebDA {
 
 
 	private ResponseObject makeRequest(String targetURL, String requestType, String responseType, HashMap<String, String> headerMap, String entityString)
-			throws ServiceException {
+			throws ServiceException, AutorizationException {
 
 		ResponseObject response = new ResponseObject();
 		try {
@@ -165,12 +165,15 @@ public class WebDA {
 						response.setBitmap(responseBitmap);
 					}
 				} else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-					throw new ServiceException(urlConnection.getResponseMessage(), response, ServiceExceptionType.AUTORIZATION);
+					throw new AutorizationException(urlConnection.getResponseMessage());
+					//throw new ServiceException(urlConnection.getResponseMessage(), response, ServiceExceptionType.AUTORIZATION);
 				} else {
 					String errorString = readResponseString(urlConnection.getErrorStream());
 					response.setError(errorString);
 					throw new ServiceException(errorString, response, ServiceExceptionType.INTERNAL);
 				}
+			} catch (AutorizationException ae) {
+				throw ae;
 			} catch (ProtocolException e) {
 				throw new ServiceException(e.getLocalizedMessage(), response, ServiceExceptionType.CONEXION);
 			} catch (SocketTimeoutException e) {
@@ -182,6 +185,8 @@ public class WebDA {
 			} finally {
 				urlConnection.disconnect();
 			}
+		} catch (AutorizationException ae) {
+			throw ae;
 		} catch (ServiceException se) {
 			throw se;
 		} catch (Exception e) {
@@ -196,7 +201,8 @@ public class WebDA {
 	}
 
 	// login a la aplicacion
-	public ResponseObject sendAutenticar(AutenticacionRequest autenticacion) throws ServiceException {
+	public ResponseObject sendAutenticar(AutenticacionRequest autenticacion)
+			throws ServiceException, AutorizationException {
 
 		ResponseObject response = null;
 		try {
@@ -208,16 +214,20 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, null, body);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 
 	// Obtiene la agenda para el usuario
-	public ResponseObject getAgenda(AutenticacionResponse autenticacionResponse) throws ServiceException {
+	public ResponseObject getAgenda(AutenticacionResponse autenticacionResponse)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -231,15 +241,19 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 	// Obtiene los filtros disponibles para el usuario
-	public ResponseObject getClientes(AutenticacionResponse autenticacionResponse) throws ServiceException {
+	public ResponseObject getClientes(AutenticacionResponse autenticacionResponse)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -254,15 +268,19 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 	// Obtiene los filtros disponibles para el usuario
-	public ResponseObject getProductos(AutenticacionResponse autenticacionResponse) throws ServiceException {
+	public ResponseObject getProductos(AutenticacionResponse autenticacionResponse)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -276,15 +294,19 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 	// Obtiene las imagenes para un producto
-	public ResponseObject getProductosImagen(AutenticacionResponse autenticacionResponse, String rutaImagen) throws ServiceException {
+	public ResponseObject getProductosImagen(AutenticacionResponse autenticacionResponse, String rutaImagen)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -298,15 +320,19 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 	// Obtiene las imagenes miniatura para un producto
-	public ResponseObject getProductosImagenMiniatura(AutenticacionResponse autenticacionResponse, String rutaMiniatura) throws ServiceException {
+	public ResponseObject getProductosImagenMiniatura(AutenticacionResponse autenticacionResponse, String rutaMiniatura)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -320,15 +346,19 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, GET_METHOD, BITMAP_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
 	// dgacitua: Envía un comentario al backend
-	public ResponseObject sendComentario(AutenticacionResponse autenticacionResponse, Comentario comentario) throws ServiceException {
+	public ResponseObject sendComentario(AutenticacionResponse autenticacionResponse, Comentario comentario)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -345,14 +375,18 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}
 
-	public ResponseObject sendPedido(AutenticacionResponse autenticacionResponse, Pedido pedido) throws ServiceException {
+	public ResponseObject sendPedido(AutenticacionResponse autenticacionResponse, Pedido pedido)
+			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
 
 		ResponseObject response = null;
@@ -369,9 +403,12 @@ public class WebDA {
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
 		} catch (Exception e) {
-			if (e instanceof ServiceException) throw e;
-			else throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
 		}
 		return response;
 	}

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 
@@ -189,6 +190,15 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    /*
+                    IntentIntegrator integrator = IntentIntegrator.forSupportFragment(ClienteDetailFragment.this);
+                    integrator.setCaptureActivity(QRActivity.class);
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+                    integrator.setPrompt("Scan cliente code");
+                    integrator.setOrientationLocked(false);
+                    integrator.setBeepEnabled(false);
+                    integrator.initiateScan();
+                    */
                     setupNuevoPedido();
                 }
             });

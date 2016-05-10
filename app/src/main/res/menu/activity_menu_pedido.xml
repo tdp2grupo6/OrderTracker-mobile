@@ -5,7 +5,7 @@
 
     <item android:id="@+id/spinner_brand"
           android:title="@string/action_filtro_marca"
-          app:showAsAction="ifRoom"
+          app:showAsAction="collapseActionView"
           app:actionViewClass="android.widget.Spinner" />
 
 </menu>

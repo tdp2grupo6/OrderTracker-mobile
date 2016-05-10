@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 
 /**
  * A fragment representing a single Cliente detail screen.
@@ -291,6 +292,8 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
             try {
                 //Si puede sincroniza los clientes primero
                 clienteBz.sincronizar();
+            } catch (AutorizationException ae) {
+                //TODO: Hacer el deslogueo de la app
             } catch (Exception e) {
             }
 

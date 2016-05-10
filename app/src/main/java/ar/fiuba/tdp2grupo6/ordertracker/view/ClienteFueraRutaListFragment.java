@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ClienteAdapter;
 
 /**
@@ -247,6 +249,8 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
             try {
                 //Si puede sincroniza los clientes primero
                 clienteBz.sincronizar();
+            } catch (AutorizationException ae) {
+                //TODO: Hacer el deslogueo de la app
             } catch (Exception e) {
             }
 

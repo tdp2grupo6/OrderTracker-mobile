@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class CatalogoActivity extends AppBaseActivity {
@@ -136,8 +137,9 @@ public class CatalogoActivity extends AppBaseActivity {
             try {
                 //Si puede sincroniza los items primero
                 productoBz.sincronizar();
-            }
-            catch (Exception e) {
+            } catch (AutorizationException ae) {
+                //TODO: Hacer el deslogueo de la app
+            } catch (Exception e) {
             }
 
             try {

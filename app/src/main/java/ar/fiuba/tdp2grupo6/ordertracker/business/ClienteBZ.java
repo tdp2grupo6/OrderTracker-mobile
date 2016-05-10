@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SharedPrefDA;
@@ -34,7 +35,7 @@ public class ClienteBZ {
 		this.mSql = dataBase;
 	}
 
-	public ArrayList<Cliente> sincronizar() throws ServiceException, BusinessException {
+	public ArrayList<Cliente> sincronizar() throws AutorizationException, BusinessException {
 		ArrayList<Cliente> response = new ArrayList<Cliente>();
 		try {
 
@@ -61,6 +62,8 @@ public class ClienteBZ {
 				}
 			}
 
+		} catch (AutorizationException ae) {
+			throw ae;
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}

@@ -25,6 +25,7 @@ import java.util.Date;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ComentarioBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 
 public class ClienteDetailActivity extends AppBaseAuthActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
@@ -201,6 +202,8 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
             try {
                 comm = cbz.guardarComentario(comm);
                 cbz.enviarComentario(comm);
+            } catch (AutorizationException ae) {
+                //TODO: Hacer el deslogueo de la app
             } catch (BusinessException e) {
                 e.printStackTrace();
             }

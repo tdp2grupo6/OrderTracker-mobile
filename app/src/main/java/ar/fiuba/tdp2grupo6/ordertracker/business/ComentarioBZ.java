@@ -8,6 +8,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
@@ -44,19 +45,21 @@ public class ComentarioBZ {
 		this.mSql = dataBase;
 	}
 
-	public void sincronizar() throws BusinessException {
+	public void sincronizar() throws AutorizationException, BusinessException {
 		try {
 			ArrayList<Comentario> listaPendientes = mSql.comentarioObtenerNoEnviado();
 
 			for (Comentario c: listaPendientes) {
 				enviarComentario(c);
 			}
+		} catch (AutorizationException ae) {
+			throw ae;
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
 	}
 
-	public void enviarComentario(Comentario comentario) {		// OK
+	public void enviarComentario(Comentario comentario) throws AutorizationException, BusinessException {
 		try {
 			if (comentario.enviado == false) {
 
@@ -67,8 +70,10 @@ public class ComentarioBZ {
 					mSql.comentarioCambiarEstadoEnviado(comentario, true);
 				}
 			}
-		} catch (ServiceException | LocalException e) {
-			e.printStackTrace();
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}
 	}
 

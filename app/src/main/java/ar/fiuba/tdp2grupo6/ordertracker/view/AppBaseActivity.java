@@ -114,14 +114,17 @@ public abstract class AppBaseActivity extends AppBaseAuthActivity implements Men
         switch (item.getItemId()) {
             case R.id.nav_clientes:
                 Intent a = new Intent(this, ClienteActivity.class);
+                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(a);
                 break;
             case R.id.nav_agenda:
                 Intent c = new Intent(this, AgendaActivity.class);
+                c.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(c);
                 break;
             case R.id.nav_catalogo:
                 Intent b = new Intent(this, CatalogoActivity.class);
+                b.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(b);
                 break;
             case R.id.nav_logout:

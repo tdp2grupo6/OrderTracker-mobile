@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
@@ -46,7 +47,7 @@ public class ProductoBZ {
         this.mSql = dataBase;
     }
 
-    public ArrayList<Producto> sincronizar() throws ServiceException, BusinessException {
+    public ArrayList<Producto> sincronizar() throws AutorizationException, BusinessException {
         ArrayList<Producto> response = new ArrayList<Producto>();
         try {
 
@@ -72,7 +73,8 @@ public class ProductoBZ {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
@@ -80,7 +82,7 @@ public class ProductoBZ {
         return response;
     }
 
-    public void sincronizarImagenMini(Producto producto) throws ServiceException, BusinessException {
+    public void sincronizarImagenMini(Producto producto) throws AutorizationException, BusinessException {
 
         try {
 
@@ -92,14 +94,15 @@ public class ProductoBZ {
                 ImagenBZ filaBZ  = new ImagenBZ();
                 filaBZ.grabar(producto.getNombreImagenMiniatura(), responseDA.getBitmap());
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), e.getMessage()));
         }
 
     }
 
-    public void sincronizarImagen(Producto producto) throws ServiceException, BusinessException {
+    public void sincronizarImagen(Producto producto) throws AutorizationException, BusinessException {
 
         try {
 
@@ -111,7 +114,8 @@ public class ProductoBZ {
                 ImagenBZ filaBZ  = new ImagenBZ();
                 filaBZ.grabar(producto.getNombreImagen(), responseDA.getBitmap());
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), e.getMessage()));
         }

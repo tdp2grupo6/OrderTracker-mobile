@@ -17,6 +17,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 
 /**
  * An activity representing a single Cliente detail screen. This
@@ -165,6 +166,8 @@ public class PedidoConfirmaActivity extends AppBaseActivity
                 //Procesa el cambio
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
                 pedidoBZ.confirmar(mPedido, true);
+            } catch (AutorizationException ae) {
+                //TODO: Hacer el deslogueo de la app
             } catch (Exception e) {
                 resultado = false;
             }

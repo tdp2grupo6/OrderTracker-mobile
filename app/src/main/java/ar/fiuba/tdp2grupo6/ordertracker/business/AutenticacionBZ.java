@@ -7,6 +7,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionRequest;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SharedPrefDA;
@@ -43,7 +44,7 @@ public class AutenticacionBZ {
         this.mSql = dataBase;
     }
 
-    public AutenticacionResponse login(String user, String password) throws ServiceException, BusinessException {
+    public AutenticacionResponse login(String user, String password) throws AutorizationException, BusinessException {
         AutenticacionResponse response = null;
         try {
 
@@ -63,7 +64,8 @@ public class AutenticacionBZ {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }

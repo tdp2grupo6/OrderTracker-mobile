@@ -19,6 +19,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
@@ -54,7 +55,7 @@ public class AgendaBZ {
         this.mSql = dataBase;
     }
 
-    public Agenda sincronizar(boolean loadCliente) throws ServiceException, BusinessException {
+    public Agenda sincronizar(boolean loadCliente) throws AutorizationException, BusinessException {
         Agenda response = new Agenda();
         try {
 
@@ -96,7 +97,8 @@ public class AgendaBZ {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }

@@ -224,9 +224,7 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
 
                 });
             }
-
         }
-
     }
 
     public void actualizarCantidadItem() {

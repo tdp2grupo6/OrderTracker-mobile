@@ -17,6 +17,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.SqlDA;
@@ -264,7 +265,7 @@ public class PedidoBZ {
         }
     }
 
-    public void confirmar(Pedido pedido, boolean trySend) throws BusinessException {
+    public void confirmar(Pedido pedido, boolean trySend) throws AutorizationException, BusinessException {
         try {
 
             if (pedido != null && pedido.items.values().size() > 0) {
@@ -281,14 +282,11 @@ public class PedidoBZ {
                 mSql.pedidoActualizar(pedido);
 
                 if (trySend) {
-                    try {
-                        this.enviarPedido(pedido);
-                    } catch (Exception e) {
-
-                    }
+                    this.enviarPedido(pedido);
                 }
             }
-
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
@@ -319,18 +317,20 @@ public class PedidoBZ {
         }
     }
 
-    public void sincronizar() throws BusinessException {
+    public void sincronizar() throws AutorizationException, BusinessException {
         try {
             ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_CONFIRMADO);
             if (pedidos != null & pedidos.size() > 0) {
                 enviarPedido(pedidos.get(0));
             }
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }
     }
 
-    public void enviarPedido(Pedido pedido) throws BusinessException {
+    public void enviarPedido(Pedido pedido) throws AutorizationException, BusinessException {
 
         try {
 
@@ -359,6 +359,8 @@ public class PedidoBZ {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }
             }
+        } catch (AutorizationException ae) {
+            throw ae;
         } catch (Exception e) {
             throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
         }

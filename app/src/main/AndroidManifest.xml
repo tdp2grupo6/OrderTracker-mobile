@@ -52,7 +52,7 @@
         </activity>
         <activity
             android:name=".view.AgendaActivity"
-            android:label="@string/title_activity_catalogo"
+            android:label="@string/title_activity_agenda"
             android:parentActivityName=".view.ClienteActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -64,13 +64,13 @@
         </activity>
         <activity
             android:name=".view.PedidoActivity"
-            android:label="@string/title_activity_catalogo"
+            android:label="@string/title_activity_pedido"
             android:parentActivityName=".view.ClienteActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".view.PedidoConfirmaActivity"
-            android:label="@string/title_activity_catalogo"
+            android:label="@string/title_activity_confirma"
             android:parentActivityName=".view.PedidoActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -80,7 +80,12 @@
             android:parentActivityName=".view.CatalogoActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
+        <activity android:name=".view.QRActivity"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
         <receiver android:name=".service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

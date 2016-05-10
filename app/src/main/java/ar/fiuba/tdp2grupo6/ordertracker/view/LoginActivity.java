@@ -24,6 +24,8 @@ import android.widget.TextView;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.AutenticacionBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.view.app.OrderTrackerApplication;
 
 public class LoginActivity extends AppCompatActivity { //implements LoaderCallbacks<Cursor> {
@@ -287,8 +289,9 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
     private void navigateNext() {
         mApplication.runService();
 
-        Intent a = new Intent(this, ClienteActivity.class);
-        startActivity(a);
+        Intent c = new Intent(this, AgendaActivity.class);
+        c.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(c);
     }
 
 
@@ -309,6 +312,8 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
             try {
                 AutenticacionBZ autenticacionBZ = new AutenticacionBZ(mContext);
                 autenticacion = autenticacionBZ.login(mEmail, mPassword);
+            } catch (AutorizationException ae) {
+                autenticacion = null;
             } catch (Exception e) {
                 autenticacion = null;
             }

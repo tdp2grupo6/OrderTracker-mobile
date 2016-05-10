@@ -28,8 +28,11 @@
     <string name="nav_agenda">Agenda</string>
     <string name="nav_logout">Logout</string>
 
+    <string name="title_activity_agenda">Agenda</string>
     <string name="title_activity_catalogo">Catálogo</string>
     <string name="title_activity_cliente">Cliente</string>
+    <string name="title_activity_pedido">Pedido</string>
+    <string name="title_activity_confirma">Confirma</string>
     <string name="title_cliente_list">Clientes</string>
     <string name="title_cliente_detail">Cliente Detalle</string>
     <string name="title_activity_producto_detail">Detalle Producto</string>

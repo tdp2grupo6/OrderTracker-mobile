@@ -44,6 +44,8 @@ public abstract class AppBaseAuthActivity extends AppCompatActivity {
         mApplication.clearAutentication();
 
         Intent a = new Intent(this, LoginActivity.class);
+        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        a.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
     }
 }

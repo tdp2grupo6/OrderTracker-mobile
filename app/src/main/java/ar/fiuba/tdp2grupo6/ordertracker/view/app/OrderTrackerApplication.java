@@ -8,7 +8,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.service.BootReceiver;
 
 public class OrderTrackerApplication extends Application {
-	public AutenticacionResponse autenticacionResponse;
+	private static AutenticacionResponse autenticacionResponse;
 
 
 	@Override
@@ -17,19 +17,19 @@ public class OrderTrackerApplication extends Application {
 	}
 
 	public AutenticacionResponse getAutentication() {
-		if (autenticacionResponse == null) {
+		if (OrderTrackerApplication.autenticacionResponse == null) {
 			AutenticacionBZ autenticacionBZ = new AutenticacionBZ(this);
-			autenticacionResponse = autenticacionBZ.getAutenticacion();
+			OrderTrackerApplication.autenticacionResponse = autenticacionBZ.getAutenticacion();
 		}
-		return autenticacionResponse;
+		return OrderTrackerApplication.autenticacionResponse;
 	}
 
 	public void clearAutentication() {
-		if (autenticacionResponse != null) {
+		if (OrderTrackerApplication.autenticacionResponse != null) {
 			AutenticacionBZ autenticacionBZ = new AutenticacionBZ(this);
 			autenticacionBZ.logout();
 
-			autenticacionResponse = null;
+			OrderTrackerApplication.autenticacionResponse = null;
 		}
 	}
 

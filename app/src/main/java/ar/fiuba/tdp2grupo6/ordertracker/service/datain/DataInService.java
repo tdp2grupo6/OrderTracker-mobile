@@ -72,10 +72,7 @@ public class DataInService extends IntentService {
 							productoBZ.sincronizarImagen(producto);
 						}
 					}
-					//Descarga las imagenes para los items si no lo tiene
-
 				}
-
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txarrastre) + ": " + e.getMessage();
 			}
