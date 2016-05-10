@@ -138,6 +138,7 @@ public class AgendaListFragment extends Fragment implements AgendaAdapter.OnItem
             if (list != null && list.size() != 0) {
                 mReciclerAdapter = new AgendaAdapter(this, list);
                 mReciclerView.setAdapter(mReciclerAdapter);
+                mReciclerView.setVisibility(View.VISIBLE);
                 mEmptyView.setVisibility(View.GONE);
             } else {
                 mReciclerView.setVisibility(View.GONE);

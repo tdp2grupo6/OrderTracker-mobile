@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -358,6 +359,10 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
 
         @Override
         protected void onPostExecute(Boolean result) {
+            if (result && mDescartarPendienteId > 0) {
+                Toast.makeText(mContext, "Pedido descartado!", Toast.LENGTH_SHORT).show();
+            }
+
             abrirNuevoPedido();
         }
 

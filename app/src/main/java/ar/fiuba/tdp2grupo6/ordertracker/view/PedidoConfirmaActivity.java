@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +38,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
     private TextView mClienteView;
     private TextView mTotalView;
+    private FloatingActionButton mFbEnviar;
 
     private PedidoConfirmaListFragment mFragment;
     private PedidoConfirmaTask mPedidoConfirmarTask;
@@ -51,8 +54,8 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FloatingActionButton fbEnviar = (FloatingActionButton) findViewById(R.id.fb_enviar);
-        fbEnviar.setOnClickListener(new View.OnClickListener() {
+        mFbEnviar = (FloatingActionButton) findViewById(R.id.fb_enviar);
+        mFbEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onPedidoConfirma();
@@ -112,6 +115,16 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
             mPedidoActualizarTask = new PedidoActualizarTask(this, this.mPedido, pedidoItem);
             mPedidoActualizarTask.execute((Void) null);
+        }
+    }
+
+    @Override
+    public void onPedidoItemVacio(boolean vacio) {
+        mFbEnviar.setEnabled(!vacio);
+        if (vacio) {
+            mFbEnviar.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        } else {
+            mFbEnviar.getBackground().setColorFilter(null);
         }
     }
 

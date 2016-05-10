@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/productos_pedido_list_empty"
-        android:text="@string/no_hay_clientes"
+        android:text="@string/no_hay_producto_pedido"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

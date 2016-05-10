@@ -28,8 +28,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.AgendaItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.AgendaAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoConfirmaAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoConfirmaTouchHelper;
@@ -53,6 +55,7 @@ public class PedidoConfirmaListFragment extends Fragment implements PedidoProduc
     public interface OnPedidoConfirmaListFragmentListener {
         void onPedidoItemClick(Producto producto);
         void onPedidoItemActualizar(PedidoItem pedidoItem);
+        void onPedidoItemVacio(boolean vacio);
     }
 
     public static PedidoConfirmaListFragment newInstance(long pedidoId) {
@@ -86,7 +89,7 @@ public class PedidoConfirmaListFragment extends Fragment implements PedidoProduc
         View view = inflater.inflate(R.layout.fragment_list_pedido, container, false);
 
         //Set the list of items
-        //mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
+        mEmptyView = (TextView) view.findViewById(R.id.productos_pedido_list_empty);
         mReciclerView = (RecyclerView) view.findViewById(R.id.productos_pedido_list);
 
         return view;
@@ -125,12 +128,21 @@ public class PedidoConfirmaListFragment extends Fragment implements PedidoProduc
     public void actualizarLista() {
         if (mReciclerView != null) {
             ArrayList<PedidoItem> list =  mPedidoConfirmaActivity.mPedido.getItems(0, "");
-            mReciclerAdapter = new PedidoProductoConfirmaAdapter(this, list, false);
-            mReciclerView.setAdapter(mReciclerAdapter);
+            if (list != null && list.size() != 0) {
+                mReciclerAdapter = new PedidoProductoConfirmaAdapter(this, list, false);
+                mReciclerView.setAdapter(mReciclerAdapter);
+                mReciclerView.setVisibility(View.VISIBLE);
+                mEmptyView.setVisibility(View.GONE);
 
-            ItemTouchHelper.Callback callback = new PedidoProductoConfirmaTouchHelper(mReciclerAdapter);
-            ItemTouchHelper helper = new ItemTouchHelper(callback);
-            helper.attachToRecyclerView(mReciclerView);
+                ItemTouchHelper.Callback callback = new PedidoProductoConfirmaTouchHelper(mReciclerAdapter);
+                ItemTouchHelper helper = new ItemTouchHelper(callback);
+                helper.attachToRecyclerView(mReciclerView);
+            } else {
+                mReciclerView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.VISIBLE);
+
+                mListener.onPedidoItemVacio(true);
+            }
         }
     }
 

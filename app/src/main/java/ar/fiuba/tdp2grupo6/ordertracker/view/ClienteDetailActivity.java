@@ -213,6 +213,7 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
 
         @Override
         protected void onPostExecute(Comentario comentario) {
+            Toast.makeText(mContext, "Mensaje enviado!", Toast.LENGTH_SHORT).show();
             mPd.dismiss();
         }
     }

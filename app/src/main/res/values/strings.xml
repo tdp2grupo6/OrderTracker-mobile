@@ -20,6 +20,7 @@
     <string name="error_agregar_sin_stock">No se cuenta con mas stock de este producto. Desea agregarlo de todas formas?</string>
 
 
+    <string name="no_hay_producto_pedido">No hay productos en el pedido</string>
     <string name="no_hay_clientes">No hay clientes</string>
     <string name="no_hay_productos">No hay productos</string>
 
