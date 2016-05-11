@@ -65,10 +65,10 @@
     <string name="detalle_producto_stock">0</string>
     <string name="detalle_producto_pedido_agregar">Agregar</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_no_logued_in">No esta logueado a la aplicacion</string>
