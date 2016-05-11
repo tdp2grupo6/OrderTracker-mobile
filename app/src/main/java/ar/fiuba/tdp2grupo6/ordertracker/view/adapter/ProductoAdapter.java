@@ -44,7 +44,6 @@ public class ProductoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO
         ProductoViewHolder holder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.layout_item_catalogo, null, false);

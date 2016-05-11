@@ -268,6 +268,7 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
         private Context mContext;
         //private ProgressDialog mPd;
+        private boolean mSessionInvalid = false;
 
         public ClientesBuscarTask(Context context) {
             this.mContext = context;
@@ -294,6 +295,7 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
                 clienteBz.sincronizar();
             } catch (AutorizationException ae) {
                 //TODO: Hacer el deslogueo de la app
+                mSessionInvalid = true;
             } catch (Exception e) {
             }
 
@@ -308,7 +310,12 @@ public class ClienteFueraRutaMapFragment extends Fragment { //implements OnMapRe
 
         @Override
         protected void onPostExecute(ArrayList<Cliente> clientes) {
-            actualizar(clientes);
+            if (mSessionInvalid == false) {
+                actualizar(clientes);
+            } else {
+                ((AppBaseAuthActivity)getActivity()).logoutApplication(true);
+            }
+
             //mPd.dismiss();
         }
 

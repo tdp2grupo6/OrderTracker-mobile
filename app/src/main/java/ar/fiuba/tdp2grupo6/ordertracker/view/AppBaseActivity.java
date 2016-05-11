@@ -128,7 +128,7 @@ public abstract class AppBaseActivity extends AppBaseAuthActivity implements Men
                 startActivity(b);
                 break;
             case R.id.nav_logout:
-                super.logoutActivity();
+                super.logoutApplication(true);
                 break;
             /*
             case R.id.nav_pedido:

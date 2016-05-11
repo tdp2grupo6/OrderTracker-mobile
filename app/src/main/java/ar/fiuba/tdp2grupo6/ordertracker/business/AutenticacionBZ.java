@@ -58,8 +58,7 @@ public class AutenticacionBZ {
                 try {
                     response = new AutenticacionResponse(responseDA.getData());
 
-                    SharedPrefDA sharedPrefDA = new SharedPrefDA(mContext);
-                    sharedPrefDA.setToken(responseDA.getData());
+                    SharedPrefDA.setToken(mContext, responseDA.getData());
                 } catch (Exception jex) {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }
@@ -75,8 +74,7 @@ public class AutenticacionBZ {
 
     public void logout() {
         try {
-            SharedPrefDA sharedPrefDA = new SharedPrefDA(mContext);
-            sharedPrefDA.deleteToken();
+            SharedPrefDA.deleteToken(mContext);
         } catch (Exception e) {
 
         }
@@ -85,9 +83,9 @@ public class AutenticacionBZ {
     public AutenticacionResponse getAutenticacion() {
         AutenticacionResponse autenticacionResponse = null;
         try {
-            SharedPrefDA sharedPrefDA = new SharedPrefDA(mContext);
-            if (sharedPrefDA.getToken() != null) {
-                autenticacionResponse = new AutenticacionResponse(sharedPrefDA.getToken());
+            String token = SharedPrefDA.getToken(mContext);
+            if (token != null) {
+                autenticacionResponse = new AutenticacionResponse(token);
             }
         } catch (Exception e) {
 

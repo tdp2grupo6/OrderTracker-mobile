@@ -47,6 +47,7 @@
 
     <string name="msg_procesando">Procesando</string>
     <string name="msg_popup_comentario">Elija un motivo del comentario, adicionalmente complete un texto</string>
+    <string name="msg_sesion_vencida">Su sesion ha vencido, debe loguearse nuevamente.</string>
 
     <string name="imagen_descripcion">Imagen</string>
 

@@ -115,6 +115,7 @@ public class CatalogoActivity extends AppBaseActivity {
     public class ProductosBuscarTask extends AsyncTask<Void, String, ArrayList<Producto>> {
         private Context mContext;
         private ProgressDialog mPd;
+        private boolean mSessionInvalid = false;
 
         public ProductosBuscarTask(Context context) {
             this.mContext = context;
@@ -138,8 +139,9 @@ public class CatalogoActivity extends AppBaseActivity {
                 //Si puede sincroniza los items primero
                 productoBz.sincronizar();
             } catch (AutorizationException ae) {
-                //TODO: Hacer el deslogueo de la app
+                mSessionInvalid = true;
             } catch (Exception e) {
+
             }
 
             try {
@@ -154,9 +156,13 @@ public class CatalogoActivity extends AppBaseActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Producto> productos) {
-            if (mListView != null && productos!=null) {
-                mSwipeLayout.setRefreshing(false);
-                actualizarLista(productos);
+            if (mSessionInvalid == false) {
+                if (mListView != null && productos != null) {
+                    mSwipeLayout.setRefreshing(false);
+                    actualizarLista(productos);
+                }
+            } else {
+                logoutApplication(true);
             }
 
             mPd.dismiss();

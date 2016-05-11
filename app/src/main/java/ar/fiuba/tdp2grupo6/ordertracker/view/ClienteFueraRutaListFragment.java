@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,9 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
     private ClientesBuscarTask mClientesBuscarTask;
 
     private OnFragmentInteractionListener mListener;
+    public interface OnFragmentInteractionListener {
+        //void onFragmentInteraction(Uri uri);
+    }
 
     public ClienteFueraRutaListFragment() {
         // Required empty public constructor
@@ -108,12 +112,6 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
         }
 
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -194,21 +192,6 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     private void refrescarLista() {
         mClientesBuscarTask = new ClientesBuscarTask(getContext());
         mClientesBuscarTask.execute((Void) null);
@@ -225,6 +208,7 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
     public class ClientesBuscarTask extends AsyncTask<Void, String, ArrayList<Cliente>> {
         private Context mContext;
         //private ProgressDialog mPd;
+        private boolean mSessionInvalid = false;
 
         public ClientesBuscarTask(Context context) {
             this.mContext = context;
@@ -251,6 +235,7 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
                 clienteBz.sincronizar();
             } catch (AutorizationException ae) {
                 //TODO: Hacer el deslogueo de la app
+                mSessionInvalid = true;
             } catch (Exception e) {
             }
 
@@ -265,12 +250,14 @@ public class ClienteFueraRutaListFragment extends Fragment implements AdapterVie
 
         @Override
         protected void onPostExecute(ArrayList<Cliente> clientes) {
-
-            //mPd.dismiss();
-            if (mListView != null && clientes!=null)
-            {
-                mSwipeLayout.setRefreshing(false);
-                actualizarLista(clientes);
+            if (mSessionInvalid == false) {
+                if (mListView != null && clientes!=null)
+                {
+                    mSwipeLayout.setRefreshing(false);
+                    actualizarLista(clientes);
+                }
+            } else {
+                ((AppBaseAuthActivity)getActivity()).logoutApplication(true);
             }
         }
 

@@ -20,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.AutenticacionBZ;
@@ -29,6 +30,8 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.view.app.OrderTrackerApplication;
 
 public class LoginActivity extends AppCompatActivity { //implements LoaderCallbacks<Cursor> {
+
+    public static final String ARG_SHOW_MESSAGE = "show_message";
 
     private OrderTrackerApplication mApplication = null;
     private UserLoginTask mAuthTask = null;
@@ -78,6 +81,13 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
         mApplication = (OrderTrackerApplication)this.getApplication();
         if (mApplication.getAutentication() != null) {
             navigateNext();
+        }
+
+        Bundle mExtras = getIntent().getExtras();
+        if (mExtras != null) {
+            boolean showMessage = mExtras.getBoolean(LoginActivity.ARG_SHOW_MESSAGE);
+            if (showMessage)
+                Toast.makeText(this, R.string.msg_sesion_vencida, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -183,12 +193,10 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;//email.contains("@");
+        return email.length() > 3;
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 

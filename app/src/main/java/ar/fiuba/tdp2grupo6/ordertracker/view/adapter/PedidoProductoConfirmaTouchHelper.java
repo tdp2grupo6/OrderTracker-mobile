@@ -13,7 +13,7 @@ public class PedidoProductoConfirmaTouchHelper extends ItemTouchHelper.SimpleCal
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        //TODO: Not implemented here
+        //Not implemented here
         return false;
     }
 

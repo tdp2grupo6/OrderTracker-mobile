@@ -155,6 +155,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
     public class PedidoConfirmaTask extends AsyncTask<Void, String, Boolean> {
         private Context mContext;
         private ProgressDialog mPd;
+        private boolean mSessionInvalid = false;
 
         private Pedido mPedido;
 
@@ -181,6 +182,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
                 pedidoBZ.confirmar(mPedido, true);
             } catch (AutorizationException ae) {
                 //TODO: Hacer el deslogueo de la app
+                mSessionInvalid = true;
             } catch (Exception e) {
                 resultado = false;
             }
@@ -190,10 +192,14 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
         @Override
         protected void onPostExecute(Boolean resultado) {
-            mPd.dismiss();
+            if (mSessionInvalid == false) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            } else {
+                logoutApplication(true);
+            }
 
-            setResult(Activity.RESULT_OK);
-            finish();
+            mPd.dismiss();
         }
 
     }

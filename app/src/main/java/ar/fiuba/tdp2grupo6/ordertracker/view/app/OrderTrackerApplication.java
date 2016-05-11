@@ -25,12 +25,10 @@ public class OrderTrackerApplication extends Application {
 	}
 
 	public void clearAutentication() {
-		if (OrderTrackerApplication.autenticacionResponse != null) {
-			AutenticacionBZ autenticacionBZ = new AutenticacionBZ(this);
-			autenticacionBZ.logout();
+		AutenticacionBZ autenticacionBZ = new AutenticacionBZ(this);
+		autenticacionBZ.logout();
 
-			OrderTrackerApplication.autenticacionResponse = null;
-		}
+		OrderTrackerApplication.autenticacionResponse = null;
 	}
 
 	public void runService() {

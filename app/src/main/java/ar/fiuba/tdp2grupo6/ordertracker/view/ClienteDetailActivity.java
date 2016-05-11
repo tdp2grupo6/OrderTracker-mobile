@@ -177,6 +177,7 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
         private Context mContext;
         private Comentario mComentario;
         private ProgressDialog mPd;
+        private boolean mSessionInvalid = false;
 
         public EnviarComentarioTask(Context context, Comentario comentario) {
             this.mContext = context;
@@ -204,6 +205,7 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
                 cbz.enviarComentario(comm);
             } catch (AutorizationException ae) {
                 //TODO: Hacer el deslogueo de la app
+                mSessionInvalid = true;
             } catch (BusinessException e) {
                 e.printStackTrace();
             }
@@ -213,7 +215,12 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
 
         @Override
         protected void onPostExecute(Comentario comentario) {
-            Toast.makeText(mContext, "Mensaje enviado!", Toast.LENGTH_SHORT).show();
+            if (mSessionInvalid == false) {
+                Toast.makeText(mContext, "Mensaje enviado!", Toast.LENGTH_SHORT).show();
+            } else {
+                logoutApplication(true);
+            }
+
             mPd.dismiss();
         }
     }
