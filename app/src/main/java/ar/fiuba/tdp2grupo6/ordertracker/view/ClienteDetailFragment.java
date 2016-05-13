@@ -100,11 +100,6 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
                              Bundle savedInstanceState) {
         this.mRootView = inflater.inflate(R.layout.fragment_cliente_detail, container, false);
 
-        /*
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        */
         // Gets the MapView from the XML layout and creates it
         mMapView = (MapView) this.mRootView.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
@@ -188,6 +183,20 @@ public class ClienteDetailFragment extends Fragment { //implements OnMapReadyCal
             ((TextView) this.mRootView.findViewById(R.id.cliente_telefono)).setText(telefono);
             ((TextView) this.mRootView.findViewById(R.id.cliente_direccion)).setText(direccion);
             ((TextView) this.mRootView.findViewById(R.id.cliente_mail)).setText(mail);
+
+            ((Button) this.mRootView.findViewById(R.id.leer_qr)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentIntegrator integrator = IntentIntegrator.forSupportFragment(ClienteDetailFragment.this);
+                    integrator.setCaptureActivity(QRActivity.class);
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+                    integrator.setPrompt("Scan cliente code");
+                    integrator.setOrientationLocked(false);
+                    integrator.setBeepEnabled(false);
+                    integrator.initiateScan();
+                }
+            });
+
             ((Button) this.mRootView.findViewById(R.id.agregar_pedido)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

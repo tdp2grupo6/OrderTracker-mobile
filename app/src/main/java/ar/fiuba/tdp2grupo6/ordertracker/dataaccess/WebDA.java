@@ -26,6 +26,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Visita;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.ServiceException.ServiceExceptionType;
@@ -356,7 +357,33 @@ public class WebDA {
 		return response;
 	}
 
-	// dgacitua: Envía un comentario al backend
+	public ResponseObject sendVisita(AutenticacionResponse autenticacionResponse, Visita visita)
+			throws ServiceException, AutorizationException {
+		validateAutentication(autenticacionResponse);
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "visita";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
+
+			String body = visita.empaquetar();
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
+	}
+
 	public ResponseObject sendComentario(AutenticacionResponse autenticacionResponse, Comentario comentario)
 			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);

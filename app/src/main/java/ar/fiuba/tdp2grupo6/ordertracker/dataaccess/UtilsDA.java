@@ -98,7 +98,7 @@ public class UtilsDA {
 			calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 0); // set hours to zero
 		calendar.set(Calendar.MINUTE, 0); // set minutes to zero
-		calendar.set(Calendar.SECOND, 0); // s
+		calendar.set(Calendar.SECOND, 0); // seconds
 		return calendar.getTimeInMillis() / 1000;
 	}
 

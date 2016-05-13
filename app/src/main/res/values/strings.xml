@@ -9,6 +9,8 @@
     <string name="btn_confirmarlo">Confirmarlo</string>
     <string name="btn_enviarComentario">Enviar</string>
     <string name="btn_cancelarComentario">Cancelar</string>
+    <string name="btn_agregar_pedido">Agregar Pedido</string>
+    <string name="btn_leer_qr">Leer QR</string>
 
     <string name="action_settings">Configuracion</string>
     <string name="action_filtro_marca">Filtro Marca</string>
@@ -79,13 +81,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-
-    <string-array name="comentarioRazonesComunes">
-        <item>Cliente no se encuentra</item>
-        <item>Cliente ya no opera en el lugar</item>
-        <item>No se puede llegar al lugar</item>
-        <item>Otro</item>
-    </string-array>
 
 </resources>
 

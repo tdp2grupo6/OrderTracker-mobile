@@ -31,6 +31,9 @@ public class Pedido {
     private double importe;
     private boolean dirtyImporte;
 
+    private long visitaId;
+    private long visitaServerId;
+
     public Map<String, PedidoItem> items;
     public Map<String, ArrayList<PedidoItem>> itemsByCategory; //por CategoriaId
     public Map<String, HashMap<String, ArrayList<PedidoItem>>> itemsByCategoryBrand; //por Marca
@@ -156,12 +159,13 @@ public class Pedido {
         String ret = "";
         try {
             /*
-            “{'cliente':{'id':2},'elementos':[{'producto':{'id':2},'cantidad':6},
-            {'producto':{'id':3},'cantidad':1},{'producto':{'id':5},'cantidad':3}]}”
+           {"cliente": {"id":9}, "fecha": "2016-05-12T14:49:45-0300",
+           "elementos": [{"producto":{"id":4},"cantidad":6}, {"producto":{"id":2},"cantidad":2}],
+           "visita": {"id":4}}
             */
             JSONObject obj = new JSONObject();
             obj.put("cliente", new JSONObject().put("id", this.clienteId));
-            obj.put("fechaRealizado", Utils.date2string(this.fechaRealizado));
+            obj.put("fechaRealizado", Utils.date2string(this.fechaRealizado, false));
 
             JSONArray elementos = new JSONArray();
             for (PedidoItem pedidoItem: this.items.values()) {
@@ -173,6 +177,10 @@ public class Pedido {
                 }
             }
             obj.put("elementos", elementos);
+
+            if (visitaServerId > 0)
+                obj.put("visita", new JSONObject().put("id", this.visitaServerId));
+
             ret = obj.toString();
         } catch (Exception e) {
             ret = "";

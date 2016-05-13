@@ -1,5 +1,6 @@
 package ar.fiuba.tdp2grupo6.ordertracker.contract;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,10 +23,14 @@ public class Comentario {
 	public String comentario;
 	public boolean enviado;
 
+	public long visitaId;
+	public long visitaServerid;
+
 	public Comentario() {
 		super();
 	}
 
+	/*
 	public Comentario(String str) throws JSONException {
 		super();
 
@@ -48,6 +53,7 @@ public class Comentario {
 		this.razonComun = json.getString("razonComun");
 		this.enviado = json.getBoolean("enviado");
 	}
+	*/
 
 	@Override
 	public String toString() {
@@ -65,13 +71,37 @@ public class Comentario {
 		return null;
 	}
 
+	/*
 	// dgacitua: Se parsea manualmente el JSON para peticiones POST
 	public String empaquetar() {
 		String ret = "{'cliente':{'id':" + this.clienteId + "},"
-				+ "'fechaComentario':'" + Utils.date2string(this.fechaComentario) + "',"
+				+ "'fechaComentario':'" + Utils.date2string(this.fechaComentario, false) + "',"
 				+ "'razonComun':'" + this.razonComun + "',"
 				+ "'comentario':'" + this.comentario + "'}";
 		return ret;
 	}
+	*/
+
+	public String empaquetar() {
+		String ret = "";
+		try {
+            /*
+            {'cliente':{'id':10}, 'razonComun': 'Otro', 'comentario': 'Sos capo, groso', 'visita':{'id':5}}
+            */
+			JSONObject obj = new JSONObject();
+			obj.put("cliente", new JSONObject().put("id", this.clienteId));
+			obj.put("fechaComentario", Utils.date2string(this.fechaComentario, false));
+			obj.put("razonComun", this.razonComun);
+			obj.put("comentario", this.comentario);
+			if (visitaServerid > 0)
+				obj.put("visita", new JSONObject().put("id", this.visitaServerid));
+
+			ret = obj.toString();
+		} catch (Exception e) {
+			ret = "";
+		}
+		return ret;
+	}
+
 
 }

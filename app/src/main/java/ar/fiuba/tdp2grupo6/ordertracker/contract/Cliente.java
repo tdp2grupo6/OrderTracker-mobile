@@ -17,6 +17,7 @@ public class Cliente {
 	public String telefono;
 	public Double lat;
 	public Double lng;
+	public String key;
 	public String estado;
 
 
@@ -41,7 +42,7 @@ public class Cliente {
 		this.email = json.getString("email");
 		this.lat = json.getDouble("latitud");
 		this.lng = json.getDouble("longitud");
-		this.estado = json.getJSONObject("estado").getString("tipo");
+		//this.estado = json.getJSONObject("estado").getString("tipo");
 	}
 
 	public Cliente(JSONObject json) throws JSONException {
@@ -58,7 +59,7 @@ public class Cliente {
 		this.email = json.getString("email");
 		this.lat = json.getDouble("latitud");
 		this.lng = json.getDouble("longitud");
-		this.estado = json.getJSONObject("estado").getString("tipo");
+		//this.estado = json.getJSONObject("estado").getString("tipo");
 	}
 
 	@Override

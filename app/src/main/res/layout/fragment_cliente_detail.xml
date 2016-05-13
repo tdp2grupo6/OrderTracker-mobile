@@ -52,13 +52,16 @@
         </TextView>
 
         <Button
+            android:id="@+id/leer_qr"
+            android:text="@string/btn_leer_qr"
+            style="@style/ButtonText"/>
+
+        <Button
             android:id="@+id/agregar_pedido"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20px"
-            android:layout_marginBottom="20px"
-            android:text="Agregar Pedido"
-            style="?android:attr/buttonStyleSmall"/>
+            android:text="@string/btn_agregar_pedido"
+            android:visibility="gone"
+            android:enabled="false"
+            style="@style/ButtonText"/>
 
         <TextView
             android:id="@+id/cliente_direccion"
@@ -79,15 +82,6 @@
                                          android:paddingBottom="?attr/actionBarSize"
                                          tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteDetailActivity"/>
 
-    <!--
-    <fragment android:id="@+id/map"
-              android:name="com.google.android.gms.maps.SupportMapFragment"
-              android:layout_width="match_parent"
-              android:layout_height="0dp"
-              android:layout_weight="1"
-              android:paddingBottom="?attr/actionBarSize"
-              tools:context="ar.fiuba.tdp2grupo6.ordertracker.view.ClienteDetailActivity"/>
-    -->
 
 
 </LinearLayout>

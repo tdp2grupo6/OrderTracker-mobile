@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 11;
+	static final int dbVersion = 12;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -55,12 +55,22 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProductoImagen_colTipo = "tipo";
 	public static final String tblProductoImagen_colPath = "path";
 
+	// Tabla Visistas
+	public static final String tblVisita = "Visita";
+	public static final String tblVisita_colId = "id"; // Autoincremental
+	public static final String tblVisita_colServerId = "serverId";
+	public static final String tblVisita_colClienteId = "clienteid";
+	public static final String tblVisita_colFecha = "fecha";
+	public static final String tblVisita_colEnviado = "enviado";
+
 	// Tabla Pedido
 	public static final String tblPedido = "Pedido";
 	public static final String tblPedido_colId = "id"; // Autoincremental
 	public static final String tblPedido_colClienteId = "clienteid";
 	public static final String tblPedido_colEstado = "estado";
 	public static final String tblPedido_colFecha = "fecha";
+	public static final String tblPedido_colVisitaId = "visitaid";
+	public static final String tblPedido_colVisitaServerId = "visitaserverid";
 
 	// Tabla Pedido Item
 	public static final String tblPedidoItem = "PedidoItem";
@@ -77,6 +87,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblComentario_colRazonComun = "razoncomun";
 	public static final String tblComentario_colComentario = "comentario";
 	public static final String tblComentario_colEnviado = "enviado";
+	public static final String tblComentario_colVisitaId = "visitaid";
+	public static final String tblComentario_colVisitaServerId = "visitaserverid";
 
 	public static synchronized DbHelper getInstance(Context context) {
 		if (helper == null) {
@@ -159,12 +171,29 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		}
 
+		// Visistas
+		createTable = "CREATE TABLE " + tblVisita + " (";
+		createTable += tblVisita_colId + " INTEGER PRIMARY KEY";
+		createTable += ", " + tblVisita_colServerId + " INTEGER";
+		createTable += ", " + tblVisita_colClienteId + " INTEGER";
+		createTable += ", " + tblVisita_colFecha + " TEXT";
+		createTable += ", " + tblVisita_colEnviado + " TEXT";
+		createTable += ")";
+		try {
+			db.execSQL(createTable);
+		} catch (SQLException sql) {
+
+		}
+
+
 		// Pedido
 		createTable = "CREATE TABLE " + tblPedido + " (";
 		createTable += tblPedido_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblPedido_colClienteId + " INTEGER";
 		createTable += ", " + tblPedido_colEstado + " INTEGER";
 		createTable += ", " + tblPedido_colFecha + " TEXT";
+		createTable += ", " + tblPedido_colVisitaId + " INTEGER";
+		createTable += ", " + tblPedido_colVisitaServerId + " INTEGER";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);
@@ -193,6 +222,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblComentario_colRazonComun + " TEXT";
 		createTable += ", " + tblComentario_colComentario + " TEXT";
 		createTable += ", " + tblComentario_colEnviado + " TEXT";
+		createTable += ", " + tblComentario_colVisitaId + " INTEGER";
+		createTable += ", " + tblComentario_colVisitaServerId + " INTEGER";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);

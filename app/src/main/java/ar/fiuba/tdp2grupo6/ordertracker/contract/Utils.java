@@ -10,10 +10,13 @@ import java.util.TimeZone;
  */
 public class Utils {
 
-    public static String date2string(Date date) {
+    public static String date2string(Date date, boolean noTimeData) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(date);
+        String resp = sdf.format(date);
+        if (noTimeData)
+            resp = resp.substring(1,10);
+        return resp;
     }
 
     public static Date string2date(String str) {

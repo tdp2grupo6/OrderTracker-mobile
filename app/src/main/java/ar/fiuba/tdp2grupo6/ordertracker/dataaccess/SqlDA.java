@@ -21,6 +21,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Utils;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Visita;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
 import ar.fiuba.tdp2grupo6.ordertracker.dataaccess.db.DbHelper;
 
@@ -426,6 +427,137 @@ public class SqlDA {
 	}
 
 	/******************************************************************************************************/
+	// Visita
+
+	public Visita visitaGuardar(Visita visita) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblVisita_colServerId, visita.serverId);
+			cv.put(DbHelper.tblVisita_colClienteId, visita.clienteId);
+			cv.put(DbHelper.tblVisita_colFecha, Utils.date2string(visita.fecha, false));
+			cv.put(DbHelper.tblVisita_colEnviado, String.valueOf(visita.enviado));
+
+			visita.id = db.insert(DbHelper.tblVisita, null, cv);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return visita;
+	}
+
+	public long visitaActualizar(Visita visita) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblVisita_colServerId, visita.serverId);
+			cv.put(DbHelper.tblVisita_colClienteId, visita.clienteId);
+			cv.put(DbHelper.tblVisita_colFecha, Utils.date2string(visita.fecha, false));
+			cv.put(DbHelper.tblVisita_colEnviado, String.valueOf(visita.enviado));
+
+			String where = "";
+			if (visita != null) {
+				String condition = DbHelper.tblVisita_colId + "=" + String.valueOf(visita.id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.update(DbHelper.tblVisita, cv, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+	public ArrayList<Visita> visitaBuscar(long visitaId, long clienteId, Date fecha, Boolean enviado) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		ArrayList<Visita> listVisita = new ArrayList<Visita>();
+		try {
+
+			String select = "SELECT * FROM " + DbHelper.tblVisita;
+
+			String where = "";
+			if (visitaId > 0) {
+				String condition = DbHelper.tblVisita_colId + "=" + String.valueOf(visitaId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (clienteId > 0) {
+				String condition = DbHelper.tblVisita_colClienteId + "=" + String.valueOf(clienteId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (fecha != null) {
+				String fechaSinTiempo = Utils.date2string(fecha, true);
+				String condition = "substr(" + DbHelper.tblVisita_colFecha + ",1,10)='" + fechaSinTiempo + "'";
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (enviado != null) {
+				String condition = DbHelper.tblVisita_colEnviado + "='" + String.valueOf(enviado) + "'";
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			Cursor c = db.rawQuery(select + where, null);
+			if (c.moveToFirst()) {
+				do {
+					Visita visita = new Visita();
+					visita.id = c.getLong(c.getColumnIndex(DbHelper.tblVisita_colId));
+					visita.serverId = c.getLong(c.getColumnIndex(DbHelper.tblVisita_colServerId));
+					visita.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblVisita_colClienteId));
+					visita.fecha = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblVisita_colFecha)));
+					visita.enviado = Utils.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblVisita_colEnviado)));
+
+					listVisita.add(visita);
+				} while (c.moveToNext());
+			}
+			if (c != null && !c.isClosed())
+				c.close();
+
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return listVisita;
+	}
+
+	public long visitaEliminar(long id) throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		long cant = 0;
+		try {
+
+			String where = "";
+
+			if (id > 0) {
+				String condition = DbHelper.tblVisita_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddCondition(where, condition, "and");
+			}
+
+			cant = db.delete(DbHelper.tblVisita, where, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+
+		return cant;
+	}
+
+
+	public void visitaVaciar() throws LocalException {
+		SQLiteDatabase db = this.mDb.getWritableDatabase();
+
+		try {
+			db.delete(DbHelper.tblVisita, null, null);
+		} catch (Exception e) {
+			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+	
+	/******************************************************************************************************/
 	// Pedido
 
 	public Pedido pedidoGuardar(Pedido pedido) throws LocalException {
@@ -436,7 +568,7 @@ public class SqlDA {
 			//cv.put(DbHelper.tblPedido_colId, pedido.id);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
-			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado));
+			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
             pedido.id = db.insert(DbHelper.tblPedido, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
@@ -453,7 +585,7 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
-			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado));
+			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
 
 			String where = "";
 			if (pedido != null) {
@@ -672,126 +804,6 @@ public class SqlDA {
     }
 
 	/******************************************************************************************************/
-	// ProductoImagen
-
-    /*
-	public ProductoImagen productoImagenGuardar(ProductoImagen productoImagen) throws LocalException {
-		SQLiteDatabase db = this.mDb.getWritableDatabase();
-
-		try {
-			ContentValues cv = new ContentValues();
-			cv.put(DbHelper.tblProductoImagen_colId, productoImagen.id);
-			cv.put(DbHelper.tblProductoImagen_colProductoId, productoImagen.productoId);
-			cv.put(DbHelper.tblProductoImagen_colTipo, productoImagen.tipo);
-			cv.put(DbHelper.tblProductoImagen_colPath, productoImagen.path);
-			db.insert(DbHelper.tblProductoImagen, null, cv);
-		} catch (Exception e) {
-			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
-		}
-
-		return productoImagen;
-	}
-
-	public long productoImagenActualizar(ProductoImagen productoImagen) throws LocalException {
-		SQLiteDatabase db = this.mDb.getWritableDatabase();
-
-		long cant = 0;
-		try {
-			ContentValues cv = new ContentValues();
-			cv.put(DbHelper.tblProductoImagen_colProductoId, productoImagen.productoId);
-			cv.put(DbHelper.tblProductoImagen_colTipo, productoImagen.tipo);
-			cv.put(DbHelper.tblProductoImagen_colPath, productoImagen.path);
-
-			String where = "";
-			if (productoImagen != null) {
-				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(productoImagen.id);
-				where = UtilsDA.AddCondition(where, condition, "and");
-			}
-
-			cant = db.update(DbHelper.tblProductoImagen, cv, where, null);
-		} catch (Exception e) {
-			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
-		}
-
-		return cant;
-	}
-
-	public ArrayList<ProductoImagen> productoImagenBuscar(long id, long productoId) throws LocalException {
-		SQLiteDatabase db = this.mDb.getWritableDatabase();
-
-		ArrayList<ProductoImagen> listProductoImagen = new ArrayList<ProductoImagen>();
-		try {
-
-			String select = "SELECT * FROM " + DbHelper.tblProductoImagen;
-
-			String where = "";
-			if (id > 0) {
-				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(id);
-				where = UtilsDA.AddWhereCondition(where, condition, "and");
-			}
-			if (productoId > 0) {
-				String condition = DbHelper.tblProductoImagen_colProductoId + "=" + String.valueOf(productoId);
-				where = UtilsDA.AddWhereCondition(where, condition, "and");
-			}
-			Cursor c = db.rawQuery(select + where, null);
-			if (c.moveToFirst()) {
-				do {
-					ProductoImagen productoImagen = new ProductoImagen();
-					productoImagen.id = c.getLong(c.getColumnIndex(DbHelper.tblProductoImagen_colId));
-					productoImagen.productoId = c.getLong(c.getColumnIndex(DbHelper.tblProductoImagen_colProductoId);
-					productoImagen.tipo = c.getString(c.getColumnIndex(DbHelper.tblProductoImagen_colTipo));
-					productoImagen.path = c.getString(c.getColumnIndex(DbHelper.tblProductoImagen_colPath));
-					listProductoImagen.add(productoImagen);
-				} while (c.moveToNext());
-			}
-			if (c != null && !c.isClosed())
-				c.close();
-
-		} catch (Exception e) {
-			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
-		}
-
-		return listProductoImagen;
-	}
-
-	public long productoImagenEliminar(long id, long productoId) throws LocalException {
-		SQLiteDatabase db = this.mDb.getWritableDatabase();
-
-		long cant = 0;
-		try {
-
-			String where = "";
-
-			if (id > 0) {
-				String condition = DbHelper.tblProductoImagen_colId + "=" + String.valueOf(id);
-				where = UtilsDA.AddCondition(where, condition, "and");
-			}
-
-			if (productoId > 0) {
-				String condition = DbHelper.tblProductoImagen_colProductoId + "=" + String.valueOf(productoId);
-				where = UtilsDA.AddCondition(where, condition, "and");
-			}
-
-			cant = db.delete(DbHelper.tblProductoImagen, where, null);
-		} catch (Exception e) {
-			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
-		}
-
-		return cant;
-	}
-
-	public void productoImagenVaciar() throws LocalException {
-		SQLiteDatabase db = this.mDb.getWritableDatabase();
-
-		try {
-			db.delete(DbHelper.tblProductoImagen, null, null);
-		} catch (Exception e) {
-			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
-		}
-	}
-    */
-
-	/******************************************************************************************************/
 	// Comentario
 
 	public Comentario comentarioGuardar(Comentario comentario) throws LocalException {
@@ -801,7 +813,7 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			//cv.put(DbHelper.tblComentario_colId, comentario.id);
 			cv.put(DbHelper.tblComentario_colClienteId, comentario.clienteId);
-			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario));
+			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario, false));
 			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
 			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
 			cv.put(DbHelper.tblComentario_colEnviado, String.valueOf(comentario.enviado));
@@ -822,7 +834,7 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			//cv.put(DbHelper.tblComentario_colId, comentario.id);
 			cv.put(DbHelper.tblComentario_colClienteId, comentario.clienteId);
-			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario));
+			cv.put(DbHelper.tblComentario_colFechaComentario, Utils.date2string(comentario.fechaComentario, false));
 			cv.put(DbHelper.tblComentario_colRazonComun, comentario.razonComun);
 			cv.put(DbHelper.tblComentario_colComentario, comentario.comentario);
 			cv.put(DbHelper.tblComentario_colEnviado, String.valueOf(comentario.enviado));

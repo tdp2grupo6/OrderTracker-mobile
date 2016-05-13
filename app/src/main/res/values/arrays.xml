@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="comentarioRazonesComunes">
+        <item>Cliente no se encuentra</item>
+        <item>Cliente ya no opera en el lugar</item>
+        <item>No se puede llegar al lugar</item>
+        <item>Otro</item>
+    </string-array>
+</resources>
