@@ -15,7 +15,7 @@ public class Utils {
         sdf.setTimeZone(TimeZone.getDefault());
         String resp = sdf.format(date);
         if (noTimeData)
-            resp = resp.substring(1,10);
+            resp = resp.substring(0,10);
         return resp;
     }
 

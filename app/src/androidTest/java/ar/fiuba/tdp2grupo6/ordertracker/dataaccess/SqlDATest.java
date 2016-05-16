@@ -51,7 +51,7 @@ public class SqlDATest {
         mDataBase.clienteGuardar(cliente);
 
         //busca
-        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "");
+        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "", "");
 
         assertThat(clientes , is(not(nullValue())));
         assertThat(clientes.size(), is(1));
@@ -77,7 +77,7 @@ public class SqlDATest {
         long cant = mDataBase.clienteActualizar(cliente);
 
         //busca
-        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "");
+        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "", "");
 
         assertThat(cant, is((long)1));
         assertThat(clientes, is(not(nullValue())));
@@ -98,7 +98,7 @@ public class SqlDATest {
 
         mDataBase.clienteGuardar(cliente);
         mDataBase.clienteVaciar();
-        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "");
+        ArrayList<Cliente> clientes = mDataBase.clienteBuscar(cliente.id, "", "");
 
 
         assertThat(clientes , is(not(nullValue())));

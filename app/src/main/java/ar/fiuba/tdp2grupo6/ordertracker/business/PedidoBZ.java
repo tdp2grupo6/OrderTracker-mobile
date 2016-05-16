@@ -189,7 +189,7 @@ public class PedidoBZ {
         return pedidos;
     }
 
-    public Pedido obtenerParaCliente(long clienteId) throws BusinessException {
+    public Pedido obtenerParaCliente(long visitaId, long clienteId) throws BusinessException {
         Pedido response = null;
         try {
 
@@ -208,6 +208,7 @@ public class PedidoBZ {
 
                 //Crea un pedido nuevo
                 response = new Pedido();
+                response.visitaId = visitaId;
                 response.clienteId = clienteId;
                 response.cliente = cliente;
 
@@ -258,6 +259,9 @@ public class PedidoBZ {
                 pedido.estado =  Pedido.ESTADO_CONFIRMADO;
 
                 mSql.pedidoActualizar(pedido);
+
+                VisitaBZ visitaBZ = new VisitaBZ(mContext);
+                visitaBZ.modificarEstado(pedido.visitaId, false, true);
             }
 
         } catch (Exception e) {
@@ -280,6 +284,10 @@ public class PedidoBZ {
                 pedido.fechaRealizado = new Date();
                 pedido.estado = Pedido.ESTADO_CONFIRMADO;
                 mSql.pedidoActualizar(pedido);
+
+
+                VisitaBZ visitaBZ = new VisitaBZ(mContext);
+                visitaBZ.modificarEstado(pedido.visitaId, false, true);
 
                 if (trySend) {
                     this.enviarPedido(pedido);

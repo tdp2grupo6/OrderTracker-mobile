@@ -85,6 +85,13 @@ public class DataInService extends IntentService {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txcomun) + ": " + e.getMessage();
 			}
 
+			// Actualiza la agenda
+			try {
+				AgendaBZ agendaBZ =  new AgendaBZ(context);
+				agendaBZ.actualizarEstados();
+			} catch (Exception e) {
+				//progressMensaje = context.getResources().getString(R.string.text_datain_txcomun) + ": " + e.getMessage();
+			}
 		} catch (Exception e) {
 			progressMensaje = e.getMessage();
 		}

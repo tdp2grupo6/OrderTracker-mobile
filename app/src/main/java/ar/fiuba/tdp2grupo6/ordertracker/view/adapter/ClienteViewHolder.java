@@ -13,10 +13,19 @@ public class ClienteViewHolder {
     public View mView;
     public TextView mNombreView;
     public TextView mDireccionView;
+    public TextView mEstadoView;
     public Cliente mCliente;
 
     public ClienteViewHolder(View view) {
         this.mView = view;
+    }
+
+
+    public TextView getEstadoView() {
+        if (this.mEstadoView == null) {
+            this.mEstadoView = (TextView) mView.findViewById(R.id.list_cliente_estado);
+        }
+        return this.mEstadoView;
     }
 
     public TextView getNombreView() {

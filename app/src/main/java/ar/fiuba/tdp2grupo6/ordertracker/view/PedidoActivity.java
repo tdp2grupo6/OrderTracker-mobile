@@ -47,6 +47,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoProductoViewHolder;
 public class PedidoActivity extends AppBaseActivity
         implements PedidoListFragment.OnPedidoListFragmentListener {
 
+    public static final String ARG_VISITA_ID = "visita_id";
     public static final String ARG_CLIENTE_ID = "cliente_id";
     public static final int ACTIVITY_PEDIDO = 1000;
 
@@ -56,6 +57,7 @@ public class PedidoActivity extends AppBaseActivity
     public boolean mAgregaItemSinStock = false;
 
     private long mClienteId;
+    private long mVisitaId;
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -87,6 +89,7 @@ public class PedidoActivity extends AppBaseActivity
 
         if (savedInstanceState == null) {
             this.mClienteId = getIntent().getLongExtra(PedidoActivity.ARG_CLIENTE_ID, 0);
+            this.mVisitaId = getIntent().getLongExtra(PedidoActivity.ARG_VISITA_ID, 0);
 
             //mListFooter = (LinearLayout) view.findViewById(R.id.producto_pedido_list_footer);
             mTotalView = (TextView) findViewById(R.id.productos_pedido_list_money);
@@ -293,7 +296,7 @@ public class PedidoActivity extends AppBaseActivity
                 //Si puede sincroniza los clientes primero
                 //y luego busca el listado
                 PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
-                resultado = pedidoBZ.obtenerParaCliente(mClienteId);
+                resultado = pedidoBZ.obtenerParaCliente(mVisitaId, mClienteId);
             } catch (Exception e) {
                 String err = e.getLocalizedMessage();
             }

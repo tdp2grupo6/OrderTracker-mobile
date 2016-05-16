@@ -8,6 +8,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Visita;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.LocalException;
@@ -79,7 +80,12 @@ public class ComentarioBZ {
 
 	public Comentario guardarComentario(Comentario comentario) throws BusinessException {		// OK
 		try {
-			return mSql.comentarioGuardar(comentario);
+			comentario = mSql.comentarioGuardar(comentario);
+			if (comentario.visitaId > 0) {
+				VisitaBZ visitaBZ = new VisitaBZ(mContext);
+				visitaBZ.modificarEstado(comentario.visitaId, true, false);
+			}
+			return comentario;
 		} catch (Exception e) {
 			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
 		}

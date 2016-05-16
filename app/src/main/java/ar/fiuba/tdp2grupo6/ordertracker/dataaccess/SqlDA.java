@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,7 +90,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<AgendaItem> agendaItemBuscar(long id, boolean loadCliente) throws LocalException {
+	public ArrayList<AgendaItem> agendaItemBuscar(long id, int diaId, long clienteId, boolean loadCliente) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<AgendaItem> listAgendaItem = new ArrayList<AgendaItem>();
@@ -98,6 +101,16 @@ public class SqlDA {
 			String where = "";
 			if (id > 0) {
 				String condition = DbHelper.tblAgendaItem_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (diaId >= 0) {
+				String condition = DbHelper.tblAgendaItem_colDiaId + "=" + String.valueOf(diaId);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (clienteId > 0) {
+				String condition = DbHelper.tblAgendaItem_colClienteId + "=" + String.valueOf(clienteId);
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
@@ -112,7 +125,7 @@ public class SqlDA {
 					agendaItem.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblAgendaItem_colClienteId));
 
                     if (loadCliente) {
-                        ArrayList<Cliente> clientes = this.clienteBuscar(agendaItem.clienteId, "");
+                        ArrayList<Cliente> clientes = this.clienteBuscar(agendaItem.clienteId, "", "");
                         if (clientes != null && clientes.size() > 0)
                             agendaItem.cliente = clientes.get(0);
                     }
@@ -179,7 +192,11 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
 			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
 			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
-			cv.put(DbHelper.tblCliente_colEstado, cliente.lng);
+			cv.put(DbHelper.tblCliente_colDisponibilidad, cliente.disponibilidad);
+			cv.put(DbHelper.tblCliente_colAgendaCliente, cliente.agendaCliente.toString());
+			cv.put(DbHelper.tblCliente_colEstadoServidor, cliente.estadoServidor.toString());
+			cv.put(DbHelper.tblCliente_colValidador, cliente.validador);
+			cv.put(DbHelper.tblCliente_colEstado, cliente.estado);
 
             cliente.id = db.insert(DbHelper.tblCliente, null, cv);
 		} catch (Exception e) {
@@ -204,7 +221,11 @@ public class SqlDA {
 			cv.put(DbHelper.tblCliente_colEmail, cliente.email);
 			cv.put(DbHelper.tblCliente_colLat, cliente.lat);
 			cv.put(DbHelper.tblCliente_colLng, cliente.lng);
-			cv.put(DbHelper.tblCliente_colEstado, cliente.lng);
+			cv.put(DbHelper.tblCliente_colDisponibilidad, cliente.disponibilidad);
+			cv.put(DbHelper.tblCliente_colAgendaCliente, cliente.agendaCliente.toString());
+			cv.put(DbHelper.tblCliente_colEstadoServidor, cliente.estadoServidor.toString());
+			cv.put(DbHelper.tblCliente_colValidador, cliente.validador);
+			cv.put(DbHelper.tblCliente_colEstado, cliente.estado);
 
 			String where = "";
 			if (cliente != null) {
@@ -220,7 +241,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Cliente> clienteBuscar(long id, String nombreCompleto) throws LocalException {
+	public ArrayList<Cliente> clienteBuscar(long id, String nombreCompleto, String validador) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Cliente> listCliente = new ArrayList<Cliente>();
@@ -239,6 +260,12 @@ public class SqlDA {
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
+			if (validador != null && validador.trim().length() > 0) {
+				String condition = "lower(" + DbHelper.tblCliente_colValidador + ")='" + validador.toLowerCase() + "'";
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+
 			Cursor c = db.rawQuery(select + where, null);
 			if (c.moveToFirst()) {
 				do {
@@ -253,7 +280,11 @@ public class SqlDA {
 					cliente.email = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEmail));
 					cliente.lat = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLat));
 					cliente.lng = c.getDouble(c.getColumnIndex(DbHelper.tblCliente_colLng));
-					cliente.estado = c.getString(c.getColumnIndex(DbHelper.tblCliente_colEstado));
+					cliente.disponibilidad = c.getString(c.getColumnIndex(DbHelper.tblCliente_colDisponibilidad));
+					cliente.validador = c.getString(c.getColumnIndex(DbHelper.tblCliente_colValidador));
+					cliente.agendaCliente = new JSONArray(c.getString(c.getColumnIndex(DbHelper.tblCliente_colAgendaCliente)));
+					cliente.estadoServidor = new JSONObject(c.getString(c.getColumnIndex(DbHelper.tblCliente_colEstadoServidor)));
+					cliente.estado = c.getInt(c.getColumnIndex(DbHelper.tblCliente_colEstado));
 					listCliente.add(cliente);
 				} while (c.moveToNext());
 			}
@@ -436,6 +467,8 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblVisita_colServerId, visita.serverId);
 			cv.put(DbHelper.tblVisita_colClienteId, visita.clienteId);
+			cv.put(DbHelper.tblVisita_colTieneComentario, UtilsDA.BooleanToInt(visita.tieneComentario));
+			cv.put(DbHelper.tblVisita_colTienePedido, UtilsDA.BooleanToInt(visita.tienePedido));
 			cv.put(DbHelper.tblVisita_colFecha, Utils.date2string(visita.fecha, false));
 			cv.put(DbHelper.tblVisita_colEnviado, String.valueOf(visita.enviado));
 
@@ -455,6 +488,8 @@ public class SqlDA {
 			ContentValues cv = new ContentValues();
 			cv.put(DbHelper.tblVisita_colServerId, visita.serverId);
 			cv.put(DbHelper.tblVisita_colClienteId, visita.clienteId);
+			cv.put(DbHelper.tblVisita_colTieneComentario, UtilsDA.BooleanToInt(visita.tieneComentario));
+			cv.put(DbHelper.tblVisita_colTienePedido, UtilsDA.BooleanToInt(visita.tienePedido));
 			cv.put(DbHelper.tblVisita_colFecha, Utils.date2string(visita.fecha, false));
 			cv.put(DbHelper.tblVisita_colEnviado, String.valueOf(visita.enviado));
 
@@ -472,13 +507,13 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Visita> visitaBuscar(long visitaId, long clienteId, Date fecha, Boolean enviado) throws LocalException {
+	public ArrayList<Visita> visitaBuscar(long visitaId, long clienteId, Date fecha, Boolean enviado, boolean loadCliente) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Visita> listVisita = new ArrayList<Visita>();
 		try {
 
-			String select = "SELECT * FROM " + DbHelper.tblVisita;
+			String select = "SELECT *, substr(" + DbHelper.tblVisita_colFecha + ",1,10) FROM " + DbHelper.tblVisita;
 
 			String where = "";
 			if (visitaId > 0) {
@@ -509,8 +544,16 @@ public class SqlDA {
 					visita.id = c.getLong(c.getColumnIndex(DbHelper.tblVisita_colId));
 					visita.serverId = c.getLong(c.getColumnIndex(DbHelper.tblVisita_colServerId));
 					visita.clienteId = c.getInt(c.getColumnIndex(DbHelper.tblVisita_colClienteId));
+					visita.tienePedido = UtilsDA.IntToBoolean(c.getInt(c.getColumnIndex(DbHelper.tblVisita_colTienePedido)));
+					visita.tieneComentario = UtilsDA.IntToBoolean(c.getInt(c.getColumnIndex(DbHelper.tblVisita_colTieneComentario)));
 					visita.fecha = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblVisita_colFecha)));
 					visita.enviado = Utils.string2boolean(c.getString(c.getColumnIndex(DbHelper.tblVisita_colEnviado)));
+
+					if (loadCliente) {
+						ArrayList<Cliente> clientes = this.clienteBuscar(visita.clienteId, "", "");
+						if (clientes != null && clientes.size() > 0)
+							visita.cliente = clientes.get(0);
+					}
 
 					listVisita.add(visita);
 				} while (c.moveToNext());
@@ -566,6 +609,7 @@ public class SqlDA {
 		try {
 			ContentValues cv = new ContentValues();
 			//cv.put(DbHelper.tblPedido_colId, pedido.id);
+			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
 			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
@@ -583,6 +627,7 @@ public class SqlDA {
 		long cant = 0;
 		try {
 			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
 			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
@@ -630,6 +675,7 @@ public class SqlDA {
 				do {
 					Pedido pedido = new Pedido();
 					pedido.id = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colId));
+					pedido.visitaId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colVisitaId));
 					pedido.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colClienteId));
 					pedido.estado = c.getShort(c.getColumnIndex(DbHelper.tblPedido_colEstado));
 					pedido.fechaRealizado = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblPedido_colFecha)));

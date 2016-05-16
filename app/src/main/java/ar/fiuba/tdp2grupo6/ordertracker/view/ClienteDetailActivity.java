@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -30,13 +32,19 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.BusinessException;
 
 public class ClienteDetailActivity extends AppBaseAuthActivity implements ClienteDetailFragment.OnFragmentClienteDetailListener {
 
+    public static final int REQUEST_CODE = 10001;
+
     public static final String ARG_CLIENTE_ID = "cliente_id";
     public static final String ARG_CLIENTE_NOMBRE_COMPLETO = "cliente_nombreCompleto";
 
     private long mClienteId;
     private String mClienteNombreCompleto;
-    private EnviarComentarioTask mEnviarComentarioTask;
+    private long mVisitaId;
+
     private Context mContext;
+    private ClienteDetailFragment mFragment;
+    private FloatingActionButton mEnviaComentario;
+    private EnviarComentarioTask mEnviarComentarioTask;
     private boolean mensajeEnviado;
 
     @Override
@@ -49,42 +57,28 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mensajeEnviado = false;
-                onClienteEnviarComentario();
-
-                if (mensajeEnviado == true) {
-                    Snackbar.make(view, "Enviando Comentario", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-                }
-            }
-        });
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
+        mEnviaComentario = (FloatingActionButton) this.findViewById(R.id.fab);
+        mEnviaComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClienteEnviarComentario();
+            }
+        });
+
         if (savedInstanceState == null) {
             this.mClienteId = getIntent().getLongExtra(ClienteDetailActivity.ARG_CLIENTE_ID, 0);
             this.mClienteNombreCompleto = getIntent().getStringExtra(ClienteDetailActivity.ARG_CLIENTE_NOMBRE_COMPLETO);
 
             // Create the detail fragment and add it to the activity using a fragment transaction.
-            ClienteDetailFragment fragment = ClienteDetailFragment.newInstance(this.mClienteId, mClienteNombreCompleto);
+            mFragment = ClienteDetailFragment.newInstance(this.mClienteId, mClienteNombreCompleto);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.cliente_detail_container, fragment)
+                    .add(R.id.cliente_detail_container, mFragment)
                     .commit();
         }
     }
@@ -112,25 +106,42 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
             case (PedidoActivity.ACTIVITY_PEDIDO) : {
                 if (resultCode == Activity.RESULT_OK) {
                     Toast.makeText(this, "Se ha confirmado el Pedido!", Toast.LENGTH_LONG).show();
+                    mFragment.onResume();
                 }
                 break;
             }
         }
     }
 
+    /*
     @Override
     public void onClienteAgregarPedido() {
         Intent intent = new Intent(this, PedidoActivity.class);
         intent.putExtra(PedidoActivity.ARG_CLIENTE_ID, mClienteId);
         startActivityForResult(intent, PedidoActivity.ACTIVITY_PEDIDO);
-        //this.startActivity(intent);
+    }
+    */
+
+    @Override
+    public void onFloatButtonPropertysChange(int visibility, boolean enable){
+        mEnviaComentario.setVisibility(visibility);
+        mEnviaComentario.setEnabled(enable);
+        if (!enable) {
+            mEnviaComentario.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        } else {
+            mEnviaComentario.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+        }
+
     }
 
-    public void onClienteEnviarComentario() {
+    @Override
+    public void onVisitaCreated(long visitaId) {
+        this.mVisitaId = visitaId;
+    }
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_comentario, null);
-        //final Spinner sp = (Spinner) view.findViewById(R.id.comentarioRazonesComunes);
-        //sp.setVisibility(View.INVISIBLE);
+    private void onClienteEnviarComentario() {
+
+        final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_comentario, null);
         final TextView tv = (TextView) view.findViewById(R.id.comentarioTexto);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AlertDialogCustom);
@@ -150,15 +161,19 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
                 ListView lw = ((AlertDialog)dialog).getListView();
                 Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
 
-                Comentario comm = new Comentario();
-                comm.clienteId = mClienteId;
-                comm.fechaComentario = new Date();
-                comm.razonComun = checkedItem.toString();//(sp != null)? sp.getSelectedItem().toString() : "Otro";
-                comm.comentario = (tv != null)? tv.getText().toString() : "";
+                //Muestra mensaje
+                Snackbar.make(view, "Enviando Comentario", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
-                mEnviarComentarioTask = new EnviarComentarioTask(mContext, comm);
+                //Graba mensaje
+                Comentario comentario = new Comentario();
+                comentario.clienteId = mClienteId;
+                comentario.fechaComentario = new Date();
+                comentario.razonComun = checkedItem.toString();//(sp != null)? sp.getSelectedItem().toString() : "Otro";
+                comentario.comentario = (tv != null)? tv.getText().toString() : "";
+                comentario.visitaId = mVisitaId;
+
+                mEnviarComentarioTask = new EnviarComentarioTask(mContext, comentario);
                 mEnviarComentarioTask.execute((Void) null);
-                mensajeEnviado = true;
                 dialog.cancel();
             }
         });
@@ -172,7 +187,6 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
         builder.show();
     }
 
-    // dgacitua: Async Task para manejar la subida de comentarios
     public class EnviarComentarioTask extends AsyncTask<Void, String, Comentario> {
         private Context mContext;
         private Comentario mComentario;
@@ -217,6 +231,7 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
         protected void onPostExecute(Comentario comentario) {
             if (mSessionInvalid == false) {
                 Toast.makeText(mContext, "Mensaje enviado!", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 logoutApplication(true);
             }

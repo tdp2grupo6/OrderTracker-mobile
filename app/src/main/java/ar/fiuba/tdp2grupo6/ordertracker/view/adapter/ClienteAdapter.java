@@ -62,6 +62,13 @@ public class ClienteAdapter extends BaseAdapter implements Filterable {
         holder.getNombreView().setText(cliente.nombreCompleto);
         holder.getDireccionView().setText(cliente.direccion);
 
+        if (holder.mCliente.estado == Cliente.ESTADO_VISITADO)
+            holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_green);
+        else if (holder.mCliente.estado == Cliente.ESTADO_PENDIENTE)
+            holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_yellow);
+        else
+            holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_red);
+
         return convertView;
     }
 

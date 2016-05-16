@@ -92,6 +92,15 @@ public class AgendaActivity extends AppBaseActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == ClienteDetailActivity.REQUEST_CODE) {
+            cargarAgenda();
+        }
+    }
+
+    @Override
     public void onClienteClick(Cliente cliente) {
         try {
             if (cliente != null ) {
@@ -103,8 +112,8 @@ public class AgendaActivity extends AppBaseActivity
                 } else {
                     Intent intent = new Intent(this, ClienteDetailActivity.class);
                     intent.putExtra(ClienteDetailActivity.ARG_CLIENTE_ID, cliente.id);
+                    this.startActivityForResult(intent, ClienteDetailActivity.REQUEST_CODE);
 
-                    this.startActivity(intent);
                 }
             }
         } catch (Exception e) {

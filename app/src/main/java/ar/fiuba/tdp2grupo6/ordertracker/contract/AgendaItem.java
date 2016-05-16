@@ -11,6 +11,14 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 
 public class AgendaItem {
 
+    public static final int DIA_DOMINGO = 0; //
+    public static final int DIA_LUNES = 1; //
+    public static final int DIA_MARTES = 2; //
+    public static final int DIA_MIERCOLES = 3; //
+    public static final int DIA_JUEVES = 4; //
+    public static final int DIA_VIERNES = 5; //
+    public static final int DIA_SABADO = 6; //
+
     public long id;
     public long clienteId;
     public int diaId;

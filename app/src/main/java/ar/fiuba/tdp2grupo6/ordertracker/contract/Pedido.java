@@ -31,7 +31,7 @@ public class Pedido {
     private double importe;
     private boolean dirtyImporte;
 
-    private long visitaId;
+    public long visitaId;
     private long visitaServerId;
 
     public Map<String, PedidoItem> items;

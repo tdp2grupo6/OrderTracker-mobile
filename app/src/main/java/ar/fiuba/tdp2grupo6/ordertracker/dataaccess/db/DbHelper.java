@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 12;
+	static final int dbVersion = 13;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -33,6 +33,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblCliente_colEmail = "email";
 	public static final String tblCliente_colLat = "lat";
 	public static final String tblCliente_colLng = "lng";
+	public static final String tblCliente_colDisponibilidad = "disponibilidad";
+	public static final String tblCliente_colAgendaCliente = "agendaCliente";
+	public static final String tblCliente_colValidador = "validador";
+	public static final String tblCliente_colEstadoServidor = "estadoServidor";
 	public static final String tblCliente_colEstado = "estado";
 
 	// Tabla Producto
@@ -60,6 +64,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblVisita_colId = "id"; // Autoincremental
 	public static final String tblVisita_colServerId = "serverId";
 	public static final String tblVisita_colClienteId = "clienteid";
+	public static final String tblVisita_colTienePedido = "tpedido";
+	public static final String tblVisita_colTieneComentario = "tcomentario";
 	public static final String tblVisita_colFecha = "fecha";
 	public static final String tblVisita_colEnviado = "enviado";
 
@@ -131,7 +137,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblCliente_colEmail + " TEXT";
 		createTable += ", " + tblCliente_colLat + " REAL";
 		createTable += ", " + tblCliente_colLng + " REAL";
-		createTable += ", " + tblCliente_colEstado + " TEXT";
+		createTable += ", " + tblCliente_colDisponibilidad + " TEXT";
+		createTable += ", " + tblCliente_colAgendaCliente + " TEXT";
+		createTable += ", " + tblCliente_colValidador + " TEXT";
+		createTable += ", " + tblCliente_colEstadoServidor + " TEXT";
+		createTable += ", " + tblCliente_colEstado + " INTEGER";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);
@@ -176,6 +186,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += tblVisita_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblVisita_colServerId + " INTEGER";
 		createTable += ", " + tblVisita_colClienteId + " INTEGER";
+		createTable += ", " + tblVisita_colTienePedido + " INTEGER";
+		createTable += ", " + tblVisita_colTieneComentario + " INTEGER";
 		createTable += ", " + tblVisita_colFecha + " TEXT";
 		createTable += ", " + tblVisita_colEnviado + " TEXT";
 		createTable += ")";

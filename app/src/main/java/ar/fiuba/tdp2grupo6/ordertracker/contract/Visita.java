@@ -11,8 +11,12 @@ public class Visita {
     public long id;
     public long serverId;
     public long clienteId;
+    public boolean tienePedido;
+    public boolean tieneComentario;
     public Date fecha;
     public boolean enviado;
+
+    public Cliente cliente;
 
     public Visita() {
         super();
@@ -20,12 +24,14 @@ public class Visita {
         this.id = 0;
         this.serverId = 0;
         this.clienteId = 0;
+        this.tieneComentario = false;
+        this.tienePedido = false;
         this.fecha = new Date();
         this.enviado = false;
     }
 
     public Visita(long clienteId, Date fecha) throws JSONException {
-        super();
+        this();
 
         this.fecha = fecha;
         this.clienteId = clienteId;
