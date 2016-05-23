@@ -391,7 +391,7 @@ public class WebDA {
 
 		ResponseObject response = null;
 		try {
-			String webMethod = "/vendedor/push-token";
+			String webMethod = "vendedor/push-token";
 			String targetURL = mUrlEndpoint + webMethod;
 
 			//Agrega el header de autenticacion

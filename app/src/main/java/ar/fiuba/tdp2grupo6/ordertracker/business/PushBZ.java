@@ -66,4 +66,27 @@ public class PushBZ {
 		}
 	}
 
+	public void reEnviarPushToken(AutenticacionResponse autenticacion) throws AutorizationException, BusinessException {
+		try {
+			String pushToken = SharedPrefDA.getFirebase(mContext);
+			if (pushToken.length() > 0) {
+				//Si no tiene el objeto de autenticacion, lo busca
+				if (autenticacion == null) {
+					AutenticacionBZ autenticacionBZ = new AutenticacionBZ(mContext);
+					autenticacion = autenticacionBZ.getAutenticacion();
+				}
+
+				//Envia el objeto al servidor
+				if (autenticacion != null) {
+					Push push = new Push(autenticacion.username, pushToken);
+					ResponseObject response = mWeb.sendPushToken(autenticacion, push);
+				}
+			}
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (Exception e) {
+			throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+		}
+	}
+
 }

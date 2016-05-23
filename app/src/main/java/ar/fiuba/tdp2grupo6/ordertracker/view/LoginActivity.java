@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.AutenticacionBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.PushBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Cliente;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
@@ -326,12 +327,31 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
                 AutenticacionBZ autenticacionBZ = new AutenticacionBZ(mContext);
                 autenticacion = autenticacionBZ.login(mEmail, mPassword);
 
+                /*
                 //Verifica que tenga los datos cargados
                 ClienteBZ clienteBZ = new ClienteBZ(mContext);
                 ArrayList<Cliente> clientes = clienteBZ.listar();
                 if (clientes == null || clientes.size() == 0) {
                     clienteBZ.sincronizar();
                 }
+                */
+                if (autenticacion != null && autenticacion.accessToken.length() > 0) {
+                    //Envia el token push al servidor
+                    try {
+                        PushBZ pushBZ = new PushBZ(mContext);
+                        pushBZ.reEnviarPushToken(autenticacion);
+                    } catch (Exception e){}
+
+                    //Verifica que tenga los datos cargados
+                    try {
+                        ClienteBZ clienteBZ = new ClienteBZ(mContext);
+                        ArrayList<Cliente> clientes = clienteBZ.listar();
+                        if (clientes == null || clientes.size() == 0) {
+                            clienteBZ.sincronizar();
+                        }
+                    } catch (Exception e){}
+                    }
+
             } catch (AutorizationException ae) {
                 autenticacion = null;
             } catch (Exception e) {
