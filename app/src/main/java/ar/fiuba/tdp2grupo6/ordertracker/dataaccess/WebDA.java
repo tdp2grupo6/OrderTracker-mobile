@@ -25,6 +25,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionRequest;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Push;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.ResponseObject;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Visita;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
@@ -371,6 +372,33 @@ public class WebDA {
 			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
 
 			String body = visita.empaquetar();
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
+	}
+
+	public ResponseObject sendPushToken(AutenticacionResponse autenticacionResponse, Push push)
+			throws ServiceException, AutorizationException {
+		validateAutentication(autenticacionResponse);
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "/vendedor/push-token";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
+
+			String body = push.empaquetar();
 
 			// realiza la llamada al servicio
 			response = makeRequest(targetURL, POST_METHOD, STRING_RESPONSE_METHOD, headers, body);

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "200737555438",
+    "firebase_url": "https://order-tracker-2f002.firebaseio.com",
+    "project_id": "order-tracker-2f002",
+    "storage_bucket": "order-tracker-2f002.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200737555438:android:e839b8eaba6f2aa9",
+        "android_client_info": {
+          "package_name": "ar.fiuba.tdp2grupo6.ordertracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200737555438-g8goc0nv3ihd5kh2861di0a49t0slh7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsHz-aLEXXIDWv2dEr7nsW2RemtQHYg6M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

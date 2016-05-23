@@ -1,7 +1,9 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.support.multidex.MultiDex;
 
 import ar.fiuba.tdp2grupo6.ordertracker.business.AutenticacionBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
@@ -22,6 +24,12 @@ public class OrderTrackerApplication extends Application {
 			OrderTrackerApplication.autenticacionResponse = autenticacionBZ.getAutenticacion();
 		}
 		return OrderTrackerApplication.autenticacionResponse;
+	}
+
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
 	}
 
 	public void clearAutentication() {
