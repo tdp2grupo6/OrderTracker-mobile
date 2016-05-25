@@ -127,6 +127,11 @@ public abstract class AppBaseActivity extends AppBaseAuthActivity implements Men
                 b.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(b);
                 break;
+            case R.id.nav_pedidos:
+                Intent d = new Intent(this, PedidosActivity.class);
+                d.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(d);
+                break;
             case R.id.nav_logout:
                 super.logoutApplication(true);
                 break;

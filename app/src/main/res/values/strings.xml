@@ -32,6 +32,7 @@
 
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
+    <string name="nav_pedidos">Pedidos</string>
     <string name="nav_agenda">Agenda</string>
     <string name="nav_logout">Logout</string>
 
