@@ -22,6 +22,8 @@
     <string name="error_pedido_pendiente">Existe un pedido pendiente del cliente %1$s. Antes de continuar tiene que CONFIRMARLO, DESCARTARLO?</string>
     <string name="error_visita_pendiente">Existe una visita pendiente del cliente %1$s. Debe terminar la visita.</string>
     <string name="error_agregar_sin_stock">No se cuenta con mas stock de este producto. Desea agregarlo de todas formas?</string>
+    <string name="error_incorrect_login">Usuario o password incorrecto</string>
+
 
 
     <string name="no_hay_producto_pedido">No hay productos en el pedido</string>

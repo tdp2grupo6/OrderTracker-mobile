@@ -129,7 +129,7 @@ public class ClienteDetailActivity extends AppBaseAuthActivity implements Client
         if (!enable) {
             mEnviaComentario.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         } else {
-            mEnviaComentario.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+            mEnviaComentario.getBackground().setColorFilter(Color.parseColor("#7ff781"), PorterDuff.Mode.MULTIPLY);
         }
 
     }

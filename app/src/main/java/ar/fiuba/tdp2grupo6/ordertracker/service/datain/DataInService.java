@@ -36,7 +36,7 @@ public class DataInService extends IntentService {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d("OT-LOG", "Sincronizando servicios de entrada!");
-		Toast.makeText(this, "Sincronizando servicios de entrada", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Obteniendo datos desde el servidor de Order Tracker", Toast.LENGTH_SHORT).show();
 		return super.onStartCommand(intent,flags,startId);
 	}
 

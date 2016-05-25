@@ -41,7 +41,7 @@ public class DataOutService extends IntentService {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d("OT-LOG", "Sincronizando servicios de salida!");
-		Toast.makeText(this, "Sincronizando servicios de salida", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "Sincronizando servicios de salida", Toast.LENGTH_SHORT).show();
 		return super.onStartCommand(intent,flags,startId);
 	}
 

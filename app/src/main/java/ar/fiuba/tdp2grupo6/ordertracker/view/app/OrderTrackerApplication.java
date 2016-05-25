@@ -10,6 +10,8 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.AutenticacionResponse;
 import ar.fiuba.tdp2grupo6.ordertracker.service.BootReceiver;
 
 public class OrderTrackerApplication extends Application {
+	public static final int NOTIFICACION_ID_FCM = 30003;
+
 	private static AutenticacionResponse autenticacionResponse;
 
 

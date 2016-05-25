@@ -369,7 +369,7 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
             if (autenticacion != null) {
                 navigateNext();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
         }
