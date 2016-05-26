@@ -55,7 +55,7 @@ public class DataOutService extends IntentService {
                 // Sincroniza los pedidos pendientes
                 try {
 					PedidoBZ pedidoBZ = new PedidoBZ(context);
-					pedidoBZ.sincronizar();
+					pedidoBZ.sincronizarUp();
                 } catch (Exception e) {
                     //progressMensaje = context.getResources().getString(R.string.text_dataout_tx) + ": " + e.getMessage();
                 }

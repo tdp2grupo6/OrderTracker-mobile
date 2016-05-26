@@ -103,7 +103,7 @@ public class PedidoBZ {
         ArrayList<Pedido> pedidos = null;
         try {
             ArrayList<PedidoItem> pedidoitems = null;
-            pedidos = mSql.pedidoBuscar(pedidoId, clienteId, estado);
+            pedidos = mSql.pedidoBuscar(pedidoId, 0, clienteId, estado);
 
             if (pedidos != null && pedidos.size() > 0) {
                 long clienteIdAux = 0;
@@ -252,7 +252,7 @@ public class PedidoBZ {
     public void confirmar(long pedidoId) throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, -1);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, 0, -1);
 
             if (pedidos != null && pedidos.size() > 0) {
                 Pedido pedido = pedidos.get(0);
@@ -314,7 +314,7 @@ public class PedidoBZ {
     public void borrarPendientes() throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_NUEVO);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_NUEVO);
             for (Pedido pedido: pedidos) {
                 mSql.pedidoItemEliminar(0, pedido.id);
                 mSql.pedidoEliminar(pedido.id);
@@ -325,12 +325,50 @@ public class PedidoBZ {
         }
     }
 
-    public void sincronizar() throws AutorizationException, BusinessException {
+    public void sincronizarUp() throws AutorizationException, BusinessException {
         try {
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, Pedido.ESTADO_CONFIRMADO);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_CONFIRMADO);
             if (pedidos != null & pedidos.size() > 0) {
                 enviarPedido(pedidos.get(0));
             }
+        } catch (AutorizationException ae) {
+            throw ae;
+        } catch (Exception e) {
+            throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
+        }
+    }
+
+    public void sincronizarDown() throws AutorizationException, BusinessException {
+        try {
+            AutenticacionBZ autenticacionBZ =  new AutenticacionBZ(mContext);
+            ResponseObject response = mWeb.getPedidos(autenticacionBZ.getAutenticacion());
+            if (response.getData() != null) {
+
+                //Graba cada cliente en la BD
+                try {
+                    JSONArray data = new JSONArray(response.getData());
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject pedidoJson = data.getJSONObject(i);
+                        long idserver = pedidoJson.getLong("id");
+                        short nuevoEstado = (short)pedidoJson.getJSONObject("estado").getInt("id");
+
+                        ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, idserver, 0, -1);
+                        if (pedidos != null && pedidos.size() > 0) {
+                            Pedido pedido = pedidos.get(0);
+
+                            //Actualiza el estado del pedido
+                            if (nuevoEstado != pedido.estado) {
+                                pedido.estado = nuevoEstado;
+                                mSql.pedidoActualizar(pedido);
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), e.getMessage()));
+                }
+            }
+
         } catch (AutorizationException ae) {
             throw ae;
         } catch (Exception e) {
@@ -346,23 +384,16 @@ public class PedidoBZ {
             ResponseObject response = mWeb.sendPedido(autenticacionBZ.getAutenticacion(), pedido);
 
             if (response.getData() != null) {
-                //Actualiza el estado del pedido
-                pedido.estado = Pedido.ESTADO_ENVIADO;
-                mSql.pedidoActualizar(pedido);
+
 
                 //Graba cada cliente en la BD
                 try {
                     JSONObject data = new JSONObject(response.getData());
-                    /*
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject itemjson = data.getJSONObject(i);
 
-                        Cliente cliente = new Cliente(itemjson);
-                        mSql.clienteGuardar(cliente);
-
-                        response.add(cliente);
-                    }
-                    */
+                    //Actualiza el estado del pedido
+                    pedido.idServer = data.getLong("id");
+                    pedido.estado = Pedido.ESTADO_ENVIADO;
+                    mSql.pedidoActualizar(pedido);
                 } catch (JSONException jex) {
                     throw new BusinessException(String.format(mContext.getResources().getString(R.string.error_respuesta_servidor), jex.getMessage()));
                 }

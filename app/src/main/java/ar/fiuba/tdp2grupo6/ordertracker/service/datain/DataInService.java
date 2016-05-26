@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import ar.fiuba.tdp2grupo6.ordertracker.business.AgendaBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ClienteBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
@@ -91,6 +92,14 @@ public class DataInService extends IntentService {
 				agendaBZ.actualizarEstados();
 			} catch (Exception e) {
 				//progressMensaje = context.getResources().getString(R.string.text_datain_txcomun) + ": " + e.getMessage();
+			}
+
+			// Sincroniza los pedidos pendientes
+			try {
+				PedidoBZ pedidoBZ = new PedidoBZ(context);
+				pedidoBZ.sincronizarDown();
+			} catch (Exception e) {
+				//progressMensaje = context.getResources().getString(R.string.text_dataout_tx) + ": " + e.getMessage();
 			}
 		} catch (Exception e) {
 			progressMensaje = e.getMessage();

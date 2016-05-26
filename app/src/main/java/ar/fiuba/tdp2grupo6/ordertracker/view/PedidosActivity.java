@@ -2,7 +2,6 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,43 +15,35 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
+import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
+import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class PedidosActivity extends AppBaseActivity {
 
-    private final int MENU_INDEX = 2;
+    private final int MENU_INDEX = 3;
 
     private Context mContext;
     private ListView mListView;
     private TextView mEmptyView;
     private SwipeRefreshLayout mSwipeLayout;
-    private ProductosBuscarTask mProductosBuscarTask;
+    private PedidosBuscarTask mPedidosBuscarTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalogo);
+        setContentView(R.layout.activity_pedidos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Set the swipe for refresh
-        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container_producto);
+        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container_pedidos);
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -61,8 +52,8 @@ public class PedidosActivity extends AppBaseActivity {
         });
 
         //Set the list of items
-        mListView = (ListView) findViewById(R.id.productos_list);
-        mEmptyView = (TextView) findViewById(R.id.productos_list_empty);
+        mListView = (ListView) findViewById(R.id.pedidos_list);
+        mEmptyView = (TextView) findViewById(R.id.pedidos_list_empty);
 
         //Set the item selected
         mDrawerMenu.getItem(MENU_INDEX).setChecked(true);
@@ -72,6 +63,7 @@ public class PedidosActivity extends AppBaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*
                 Intent intent = new Intent(getApplicationContext(), ProductoDetailActivity.class);
                 Producto prod = (Producto) parent.getItemAtPosition(position);
                 //Toast.makeText(mContext, "Seleccionando el producto (" + prod.id + ") " + prod.nombre, Toast.LENGTH_SHORT).show();
@@ -86,6 +78,7 @@ public class PedidosActivity extends AppBaseActivity {
                 intent.putExtra("productoCategoria", prod.categoria.toString());
                 intent.putExtra("productoEstado", prod.mostrarEstado());
                 startActivity(intent);
+                */
             }
         });
     }
@@ -100,24 +93,24 @@ public class PedidosActivity extends AppBaseActivity {
     }
 
     private void refrescarLista() {
-        mProductosBuscarTask = new ProductosBuscarTask(this);
-        mProductosBuscarTask.execute((Void) null);
+        mPedidosBuscarTask = new PedidosBuscarTask(this);
+        mPedidosBuscarTask.execute((Void) null);
     }
 
-    private void actualizarLista(ArrayList<Producto> productos) {
+    private void actualizarLista(ArrayList<Pedido> pedidos) {
         if (mListView != null) {
-            ProductoAdapter adapter = new ProductoAdapter(this, productos);
+            PedidoAdapter adapter = new PedidoAdapter(this, pedidos);
             mListView.setAdapter(adapter);
             mListView.setEmptyView(mEmptyView);
         }
     }
 
-    public class ProductosBuscarTask extends AsyncTask<Void, String, ArrayList<Producto>> {
+    public class PedidosBuscarTask extends AsyncTask<Void, String, ArrayList<Pedido>> {
         private Context mContext;
         private ProgressDialog mPd;
         private boolean mSessionInvalid = false;
 
-        public ProductosBuscarTask(Context context) {
+        public PedidosBuscarTask(Context context) {
             this.mContext = context;
         }
 
@@ -131,13 +124,13 @@ public class PedidosActivity extends AppBaseActivity {
         }
 
         @Override
-        protected ArrayList<Producto> doInBackground(Void... params) {
-            ArrayList<Producto> resultado = new ArrayList<Producto>();
+        protected ArrayList<Pedido> doInBackground(Void... params) {
+            ArrayList<Pedido> resultado = new ArrayList<Pedido>();
 
-            ProductoBZ productoBz = new ProductoBZ(this.mContext);
+            PedidoBZ pedidoBZ = new PedidoBZ(this.mContext);
             try {
                 //Si puede sincroniza los items primero
-                productoBz.sincronizar();
+                pedidoBZ.sincronizarDown();
             } catch (AutorizationException ae) {
                 mSessionInvalid = true;
             } catch (Exception e) {
@@ -146,7 +139,7 @@ public class PedidosActivity extends AppBaseActivity {
 
             try {
                 //y luego busca el listado
-                resultado = productoBz.listar();
+                resultado = pedidoBZ.buscar(0, 0, -1, false);
             }
             catch (Exception e) {
             }
@@ -155,11 +148,11 @@ public class PedidosActivity extends AppBaseActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Producto> productos) {
+        protected void onPostExecute(ArrayList<Pedido> pedidos) {
             if (mSessionInvalid == false) {
-                if (mListView != null && productos != null) {
+                if (mListView != null && pedidos != null) {
                     mSwipeLayout.setRefreshing(false);
-                    actualizarLista(productos);
+                    actualizarLista(pedidos);
                 }
             } else {
                 logoutApplication(true);

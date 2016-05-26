@@ -5,9 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import java.util.List;
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
-import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
 
 public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoViewHolder> implements Filterable {
 
@@ -47,7 +44,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
 
     @Override
     public PedidoProductoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_pedido, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_pedido_producto, parent, false);
         return new PedidoProductoViewHolder(view);
     }
 

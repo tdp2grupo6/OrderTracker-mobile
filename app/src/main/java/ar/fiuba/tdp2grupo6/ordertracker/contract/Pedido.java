@@ -24,6 +24,7 @@ public class Pedido {
     public static final int ESTADO_CANCELADO = 6; // El pedido no puede ser resuelto por el Administrador, por lo que se rechaza
 
     public long id;
+    public long idServer;
     public long clienteId;
     public Date fechaRealizado;
     public Cliente cliente;
@@ -45,6 +46,7 @@ public class Pedido {
         super();
 
         this.id = 0;
+        this.idServer = 0;
         this.clienteId = 0;
         this.fechaRealizado = new Date();
         this.cliente = null;

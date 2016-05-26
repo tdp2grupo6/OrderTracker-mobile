@@ -29,6 +29,7 @@
     <string name="no_hay_producto_pedido">No hay productos en el pedido</string>
     <string name="no_hay_clientes">No hay clientes</string>
     <string name="no_hay_productos">No hay productos</string>
+    <string name="no_hay_pedidos">No hay pedidos</string>
 
     <string name="nav_clientes">Clientes</string>
     <string name="nav_catalogo">Catálogo</string>
@@ -39,7 +40,8 @@
     <string name="title_activity_agenda">Agenda</string>
     <string name="title_activity_catalogo">Catálogo</string>
     <string name="title_activity_cliente">Cliente</string>
-    <string name="title_activity_pedido">Pedido</string>
+    <string name="title_activity_pedido">Nuevo Pedido</string>
+    <string name="title_activity_pedidos">Pedidos</string>
     <string name="title_activity_confirma">Confirma</string>
     <string name="title_cliente_list">Clientes</string>
     <string name="title_cliente_detail">Cliente Detalle</string>

@@ -609,6 +609,7 @@ public class SqlDA {
 		try {
 			ContentValues cv = new ContentValues();
 			//cv.put(DbHelper.tblPedido_colId, pedido.id);
+			cv.put(DbHelper.tblPedido_colIdServer, pedido.idServer);
 			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
@@ -627,6 +628,7 @@ public class SqlDA {
 		long cant = 0;
 		try {
 			ContentValues cv = new ContentValues();
+			cv.put(DbHelper.tblPedido_colIdServer, pedido.idServer);
 			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
@@ -646,7 +648,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Pedido> pedidoBuscar(long id, long clienteId, int estado) throws LocalException {
+	public ArrayList<Pedido> pedidoBuscar(long id, long idServer, long clienteId, int estado) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Pedido> listPedido = new ArrayList<Pedido>();
@@ -657,6 +659,11 @@ public class SqlDA {
 			String where = "";
 			if (id > 0) {
 				String condition = DbHelper.tblPedido_colId + "=" + String.valueOf(id);
+				where = UtilsDA.AddWhereCondition(where, condition, "and");
+			}
+
+			if (idServer > 0) {
+				String condition = DbHelper.tblPedido_colIdServer + "=" + String.valueOf(idServer);
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
@@ -675,6 +682,7 @@ public class SqlDA {
 				do {
 					Pedido pedido = new Pedido();
 					pedido.id = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colId));
+					pedido.idServer = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colIdServer));
 					pedido.visitaId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colVisitaId));
 					pedido.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colClienteId));
 					pedido.estado = c.getShort(c.getColumnIndex(DbHelper.tblPedido_colEstado));

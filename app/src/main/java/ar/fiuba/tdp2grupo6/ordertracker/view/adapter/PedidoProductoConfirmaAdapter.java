@@ -1,20 +1,12 @@
 package ar.fiuba.tdp2grupo6.ordertracker.view.adapter;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ImagenBZ;
@@ -45,7 +37,7 @@ public class PedidoProductoConfirmaAdapter extends RecyclerView.Adapter<PedidoPr
 
     @Override
     public PedidoProductoConfirmaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_pedido_confirma, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_pedido_producto_confirma, parent, false);
         return new PedidoProductoConfirmaViewHolder(view);
     }
 

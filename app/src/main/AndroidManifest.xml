@@ -63,6 +63,12 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".view.PedidosActivity"
+            android:label="@string/title_activity_pedidos"
+            android:parentActivityName=".view.ClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".view.PedidoActivity"
             android:label="@string/title_activity_pedido"
             android:parentActivityName=".view.ClienteActivity"

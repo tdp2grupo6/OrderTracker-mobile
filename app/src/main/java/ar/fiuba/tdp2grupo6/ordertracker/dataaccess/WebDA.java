@@ -358,6 +358,32 @@ public class WebDA {
 		return response;
 	}
 
+	// Obtiene los pedidos del usuario
+	public ResponseObject getPedidos(AutenticacionResponse autenticacionResponse)
+			throws ServiceException, AutorizationException {
+		validateAutentication(autenticacionResponse);
+
+		ResponseObject response = null;
+		try {
+			String webMethod = "pedido";
+			String targetURL = mUrlEndpoint + webMethod;
+
+			//Agrega el header de autenticacion
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put(autenticacionResponse.getAutenticationHeaderKey(), autenticacionResponse.getAutenticationHeaderValue());
+
+			// realiza la llamada al servicio
+			response = makeRequest(targetURL, GET_METHOD, STRING_RESPONSE_METHOD, headers, null);
+		} catch (AutorizationException ae) {
+			throw ae;
+		} catch (ServiceException se) {
+			throw se;
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), response, ServiceExceptionType.APPLICATION);
+		}
+		return response;
+	}
+
 	public ResponseObject sendVisita(AutenticacionResponse autenticacionResponse, Visita visita)
 			throws ServiceException, AutorizationException {
 		validateAutentication(autenticacionResponse);
