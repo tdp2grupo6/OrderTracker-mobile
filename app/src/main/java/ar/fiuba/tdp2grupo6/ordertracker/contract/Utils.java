@@ -30,6 +30,46 @@ public class Utils {
         return null;
     }
 
+    public static String int2human(int number, short leadingZero) {
+        String strNumber = "";
+        if (leadingZero > 0) {
+            strNumber = String.format("%0" + leadingZero + "d", number);
+        } else {
+            strNumber = String.valueOf(number);
+        }
+        return strNumber;
+    }
+
+    public static String long2human(long number, short leadingZero) {
+        String strNumber = "";
+        if (leadingZero > 0) {
+            strNumber = String.format("%0" + leadingZero + "d", number);
+        } else {
+            strNumber = String.valueOf(number);
+        }
+        return strNumber;
+    }
+
+    public static String double2human(double number, short decimalDigit) {
+        String strNumber = "";
+        if (decimalDigit > 0) {
+            strNumber = String.format("%." + decimalDigit + "f", number);
+        } else {
+            strNumber = String.valueOf(number);
+        }
+        return strNumber;
+    }
+
+    public static String date2human(Date date, boolean noTimeData) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String resp = sdf.format(date);
+        if (noTimeData)
+            resp = resp.substring(0,10);
+        return resp;
+    }
+
+
     public static boolean string2boolean(String str) {
         return str != null && str.toLowerCase().equals("true");
     }

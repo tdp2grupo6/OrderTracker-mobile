@@ -2,25 +2,36 @@ package ar.fiuba.tdp2grupo6.ordertracker.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ar.fiuba.tdp2grupo6.ordertracker.R;
 import ar.fiuba.tdp2grupo6.ordertracker.business.PedidoBZ;
 import ar.fiuba.tdp2grupo6.ordertracker.business.ProductoBZ;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Comentario;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Pedido;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.Producto;
+import ar.fiuba.tdp2grupo6.ordertracker.contract.Utils;
 import ar.fiuba.tdp2grupo6.ordertracker.contract.exceptions.AutorizationException;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoAdapter;
+import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.PedidoItemAdapter;
 import ar.fiuba.tdp2grupo6.ordertracker.view.adapter.ProductoAdapter;
 
 public class PedidosActivity extends AppBaseActivity {
@@ -63,6 +74,48 @@ public class PedidosActivity extends AppBaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Pedido pedido = (Pedido) parent.getItemAtPosition(position);
+
+                //Configura el total
+                final View viewHeaderDialog = LayoutInflater.from(mContext).inflate(R.layout.layout_pedido_detalle_title, null);
+                final TextView pedidoNumeroView = (TextView) viewHeaderDialog.findViewById(R.id.pedido_title_numero);
+                final TextView pedidoClienteView = (TextView) viewHeaderDialog.findViewById(R.id.pedido_title_cliente);
+                final TextView pedidoFechaView = (TextView) viewHeaderDialog.findViewById(R.id.pedido_title_fecha);
+                pedidoClienteView.setText(pedido.cliente.nombreCompleto);
+                pedidoFechaView.setText(Utils.date2human(pedido.fechaRealizado,true));
+                pedidoNumeroView.setText("# " + Utils.long2human(pedido.idServer, (short)5));
+
+                //Configura el total
+                final View viewFooterDialog = LayoutInflater.from(mContext).inflate(R.layout.layout_pedido_detalle, null);
+                final TextView pedidoMontoView = (TextView) viewFooterDialog.findViewById(R.id.pedido_monto);
+                pedidoMontoView.setText("Importe Total $ " + Utils.double2human(pedido.getImporte(false), (short)2));
+
+                //Configura la lista
+                ArrayList<PedidoItem> pedidoItems = new ArrayList<PedidoItem>(pedido.items.values());
+                PedidoItemAdapter adapter = new PedidoItemAdapter(mContext, pedidoItems);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);//, R.style.AlertDialogCustom);
+                //builder.setTitle(mContext.getResources().getString(R.string.title_popup_comentario));
+                builder.setCustomTitle(viewHeaderDialog);
+                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setView(viewFooterDialog);
+                builder.setCancelable(false);
+                builder.setNegativeButton(R.string.btn_cancelarComentario, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                builder.create();
+                AlertDialog alertDialog = builder.create();
+                ListView listView = alertDialog.getListView();
+                listView.setDivider(new ColorDrawable(Color.BLACK));
+                listView.setDividerHeight(1);
+                alertDialog.show();
                 /*
                 Intent intent = new Intent(getApplicationContext(), ProductoDetailActivity.class);
                 Producto prod = (Producto) parent.getItemAtPosition(position);

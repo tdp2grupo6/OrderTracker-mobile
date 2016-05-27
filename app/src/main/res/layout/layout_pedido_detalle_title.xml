@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@color/colorPrimary"
+    style="@style/AlertDialogCustom">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical|start"
+        >
+
+        <TextView
+            android:id="@+id/pedido_title_numero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="start"
+            android:textAlignment="viewStart"
+            style="@style/ItemStock"
+            android:text="# 00001"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/pedido_title_cliente"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            style="@style/ItemStock"
+            android:text="China Suarez"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/pedido_title_fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="end"
+            android:textAlignment="viewEnd"
+            style="@style/ItemStock"
+            android:text="17/05/2016">
+        </TextView>
+
+    </LinearLayout>
+
+</LinearLayout>

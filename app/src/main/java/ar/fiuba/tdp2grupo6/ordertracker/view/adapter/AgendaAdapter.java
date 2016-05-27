@@ -54,12 +54,16 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaViewHolder> { //} 
         holder.getNombreView().setText(agendaItem.cliente.nombreCompleto);
         holder.getDireccionView().setText(agendaItem.cliente.direccion);
 
-        if (holder.mCliente.estado == Cliente.ESTADO_VISITADO)
+        if (holder.mCliente.estado == Cliente.ESTADO_VISITADO) {
+            holder.getEstadoView().setText("V");
             holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_green);
-        else if (holder.mCliente.estado == Cliente.ESTADO_PENDIENTE)
+        } else if (holder.mCliente.estado == Cliente.ESTADO_PENDIENTE) {
+            holder.getEstadoView().setText("P");
             holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_yellow);
-        else
+        } else {
+            holder.getEstadoView().setText("N");
             holder.getEstadoView().setBackgroundResource(R.drawable.item_cliente_status_red);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
