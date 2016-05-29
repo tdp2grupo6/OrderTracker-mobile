@@ -56,6 +56,7 @@ public class DataInService extends IntentService {
 
 			// Sincroniza los items
 			try {
+
 				ProductoBZ productoBZ =  new ProductoBZ(context);
 				ArrayList<Producto> productos = productoBZ.sincronizar();
 
