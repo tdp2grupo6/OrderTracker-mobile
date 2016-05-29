@@ -648,7 +648,7 @@ public class SqlDA {
 		return cant;
 	}
 
-	public ArrayList<Pedido> pedidoBuscar(long id, long idServer, long clienteId, int estado) throws LocalException {
+	public ArrayList<Pedido> pedidoBuscar(long id, long idServer, long clienteId, int estado, boolean sort) throws LocalException {
 		SQLiteDatabase db = this.mDb.getWritableDatabase();
 
 		ArrayList<Pedido> listPedido = new ArrayList<Pedido>();
@@ -677,7 +677,12 @@ public class SqlDA {
 				where = UtilsDA.AddWhereCondition(where, condition, "and");
 			}
 
-			Cursor c = db.rawQuery(select + where, null);
+			String orderBy = "";
+			if (sort) {
+				orderBy = " ORDER BY " + DbHelper.tblPedido_colId + " DESC";
+			}
+
+			Cursor c = db.rawQuery(select + where + orderBy, null);
 			if (c.moveToFirst()) {
 				do {
 					Pedido pedido = new Pedido();

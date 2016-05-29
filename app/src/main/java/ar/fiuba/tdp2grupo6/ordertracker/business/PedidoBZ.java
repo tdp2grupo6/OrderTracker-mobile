@@ -103,7 +103,7 @@ public class PedidoBZ {
         ArrayList<Pedido> pedidos = null;
         try {
             ArrayList<PedidoItem> pedidoitems = null;
-            pedidos = mSql.pedidoBuscar(pedidoId, 0, clienteId, estado);
+            pedidos = mSql.pedidoBuscar(pedidoId, 0, clienteId, estado, true);
 
             if (pedidos != null && pedidos.size() > 0) {
                 long clienteIdAux = 0;
@@ -252,7 +252,7 @@ public class PedidoBZ {
     public void confirmar(long pedidoId) throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, 0, -1);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(pedidoId, 0, 0, -1, false);
 
             if (pedidos != null && pedidos.size() > 0) {
                 Pedido pedido = pedidos.get(0);
@@ -314,7 +314,7 @@ public class PedidoBZ {
     public void borrarPendientes() throws BusinessException {
         try {
 
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_NUEVO);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_NUEVO, false);
             for (Pedido pedido: pedidos) {
                 mSql.pedidoItemEliminar(0, pedido.id);
                 mSql.pedidoEliminar(pedido.id);
@@ -327,7 +327,7 @@ public class PedidoBZ {
 
     public void sincronizarUp() throws AutorizationException, BusinessException {
         try {
-            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_CONFIRMADO);
+            ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, 0, 0, Pedido.ESTADO_CONFIRMADO, false);
             if (pedidos != null & pedidos.size() > 0) {
                 enviarPedido(pedidos.get(0));
             }
@@ -352,7 +352,7 @@ public class PedidoBZ {
                         long idserver = pedidoJson.getLong("id");
                         short nuevoEstado = (short)pedidoJson.getJSONObject("estado").getInt("id");
 
-                        ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, idserver, 0, -1);
+                        ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, idserver, 0, -1, false);
                         if (pedidos != null && pedidos.size() > 0) {
                             Pedido pedido = pedidos.get(0);
 

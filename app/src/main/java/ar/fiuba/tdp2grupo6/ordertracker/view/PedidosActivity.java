@@ -8,13 +8,21 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,6 +51,7 @@ public class PedidosActivity extends AppBaseActivity {
     private TextView mEmptyView;
     private SwipeRefreshLayout mSwipeLayout;
     private PedidosBuscarTask mPedidosBuscarTask;
+    private PedidoAdapter mListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +154,47 @@ public class PedidosActivity extends AppBaseActivity {
         this.refrescarLista();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fragment_menu_cliente_fuera_ruta, menu);
+
+        MenuItem search = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        EditText searchField = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                if (mListAdapter != null) {
+                    mListAdapter.getFilter().filter(charSequence);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_search:
+                // do stuff
+                return true;
+        }
+        return false;
+    }
+
     private void refrescarLista() {
         mPedidosBuscarTask = new PedidosBuscarTask(this);
         mPedidosBuscarTask.execute((Void) null);
@@ -152,8 +202,8 @@ public class PedidosActivity extends AppBaseActivity {
 
     private void actualizarLista(ArrayList<Pedido> pedidos) {
         if (mListView != null) {
-            PedidoAdapter adapter = new PedidoAdapter(this, pedidos);
-            mListView.setAdapter(adapter);
+            mListAdapter = new PedidoAdapter(this, pedidos);
+            mListView.setAdapter(mListAdapter);
             mListView.setEmptyView(mEmptyView);
         }
     }

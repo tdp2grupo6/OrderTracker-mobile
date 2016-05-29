@@ -80,8 +80,8 @@ public class LoginActivity extends AppCompatActivity { //implements LoaderCallba
         mProgressView = findViewById(R.id.login_progress);
 
         //TODO SACARRRR
-        mEmailView.setText("vendedor");
-        mPasswordView.setText("vendedor");
+        //mEmailView.setText("vendedor");
+        //mPasswordView.setText("vendedor");
 
         //Verifica si ya esta logueado
         mApplication = (OrderTrackerApplication)this.getApplication();

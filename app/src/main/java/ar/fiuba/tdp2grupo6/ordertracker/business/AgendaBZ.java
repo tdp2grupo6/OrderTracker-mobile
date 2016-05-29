@@ -110,8 +110,14 @@ public class AgendaBZ {
         try {
             ArrayList<AgendaItem> lista = mSql.agendaItemBuscar(0, -1, 0, loadCliente);
             if (lista != null && lista.size() > 0){
+                //Como es la primer pantalla que se abre, puede ser que tenga la agena pero no
+                //todos los cientes descargados, entonces cuelga.
+                //Solucion de compromiso, solo muestra la agenda para los cuales tenga clientes
                 for (AgendaItem agendaItem: lista) {
-                    agenda.addAgendaItem(agendaItem);
+                    if ((loadCliente ==  true && agendaItem.cliente != null) ||
+                        (loadCliente ==  false && agendaItem.cliente == null)){
+                        agenda.addAgendaItem(agendaItem);
+                    }
                 }
             }
         } catch (Exception e) {
