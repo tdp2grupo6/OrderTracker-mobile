@@ -12,6 +12,7 @@ import ar.fiuba.tdp2grupo6.ordertracker.contract.PedidoItem;
 public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public ImageView mImageView;
+    public ImageView mDescuentoView;
     public TextView mNombreView;
     public TextView mStockView;
     public TextView mPrecioView;
@@ -37,6 +38,13 @@ public class PedidoProductoViewHolder extends RecyclerView.ViewHolder {
             mImageView = (ImageView) mView.findViewById(R.id.list_producto_imagen);
         }
         return this.mImageView;
+    }
+
+    public ImageView getDescuentoView() {
+        if (this.mDescuentoView == null) {
+            mDescuentoView = (ImageView) mView.findViewById(R.id.list_producto_descuento);
+        }
+        return this.mDescuentoView;
     }
 
     public TextView getNombreView() {

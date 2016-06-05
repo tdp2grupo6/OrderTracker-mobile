@@ -36,10 +36,25 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+
     <style name="ItemStock">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <style name="ItemStockBold">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ItemStockRed">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#c10707</item>
     </style>
 
     <style name="ItemStatus">

@@ -60,6 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
                 android:minHeight="240dp"
+                android:visibility="gone"
                 android:contentDescription="@string/imagen_descripcion"/>
 
             <LinearLayout
@@ -84,6 +85,218 @@
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/detalle_producto_descuento"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="14dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/detalle_producto_descuento_ico"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/descuento"/>
+
+                <TextView
+                    android:id="@+id/detalle_producto_descuento_titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    style="@style/DetalleDescripcionTitulo"
+                    android:text="@string/detalle_producto_descuento_titulo"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/detalle_producto_descuento_tabla"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="14dp">
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col0"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col0_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:textStyle="bold|italic"
+                        android:text="Rango"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col0_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:textStyle="bold|italic"
+                        android:text="Descuento"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col1"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col1_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="1-2"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col1_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="10%"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col2"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col2_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="1-2"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col2_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="10%"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col3"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col3_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="1-2"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col3_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="10%"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col4"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col4_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="1-2"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col4_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="10%"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detalle_producto_descuento_col5"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col5_row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="1-2"/>
+
+                    <TextView
+                        android:id="@+id/detalle_producto_descuento_col5_row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/cell_type_1"
+                        android:text="10%"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

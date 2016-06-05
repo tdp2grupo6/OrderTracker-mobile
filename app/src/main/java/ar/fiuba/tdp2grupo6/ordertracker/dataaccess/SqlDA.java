@@ -347,6 +347,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
 			cv.put(DbHelper.tblProducto_colRutaImg, producto.rutaImagen);
 			cv.put(DbHelper.tblProducto_colRutaMini, producto.rutaMiniatura);
+			cv.put(DbHelper.tblProducto_colDescuentos, producto.descuentosJson.toString());
             producto.id = db.insert(DbHelper.tblProducto, null, cv);
 		} catch (Exception e) {
 			throw new LocalException(String.format(mContext.getResources().getString(R.string.error_accediendo_bd), e.getMessage()));
@@ -370,6 +371,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblProducto_colEstado, producto.estado);
 			cv.put(DbHelper.tblProducto_colRutaImg, producto.rutaImagen);
 			cv.put(DbHelper.tblProducto_colRutaMini, producto.rutaMiniatura);
+			cv.put(DbHelper.tblProducto_colDescuentos, producto.descuentosJson.toString());
 
 			String where = "";
 			if (producto != null) {
@@ -413,6 +415,7 @@ public class SqlDA {
 					producto.estado = c.getString(c.getColumnIndex(DbHelper.tblProducto_colEstado));
 					producto.rutaImagen = c.getString(c.getColumnIndex(DbHelper.tblProducto_colRutaImg));
 					producto.rutaMiniatura = c.getString(c.getColumnIndex(DbHelper.tblProducto_colRutaMini));
+					producto.descuentosJson = new JSONArray(c.getString(c.getColumnIndex(DbHelper.tblProducto_colDescuentos)));
 					listProducto.add(producto);
 				} while (c.moveToNext());
 			}

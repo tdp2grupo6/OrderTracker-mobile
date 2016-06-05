@@ -76,6 +76,13 @@
                 >
             </TextView>
 
+
+            <ImageView
+                android:id="@+id/list_producto_descuento"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/descuento"/>
+
             <TextView
                 android:id="@+id/list_producto_minus"
                 android:layout_width="35dp"

@@ -1,7 +1,5 @@
 package ar.fiuba.tdp2grupo6.ordertracker.contract;
 
-import android.widget.ListView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,7 +27,9 @@ public class Pedido {
     public Date fechaRealizado;
     public Cliente cliente;
     public short estado;
-    private double importe;
+    private double descuento;
+    private double subtotal;
+    private double total;
     private boolean dirtyImporte;
 
     public long visitaId;
@@ -51,7 +51,10 @@ public class Pedido {
         this.fechaRealizado = new Date();
         this.cliente = null;
         this.estado = Pedido.ESTADO_NUEVO;
-        this.importe = 0;
+
+        this.subtotal = 0;
+        this.descuento = 0;
+        this.total = 0;
         this.dirtyImporte = false;
 
         this.items = new HashMap<String, PedidoItem>(); //por ID
@@ -133,14 +136,59 @@ public class Pedido {
 
     public double getImporte(boolean actualizar) {
         if (dirtyImporte || actualizar) {
-            double nuevoImporte = 0;
+            double nuevoTotal = 0;
+            double nuevoDescuento = 0;
             for (PedidoItem pedidoItem : items.values()) {
-                nuevoImporte += pedidoItem.cantidad * pedidoItem.producto.precio;
+                double itemImporte = pedidoItem.cantidad * pedidoItem.producto.precio;
+                double itemDescuento = (itemImporte * pedidoItem.descuentoProcentajeAplicado())/100;
+
+                nuevoDescuento += itemDescuento;
+                nuevoTotal += itemImporte;
             }
-            this.importe = nuevoImporte;
+            this.subtotal = nuevoTotal;
+            this.descuento = nuevoDescuento;
+            this.total = nuevoTotal - nuevoDescuento;
             this.dirtyImporte = false;
         }
-        return this.importe;
+        return this.total;
+    }
+
+    public double getDescuento(boolean actualizar) {
+        if (dirtyImporte || actualizar) {
+            double nuevoTotal = 0;
+            double nuevoDescuento = 0;
+            for (PedidoItem pedidoItem : items.values()) {
+                double itemImporte = pedidoItem.cantidad * pedidoItem.producto.precio;
+                double itemDescuento = (itemImporte * pedidoItem.descuentoProcentajeAplicado())/100;
+
+                nuevoDescuento += itemDescuento;
+                nuevoTotal += itemImporte;
+            }
+            this.subtotal = nuevoTotal;
+            this.descuento = nuevoDescuento;
+            this.total = nuevoTotal - nuevoDescuento;
+            this.dirtyImporte = false;
+        }
+        return this.descuento;
+    }
+
+    public double getSubtotal(boolean actualizar) {
+        if (dirtyImporte || actualizar) {
+            double nuevoTotal = 0;
+            double nuevoDescuento = 0;
+            for (PedidoItem pedidoItem : items.values()) {
+                double itemImporte = pedidoItem.cantidad * pedidoItem.producto.precio;
+                double itemDescuento = (itemImporte * pedidoItem.descuentoProcentajeAplicado())/100;
+
+                nuevoDescuento += itemDescuento;
+                nuevoTotal += itemImporte;
+            }
+            this.subtotal = nuevoTotal;
+            this.descuento = nuevoDescuento;
+            this.total = nuevoTotal - nuevoDescuento;
+            this.dirtyImporte = false;
+        }
+        return this.subtotal;
     }
 
     public ArrayList<PedidoItem> getItems(long categoriaId, String marca) {

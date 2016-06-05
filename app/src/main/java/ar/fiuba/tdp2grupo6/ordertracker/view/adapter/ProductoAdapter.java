@@ -63,6 +63,12 @@ public class ProductoAdapter extends BaseAdapter {
         if (imagenMiniatura != null)
             holder.getImage().setImageBitmap(imagenMiniatura);
 
+        if (producto.tieneDescuento()) {
+            holder.getImageDescuento().setVisibility(View.VISIBLE);
+        } else {
+            holder.getImageDescuento().setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 }

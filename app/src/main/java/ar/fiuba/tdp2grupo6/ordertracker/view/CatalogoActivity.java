@@ -85,6 +85,8 @@ public class CatalogoActivity extends AppBaseActivity {
                 intent.putExtra("productoRutaImagen", prod.getNombreImagenMiniatura());
                 intent.putExtra("productoCategoria", prod.categoria.toString());
                 intent.putExtra("productoEstado", prod.mostrarEstado());
+                intent.putExtra("productoDescuentos", prod.descuentosJson.toString());
+
                 startActivity(intent);
             }
         });

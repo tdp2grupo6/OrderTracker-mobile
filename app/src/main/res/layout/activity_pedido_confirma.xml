@@ -40,16 +40,16 @@
 
             <TextView
                 android:id="@+id/productos_pedido_list_cliente"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
                 android:layout_marginRight="5px"
                 style="@style/ItemStock"
                 android:text=""/>
 
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,18 +60,51 @@
                 android:layout_marginRight="3px"
                 style="@style/ItemStock"
                 android:text=" - Total $"/>
-
-            <TextView
-                android:id="@+id/productos_pedido_list_money"
+            -->
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
-                android:layout_marginRight="5px"
-                style="@style/ItemStock"
-                android:text=""/>
+                android:layout_marginRight="15px"
+                android:layout_marginLeft="5px"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical|center_horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/productos_pedido_list_subtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="15px"
+                    android:layout_marginBottom="0px"
+                    style="@style/ItemStock"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/productos_pedido_list_descuento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5px"
+                    android:layout_marginBottom="0px"
+                    style="@style/ItemStockRed"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/productos_pedido_list_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5px"
+                    android:layout_marginBottom="15px"
+                    style="@style/ItemStockBold"
+                    android:text=""/>
+
+            </LinearLayout>
 
         </LinearLayout>
         <!-- Footer -->
@@ -80,7 +113,7 @@
             android:id="@+id/pedido_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="35dp"/>
+            android:paddingBottom="75dp"/>
 
     </RelativeLayout>
 
@@ -89,7 +122,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="70dp"
         android:src="@drawable/ic_undo_black_24dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -97,7 +133,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="70dp"
         app:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/ic_done_all_black_24dp" />
 

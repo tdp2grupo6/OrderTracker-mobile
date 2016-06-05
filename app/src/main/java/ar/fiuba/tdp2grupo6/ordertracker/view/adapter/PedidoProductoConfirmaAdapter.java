@@ -70,6 +70,12 @@ public class PedidoProductoConfirmaAdapter extends RecyclerView.Adapter<PedidoPr
             }
         });
 
+        if (holder.mPedidoItem.tieneDescuento()) {
+            holder.getDescuentoView().setVisibility(View.VISIBLE);
+        } else {
+            holder.getDescuentoView().setVisibility(View.GONE);
+        }
+
         /*
         holder.getMinusView().setOnClickListener(new View.OnClickListener() {
             @Override

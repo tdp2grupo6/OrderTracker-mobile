@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 14;
+	static final int dbVersion = 15;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -51,6 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblProducto_colEstado = "estado";
 	public static final String tblProducto_colRutaImg = "rutaImagen";
 	public static final String tblProducto_colRutaMini = "rutaMiniatura";
+	public static final String tblProducto_colDescuentos = "descuentos";
 
 	// Tabla Producto Imagen
 	public static final String tblProductoImagen = "ProductoImagen";
@@ -162,6 +163,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += ", " + tblProducto_colEstado + " TEXT";
 		createTable += ", " + tblProducto_colRutaImg + " TEXT";
 		createTable += ", " + tblProducto_colRutaMini + " TEXT";
+		createTable += ", " + tblProducto_colDescuentos + " TEXT";
 		createTable += ")";
 		try {
 			db.execSQL(createTable);

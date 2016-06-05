@@ -13,6 +13,7 @@ public class ProductoViewHolder {
     private View row;
     private TextView upperText = null, lowerText1 = null, lowerText2 = null, sideText = null;
     private ImageView image;
+    private ImageView imageDescuento;
 
     public ProductoViewHolder(View row) {
         this.row = row;
@@ -52,4 +53,13 @@ public class ProductoViewHolder {
         }
         return this.image;
     }
+
+    public ImageView getImageDescuento() {
+        if (this.imageDescuento == null) {
+            this.imageDescuento = (ImageView) row.findViewById(R.id.list_producto_descuento);
+        }
+        return this.imageDescuento;
+    }
+
+
 }

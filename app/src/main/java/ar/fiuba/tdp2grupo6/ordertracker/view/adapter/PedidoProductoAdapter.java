@@ -29,6 +29,7 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
     private OnItemClickListener mItemClickListener;
     public interface OnItemClickListener {
         public void onItemClick(PedidoProductoViewHolder holder, int position);
+        public void onItemDescuentoClick(PedidoProductoViewHolder holder, int position);
         public void onItemPlusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad);
         public void onItemMinusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad);
         public void onItemQuantityClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad);
@@ -124,6 +125,19 @@ public class PedidoProductoAdapter extends RecyclerView.Adapter<PedidoProductoVi
             }
         });
 
+        if (holder.mPedidoItem.tieneDescuento()) {
+            holder.getDescuentoView().setVisibility(View.VISIBLE);
+            holder.getDescuentoView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemDescuentoClick(holder, position);
+                }
+                    }
+            });
+        } else {
+            holder.getDescuentoView().setVisibility(View.GONE);
+        }
         /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

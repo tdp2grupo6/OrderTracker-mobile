@@ -37,7 +37,9 @@ public class PedidoConfirmaActivity extends AppBaseActivity
     public Pedido mPedido;
 
     private TextView mClienteView;
+    private TextView mDescuentoView;
     private TextView mTotalView;
+    private TextView mSubTotalView;
     private FloatingActionButton mFbEnviar;
 
     private PedidoConfirmaListFragment mFragment;
@@ -75,7 +77,9 @@ public class PedidoConfirmaActivity extends AppBaseActivity
             this.mPedidoId = getIntent().getLongExtra(PedidoConfirmaActivity.ARG_PEDIDO_ID, 0);
 
             //mListFooter = (LinearLayout) view.findViewById(R.id.producto_pedido_list_footer);
-            mTotalView = (TextView) findViewById(R.id.productos_pedido_list_money);
+            mSubTotalView = (TextView) findViewById(R.id.productos_pedido_list_subtotal);
+            mDescuentoView = (TextView) findViewById(R.id.productos_pedido_list_descuento);
+            mTotalView = (TextView) findViewById(R.id.productos_pedido_list_total);
             mClienteView = (TextView) findViewById(R.id.productos_pedido_list_cliente);
 
             mFragment = PedidoConfirmaListFragment.newInstance(mPedidoId);
@@ -105,6 +109,7 @@ public class PedidoConfirmaActivity extends AppBaseActivity
         intent.putExtra("productoRutaImagen", producto.getNombreImagenMiniatura());
         intent.putExtra("productoCategoria", producto.categoria.toString());
         intent.putExtra("productoEstado", producto.mostrarEstado());
+        intent.putExtra("productoDescuentos", producto.descuentosJson.toString());
         startActivity(intent);
     }
 
@@ -142,8 +147,10 @@ public class PedidoConfirmaActivity extends AppBaseActivity
 
     private void actualizarFooter() {
         if (mPedido != null) {
-            mClienteView.setText(mPedido.cliente.nombreCompleto);
-            mTotalView.setText(String.format("%.2f", mPedido.getImporte(false)));
+            mClienteView.setText(mPedido.cliente.nombreCompleto + ": ");
+            mDescuentoView.setText("Desc. $ " + String.format("%.2f", mPedido.getDescuento(false)));
+            mTotalView.setText("Total. $ " + String.format("%.2f", mPedido.getImporte(false)));
+            mSubTotalView.setText("SubTotal. $ " + String.format("%.2f", mPedido.getSubtotal(false)));
         }
     }
 

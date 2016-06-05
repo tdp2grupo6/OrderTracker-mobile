@@ -242,6 +242,11 @@ public class PedidoListFragment extends Fragment implements PedidoProductoAdapte
     }
 
     @Override
+    public void onItemDescuentoClick(PedidoProductoViewHolder holder, int position) {
+        //mListener.onPedidoItemClick(holder.mPedidoItem.producto);
+    }
+
+    @Override
     public void onItemPlusClick(PedidoProductoViewHolder holder, int position, int viejaCantidad, int nuevaCantidad) {
         mHolder = holder;
         mPosition = position;
