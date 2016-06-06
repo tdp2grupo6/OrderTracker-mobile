@@ -179,7 +179,8 @@ public class PedidoBZ {
 
                     //regenera los maps del pedido
                     pedido.generateMaps();
-                    pedido.getImporte(true);
+                    if (pedido.estado == Pedido.ESTADO_NUEVO)
+                        pedido.getImporte(true);
                 }
             }
         } catch (Exception e) {
@@ -351,14 +352,16 @@ public class PedidoBZ {
                         JSONObject pedidoJson = data.getJSONObject(i);
                         long idserver = pedidoJson.getLong("id");
                         short nuevoEstado = (short)pedidoJson.getJSONObject("estado").getInt("id");
+                        double nuevoImporte = pedidoJson.getDouble("totalCompra");
 
                         ArrayList<Pedido> pedidos = mSql.pedidoBuscar(0, idserver, 0, -1, false);
                         if (pedidos != null && pedidos.size() > 0) {
                             Pedido pedido = pedidos.get(0);
 
                             //Actualiza el estado del pedido
-                            if (nuevoEstado != pedido.estado) {
+                            if (nuevoEstado != pedido.estado || nuevoImporte != pedido.getImporte(false)) {
                                 pedido.estado = nuevoEstado;
+                                pedido.setImporte(nuevoImporte);
                                 mSql.pedidoActualizar(pedido);
                             }
                         }

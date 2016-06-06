@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String dbName = "ordertracker";
-	static final int dbVersion = 15;
+	static final int dbVersion = 16;
 	static final String dbDateTimeType = " INTEGER NOT NULL DEFAULT (strftime('%s','now'))";
 	static final String dbDateType = " INTEGER";
 
@@ -75,6 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String tblPedido_colId = "id"; // Autoincremental
 	public static final String tblPedido_colIdServer = "idserver";
 	public static final String tblPedido_colClienteId = "clienteid";
+	public static final String tblPedido_colTotal = "total";
 	public static final String tblPedido_colEstado = "estado";
 	public static final String tblPedido_colFecha = "fecha";
 	public static final String tblPedido_colVisitaId = "visitaid";
@@ -206,6 +207,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createTable += tblPedido_colId + " INTEGER PRIMARY KEY";
 		createTable += ", " + tblPedido_colIdServer + " INTEGER";
 		createTable += ", " + tblPedido_colClienteId + " INTEGER";
+		createTable += ", " + tblPedido_colTotal + " REAL";
 		createTable += ", " + tblPedido_colEstado + " INTEGER";
 		createTable += ", " + tblPedido_colFecha + " TEXT";
 		createTable += ", " + tblPedido_colVisitaId + " INTEGER";

@@ -615,6 +615,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblPedido_colIdServer, pedido.idServer);
 			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
+			cv.put(DbHelper.tblPedido_colTotal, pedido.getImporte(false));
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
 			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
             pedido.id = db.insert(DbHelper.tblPedido, null, cv);
@@ -634,6 +635,7 @@ public class SqlDA {
 			cv.put(DbHelper.tblPedido_colIdServer, pedido.idServer);
 			cv.put(DbHelper.tblPedido_colVisitaId, pedido.visitaId);
 			cv.put(DbHelper.tblPedido_colClienteId, pedido.clienteId);
+			cv.put(DbHelper.tblPedido_colTotal, pedido.getImporte(false));
 			cv.put(DbHelper.tblPedido_colEstado, pedido.estado);
 			cv.put(DbHelper.tblPedido_colFecha, Utils.date2string(pedido.fechaRealizado, false));
 
@@ -693,6 +695,7 @@ public class SqlDA {
 					pedido.idServer = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colIdServer));
 					pedido.visitaId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colVisitaId));
 					pedido.clienteId = c.getLong(c.getColumnIndex(DbHelper.tblPedido_colClienteId));
+					pedido.setImporte(c.getDouble(c.getColumnIndex(DbHelper.tblPedido_colTotal)));
 					pedido.estado = c.getShort(c.getColumnIndex(DbHelper.tblPedido_colEstado));
 					pedido.fechaRealizado = Utils.string2date(c.getString(c.getColumnIndex(DbHelper.tblPedido_colFecha)));
 					listPedido.add(pedido);

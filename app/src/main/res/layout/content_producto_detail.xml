@@ -60,7 +60,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
                 android:minHeight="240dp"
-                android:visibility="gone"
                 android:contentDescription="@string/imagen_descripcion"/>
 
             <LinearLayout

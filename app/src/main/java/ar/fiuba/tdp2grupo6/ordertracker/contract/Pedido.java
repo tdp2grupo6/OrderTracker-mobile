@@ -134,6 +134,10 @@ public class Pedido {
         this.dirtyImporte = true;
     }
 
+    public void setImporte(double importe) {
+        this.total = importe;
+    }
+
     public double getImporte(boolean actualizar) {
         if (dirtyImporte || actualizar) {
             double nuevoTotal = 0;
